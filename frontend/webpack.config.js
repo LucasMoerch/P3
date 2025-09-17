@@ -14,11 +14,10 @@ module.exports = {
         ],
         port: 5173,
         historyApiFallback: true,
-        // Webpack Dev Server v5 proxy format
         proxy: [
             {
                 context: ['/api'],
-                target: 'http://localhost:8080',
+                target: 'http://api:8080',
                 changeOrigin: true
             }
         ]
