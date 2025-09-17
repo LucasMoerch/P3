@@ -1,29 +1,24 @@
 version: "3.9"
-name: enevold-dev
-
 services:
   mongo:
     image: mongo:7
-    container_name: enevold_mongo
+    restart: always
     environment:
-      MONGO_INITDB_DATABASE: ${MONGO_DB}
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo_data:/data/db
+      MONGO_INITDB_DATABASE: enevold
+    volumes: [mongo_data:/data/db]
+
+  api:
+    build: ./backend
+    environment:
+      MONGO_URI: mongodb://mongo:27017/enevold
+      SPRING_PROFILES_ACTIVE: prod
+    ports: ["8080:8080"]
+    depends_on: [mongo]
 
   web:
-    image: node:22-alpine
-    container_name: enevold_web
-    working_dir: /app
-    command: sh -c "npm ci && npm run dev"
-    ports:
-      - "5173:5173"
-    volumes:
-      - ./frontend:/app
-    depends_on:
-      - mongo
-
+    build: ./frontend
+    ports: ["80:80"]
+    depends_on: [api]
 
 volumes:
   mongo_data:
