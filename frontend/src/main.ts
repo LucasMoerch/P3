@@ -1,4 +1,4 @@
-import http from "../api/http";
+import http from "./api/http";
 
 const app = document.getElementById("app")!;
 app.innerHTML = `
