@@ -1,0 +1,10 @@
+/* 1) Overrides Bootstrap */
+$primary: #4CAF50;
+$secondary: #333333;
+$font-family-base: ("Inter", sans-serif);
+
+/* Bring in Bootstrap */
+@import "bootstrap/scss/bootstrap";
+
+/* extras */
+body { background: #fafafa; }
