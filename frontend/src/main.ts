@@ -1,3 +1,5 @@
+import "./styles/custom.scss"
+
 import { resolveRoute } from "./routers/routers"
 
 function render() {
