@@ -1,23 +1,30 @@
-import http from "./api/http";
+import { resolveRoute } from "./routers/routers"
 
-const app = document.getElementById("app")!;
-app.innerHTML = `
-  <div class="card">
-    <div class="card-body">
-      <h1 class="h1">Frontend is running!!!</h1>
-      <button id="ping" class="btn btn-primary">Ping API</button>
-    </div>
-  </div>
-`;
+function render() {
+    const app = document.getElementById("app")!;
+    app.innerHTML = ""; // clear old content
+    app.appendChild(resolveRoute(location.pathname)); // insert new content
+}
 
-// test connection
-document.getElementById("ping")?.addEventListener("click", async ()=> {
-    console.log("Pinging server...");
-    try {
-        const { data } = await http.get("/actuator/health")
-        console.log(data);
+// Handle navigation
+function navigate(path: string) {
+    history.pushState({}, "", path);
+    render();
+}
+
+// Run once at startup
+window.addEventListener("load", render);
+
+// Handle back/forward buttons
+window.addEventListener("popstate", render);
+
+// Navigate on link click
+document.addEventListener("click", (e) => {
+    const target = e.target as HTMLElement;
+    if (target.tagName === "A" && target.getAttribute("data-link")) {
+        e.preventDefault();
+        const href = target.getAttribute("href")!;
+        navigate(href);
     }
-    catch (error: any){
-        console.log(error)
-    }
-})
+});
+
