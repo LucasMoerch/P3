@@ -36,15 +36,15 @@ function renderTimeTrackingCard() {
     closeBtn.innerText = "X";
 
     const startTimeBtn = document.createElement("button");
-    startTimeBtn.className = "btn btn-success col-3";
-    startTimeBtn.innerText = "Start Time";
+    startTimeBtn.className = "btn btn-primary fw-bold col-3";
+    startTimeBtn.innerText = "Check in";
 
     const stopTimeBtn = document.createElement("button");
-    stopTimeBtn.className = "btn btn-danger col-3";
+    stopTimeBtn.className = "btn btn-danger fw-semibold col-3";
     stopTimeBtn.innerText = "Stop Time";
 
     const pauseBtn = document.createElement("button");
-    pauseBtn.className = "btn btn-warning col-3";
+    pauseBtn.className = "btn btn-warning fw-semibold col-3";
     pauseBtn.innerText = "Pause Time";
 
     // Render the calendar field

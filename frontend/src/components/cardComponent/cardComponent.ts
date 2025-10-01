@@ -8,7 +8,7 @@ export function renderCard(): HTMLElement {
     overlay.setAttribute("aria-modal", "true");
 
     const card = document.createElement("div");
-    card.className = "card";
+    card.className = "card bg-card-bg";
 
     // Append card inside overlay
 
