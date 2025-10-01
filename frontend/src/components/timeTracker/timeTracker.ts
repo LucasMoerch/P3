@@ -4,13 +4,19 @@ import { renderCard } from "../cardComponent/cardComponent";
 
 // Utility function to get current time as HH:MM:SS
 function getTimeNow(): string {
-    const now = new Date();
-    return [
-        now.getHours().toString().padStart(2, '0'),
-        now.getMinutes().toString().padStart(2, '0'),
-        now.getSeconds().toString().padStart(2, '0')
-    ].join(':');
+    const startTime: Date = new Date(); // stores the current time the moment the start button is clicked
+    const timeNow: string =
+        startTime.getHours().toString().padStart(2,'0') + ':' +
+        startTime.getMinutes().toString().padStart(2,'0') + ':' +
+        startTime.getSeconds().toString().padStart(2,'0');
+
+    return timeNow;
 }
+
+function closeElement(element: HTMLElement): void {
+    element.remove();
+}
+
 
 export function renderTimeTracker(): HTMLElement {
     const div: HTMLDivElement = document.createElement("div");
@@ -26,11 +32,10 @@ export function renderTimeTracker(): HTMLElement {
         console.log("Time Tracking clicked...");
     });
 
-    div.appendChild(openCardButton);
+    
 
-    function closeElement(element: HTMLElement): void {
-        element.remove();
-    }
+      //Build openCardButton
+        div.appendChild(openCardButton);
 
     function renderTimeTrackingCard(): HTMLElement {
         const overlay: HTMLElement = renderCard();
@@ -55,15 +60,19 @@ export function renderTimeTracker(): HTMLElement {
         stopTimeBtn.className = "btn btn-danger col-1";
         stopTimeBtn.innerText = "Stop Time";
 
-        const timeDisplay: HTMLDivElement = document.createElement("div");
-        body.appendChild(timeDisplay);
-
+        const timeDisplay: HTMLDivElement = document.createElement("div")
+        timeDisplay.innerHTML = "00:00:00"
+        
+        
+        
+      
         // Build card
-        card.appendChild(closeBtn);
-        body.appendChild(startTimeBtn);
         overlay.appendChild(card);
+        card.appendChild(closeBtn);
         card.appendChild(header);
         card.appendChild(body);
+        body.appendChild(timeDisplay);
+        body.appendChild(startTimeBtn);
 
         // Event listeners
         closeBtn.addEventListener("click", (): void => {
@@ -72,7 +81,7 @@ export function renderTimeTracker(): HTMLElement {
 
         startTimeBtn.addEventListener("click", (): void => {
             const startTimeNow: string = getTimeNow();
-            timeDisplay.innerHTML = "Start Time: " + startTimeNow + "<br>";
+            timeDisplay.innerHTML = startTimeNow ;
             startTimeBtn.remove();
             body.appendChild(stopTimeBtn);
             console.log("Start Time clicked...", startTimeNow);
@@ -80,7 +89,7 @@ export function renderTimeTracker(): HTMLElement {
 
         stopTimeBtn.addEventListener("click", (): void => {
             const stopTimeNow: string = getTimeNow();
-            timeDisplay.innerHTML += "Stop Time: " + stopTimeNow + "<br>";
+            timeDisplay.innerHTML =  stopTimeNow;
             body.appendChild(completeBtn);
             console.log("Stop Time clicked...", stopTimeNow);
         });
