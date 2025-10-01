@@ -4,13 +4,17 @@ import { renderCard } from "../cardComponent/cardComponent";
 
 export function renderTimeTracker(): HTMLElement {
     const div = document.createElement("div");
-    div.className = "col text-end pl-3 mt-3";
-    const openCardButton = document.createElement("button");
-    openCardButton.className = "btn btn-primary";
-    openCardButton.innerHTML = "Time Tracking";
-    
 
-   
+    div.style.position = "fixed";
+    div.style.top = "50%"; //Makes the button stay in the middle
+    div.style.right = "0"; //0px from the right edge
+    div.style.transform = "translateY(-50%)";
+
+    const openCardButton = document.createElement("button");
+    openCardButton.className = "btn";
+    openCardButton.style.backgroundColor = "#007bff";
+    openCardButton.style.color = "white";
+    openCardButton.innerHTML = "⏱️";
 
     openCardButton.addEventListener("click", () => {
         const cardEl = renderTimeTrackingCard();
@@ -37,7 +41,7 @@ function renderTimeTrackingCard() {
     closeBtn.innerText = "X";
 
     const startTimeBtn = document.createElement("button");
-    startTimeBtn.className = "btn btn-success col-1";
+    startTimeBtn.className = "btn btn-primary col-1";
     startTimeBtn.innerText = "Start Time";
 
     const stopTimeBtn = document.createElement("button");
@@ -78,3 +82,4 @@ function renderTimeTrackingCard() {
     
     return div;
 }
+

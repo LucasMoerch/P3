@@ -1,11 +1,22 @@
 import "./styles/custom.scss"
-
+import { renderTimeTracker } from "./components/timeTracker/timeTracker";
 import { resolveRoute } from "./routers/routers"
 
 function render() {
     const app = document.getElementById("app")!;
     app.innerHTML = ""; // clear old content
     app.appendChild(resolveRoute(location.pathname)); // insert new content
+
+    const excludedPages = ["/login"]; //pages where you dont want timeButton.
+
+    if(!document.getElementById("time-tracker-button")
+        && !excludedPages.includes(location.pathname)){
+
+        const tracker = renderTimeTracker();
+        tracker.id = "time-tracker-button"; //prevent duplicates
+        document.body.appendChild(tracker);
+    }
+
 }
 
 // Handle navigation
