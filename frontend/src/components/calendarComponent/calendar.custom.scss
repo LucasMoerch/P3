@@ -1,0 +1,4 @@
+/* ensure the calendar popup is above overlays */
+.vc, .vanilla-calendar {
+  z-index: 10050 !important;
+}
