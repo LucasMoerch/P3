@@ -1,6 +1,7 @@
 import http from "../../api/http"
 import "./timetracker.scss";
 import { renderCard } from "../cardComponent/cardComponent";
+import { renderCalendar } from "../calendarComponent/calendar"
 
 export function renderTimeTracker(): HTMLElement {
     const div = document.createElement("div");
@@ -8,9 +9,7 @@ export function renderTimeTracker(): HTMLElement {
     const openCardButton = document.createElement("button");
     openCardButton.className = "btn btn-primary";
     openCardButton.innerHTML = "Time Tracking";
-    
 
-   
 
     openCardButton.addEventListener("click", () => {
         const cardEl = renderTimeTrackingCard();
@@ -33,22 +32,23 @@ function renderTimeTrackingCard() {
     // Add your custom content
 
     const closeBtn = document.createElement("button");
-    closeBtn.className = "btn btn-secondary col-1";
+    closeBtn.className = "btn btn-secondary col-3";
     closeBtn.innerText = "X";
 
     const startTimeBtn = document.createElement("button");
-    startTimeBtn.className = "btn btn-success col-1";
+    startTimeBtn.className = "btn btn-success col-3";
     startTimeBtn.innerText = "Start Time";
 
     const stopTimeBtn = document.createElement("button");
-    stopTimeBtn.className = "btn btn-danger col-1";
+    stopTimeBtn.className = "btn btn-danger col-3";
     stopTimeBtn.innerText = "Stop Time";
 
     const pauseBtn = document.createElement("button");
-    pauseBtn.className = "btn btn-warning col-1";
+    pauseBtn.className = "btn btn-warning col-3";
     pauseBtn.innerText = "Pause Time";
 
- 
+    // Render the calendar field
+    body.appendChild(renderCalendar())
 
     card.appendChild(closeBtn);
 
