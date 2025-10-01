@@ -1,6 +1,6 @@
 import "./styles/custom.scss"
 
-import { resolveRoute } from "./routers/routers"
+import { resolveRoute } from "./routers/router"
 
 function render() {
     const app = document.getElementById("app")!;
