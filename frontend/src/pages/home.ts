@@ -3,7 +3,7 @@ import { renderTimeTracker } from "../components/timeTracker/timeTracker";
 
 export function renderHomePage(): HTMLElement{
     const div = document.createElement("div");
-    div.innerHTML = `<h1>Home page<h1>`;
+    div.innerHTML = `<h1>Home page</h1>`;
 
    
 
@@ -18,6 +18,8 @@ export function renderHomePage(): HTMLElement{
     const loginLink = document.createElement("a");
     loginLink.innerHTML = "Login"
     loginLink.href = "/login"
+    loginLink.setAttribute("data-link", "");
+
     container.appendChild(loginLink)
 
     return container
