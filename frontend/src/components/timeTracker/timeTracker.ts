@@ -1,80 +1,92 @@
-import http from "../../api/http"
+import http from "../../api/http";
 import "./timetracker.scss";
 import { renderCard } from "../cardComponent/cardComponent";
 
+// Utility function to get current time as HH:MM:SS
+function getTimeNow(): string {
+    const now = new Date();
+    return [
+        now.getHours().toString().padStart(2, '0'),
+        now.getMinutes().toString().padStart(2, '0'),
+        now.getSeconds().toString().padStart(2, '0')
+    ].join(':');
+}
+
 export function renderTimeTracker(): HTMLElement {
-    const div = document.createElement("div");
+    const div: HTMLDivElement = document.createElement("div");
     div.className = "col text-end pl-3 mt-3";
-    const openCardButton = document.createElement("button");
+
+    const openCardButton: HTMLButtonElement = document.createElement("button");
     openCardButton.className = "btn btn-primary";
     openCardButton.innerHTML = "Time Tracking";
-    
 
-   
-
-    openCardButton.addEventListener("click", () => {
+    openCardButton.addEventListener("click", (): void => {
         const cardEl = renderTimeTrackingCard();
         document.body.appendChild(cardEl);
-      
         console.log("Time Tracking clicked...");
     });
 
     div.appendChild(openCardButton);
-    function closeElement(elementName: HTMLElement){
-        elementName.remove();
+
+    function closeElement(element: HTMLElement): void {
+        element.remove();
     }
 
-function renderTimeTrackingCard() {
-    // Create overlay
-    const overlay = renderCard();
-    const card = overlay.querySelector(".card") as HTMLElement;
-    const header= card.querySelector(".header") as HTMLElement;
-    const body= card.querySelector(".body") as HTMLElement;
-    // Add your custom content
+    function renderTimeTrackingCard(): HTMLElement {
+        const overlay: HTMLElement = renderCard();
+        const card: HTMLElement = overlay.querySelector(".card") as HTMLElement;
+        const header: HTMLElement = card.querySelector(".header") as HTMLElement;
+        const body: HTMLElement = card.querySelector(".body") as HTMLElement;
 
-    const closeBtn = document.createElement("button");
-    closeBtn.className = "btn btn-secondary col-1";
-    closeBtn.innerText = "X";
+        // Buttons
+        const closeBtn: HTMLButtonElement = document.createElement("button");
+        closeBtn.className = "btn btn-secondary col-1";
+        closeBtn.innerText = "X";
 
-    const startTimeBtn = document.createElement("button");
-    startTimeBtn.className = "btn btn-success col-1";
-    startTimeBtn.innerText = "Start Time";
+        const completeBtn: HTMLButtonElement = document.createElement("button");
+        completeBtn.className = "btn btn-primary col-1";
+        completeBtn.innerText = "Complete";
 
-    const stopTimeBtn = document.createElement("button");
-    stopTimeBtn.className = "btn btn-danger col-1";
-    stopTimeBtn.innerText = "Stop Time";
+        const startTimeBtn: HTMLButtonElement = document.createElement("button");
+        startTimeBtn.className = "btn btn-success col-1";
+        startTimeBtn.innerText = "Start Time";
 
-    const pauseBtn = document.createElement("button");
-    pauseBtn.className = "btn btn-warning col-1";
-    pauseBtn.innerText = "Pause Time";
+        const stopTimeBtn: HTMLButtonElement = document.createElement("button");
+        stopTimeBtn.className = "btn btn-danger col-1";
+        stopTimeBtn.innerText = "Stop Time";
 
- 
+        const timeDisplay: HTMLDivElement = document.createElement("div");
+        body.appendChild(timeDisplay);
 
-    card.appendChild(closeBtn);
+        // Build card
+        card.appendChild(closeBtn);
+        body.appendChild(startTimeBtn);
+        overlay.appendChild(card);
+        card.appendChild(header);
+        card.appendChild(body);
 
-    body.appendChild(startTimeBtn);
+        // Event listeners
+        closeBtn.addEventListener("click", (): void => {
+            overlay.remove();
+        });
 
-    overlay.appendChild(card);
-    card.appendChild(header);
-    card.appendChild(body); 
+        startTimeBtn.addEventListener("click", (): void => {
+            const startTimeNow: string = getTimeNow();
+            timeDisplay.innerHTML = "Start Time: " + startTimeNow + "<br>";
+            startTimeBtn.remove();
+            body.appendChild(stopTimeBtn);
+            console.log("Start Time clicked...", startTimeNow);
+        });
 
-    // Events
-    closeBtn.addEventListener("click", () => {
-        overlay.remove();
-    
-    });
+        stopTimeBtn.addEventListener("click", (): void => {
+            const stopTimeNow: string = getTimeNow();
+            timeDisplay.innerHTML += "Stop Time: " + stopTimeNow + "<br>";
+            body.appendChild(completeBtn);
+            console.log("Stop Time clicked...", stopTimeNow);
+        });
 
-    startTimeBtn.addEventListener("click", () => {
-        startTimeBtn.remove();
-        body.appendChild(pauseBtn);
-        body.appendChild(stopTimeBtn);
-        console.log("Start Time clicked...");
-    });
+        return overlay;
+    }
 
-   
-
-    return overlay;
-}
-    
     return div;
 }
