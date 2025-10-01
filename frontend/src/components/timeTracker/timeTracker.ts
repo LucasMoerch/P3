@@ -39,8 +39,6 @@ function renderTimeTrackingCard() {
     const card = document.createElement("div"); 
     card.className = "card time-tracker-card";
 
-    card.addEventListener("click", (e) => e.stopPropagation());
-
     const closeBtn = document.createElement("button");
     closeBtn.className = "btn btn-secondary col-1";
     closeBtn.innerText = "X";
@@ -86,12 +84,7 @@ function renderTimeTrackingCard() {
         console.log("Start Time clicked...");
     });
 
-    overlay.addEventListener("click", (e) => {
-        if (e.target === overlay) {
-            overlay.remove();
-            cardEl = null;
-        }
-    });
+   
 
     return overlay;
 }
