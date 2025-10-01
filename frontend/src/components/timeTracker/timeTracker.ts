@@ -10,8 +10,6 @@ export function renderTimeTracker(): HTMLElement {
     openCardButton.innerHTML = "Time Tracking";
     
 
-   
-
     openCardButton.addEventListener("click", () => {
         const cardEl = renderTimeTrackingCard();
         document.body.appendChild(cardEl);
@@ -48,12 +46,13 @@ function renderTimeTrackingCard() {
     pauseBtn.className = "btn btn-warning col-1";
     pauseBtn.innerText = "Pause Time";
 
- 
+    const hejBtn = document.createElement("button");
+    hejBtn.className = "btn btn-warning col-1";
+    hejBtn.innerText = "Hej";
 
+    
     card.appendChild(closeBtn);
-
     body.appendChild(startTimeBtn);
-
     overlay.appendChild(card);
     card.appendChild(header);
     card.appendChild(body); 

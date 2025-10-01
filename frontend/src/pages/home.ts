@@ -1,5 +1,6 @@
 import { renderHealthCheck} from "../components/healthCheck";
 import { renderTimeTracker } from "../components/timeTracker/timeTracker";
+import {exampleComponent} from "../components/exampleComponent/exampleComponent"
 
 export function renderHomePage(): HTMLElement{
     const div = document.createElement("div");
@@ -14,6 +15,10 @@ export function renderHomePage(): HTMLElement{
      const timeTracking = document.createElement("div");
     container.appendChild(timeTracking);
     container.appendChild(renderTimeTracker())
+
+    const exampleComp = document.createElement("div");
+    exampleComp.appendChild(exampleComponent());
+    container.appendChild(exampleComp);
 
     const loginLink = document.createElement("a");
     loginLink.innerHTML = "Login"
