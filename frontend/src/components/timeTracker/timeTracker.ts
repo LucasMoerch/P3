@@ -1,5 +1,6 @@
 import http from "../../api/http"
 import "./timetracker.scss";
+import { renderCard } from "../cardComponent/cardComponent";
 
 export function renderTimeTracker(): HTMLElement {
     const div = document.createElement("div");
@@ -9,16 +10,12 @@ export function renderTimeTracker(): HTMLElement {
     openCardButton.innerHTML = "Time Tracking";
     
 
-    let cardEl: HTMLElement | null = null; // gemmer Kort referencen
+   
 
     openCardButton.addEventListener("click", () => {
-        if (!cardEl) {
-            cardEl = renderTimeTrackingCard();
-            document.body.appendChild(cardEl);
-        } else {
-            if (cardEl && document.body.contains(cardEl)) { document.body.removeChild(cardEl); }
-            cardEl = null; // reset reference
-        }
+        const cardEl = renderTimeTrackingCard();
+        document.body.appendChild(cardEl);
+      
         console.log("Time Tracking clicked...");
     });
 
@@ -29,15 +26,11 @@ export function renderTimeTracker(): HTMLElement {
 
 function renderTimeTrackingCard() {
     // Create overlay
-    const overlay = document.createElement("div");
-    overlay.className = "time-tracker-overlay overlay";
-   
- 
-    overlay.setAttribute("role", "dialog");
-    overlay.setAttribute("aria-modal", "true");
-
-    const card = document.createElement("div"); 
-    card.className = "card time-tracker-card";
+    const overlay = renderCard();
+    const card = overlay.querySelector(".card") as HTMLElement;
+    const header= card.querySelector(".header") as HTMLElement;
+    const body= card.querySelector(".body") as HTMLElement;
+    // Add your custom content
 
     const closeBtn = document.createElement("button");
     closeBtn.className = "btn btn-secondary col-1";
@@ -55,26 +48,20 @@ function renderTimeTrackingCard() {
     pauseBtn.className = "btn btn-warning col-1";
     pauseBtn.innerText = "Pause Time";
 
-    const header = document.createElement("div");
-    header.className = "card-header";
-    header.innerText = "Time Registration";
-
-    const body = document.createElement("div");
-    body.className = "card-body";
-    body.innerHTML = `<p>Track your time spent on tasks.</p>`;
-    
+ 
 
     card.appendChild(closeBtn);
-    card.appendChild(header);
-    card.appendChild(body);
+
     body.appendChild(startTimeBtn);
 
     overlay.appendChild(card);
+    card.appendChild(header);
+    card.appendChild(body); 
 
     // Events
     closeBtn.addEventListener("click", () => {
         overlay.remove();
-        cardEl = null;
+    
     });
 
     startTimeBtn.addEventListener("click", () => {
