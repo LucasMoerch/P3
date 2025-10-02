@@ -21,16 +21,10 @@ function closeElement(element: HTMLElement): void {
 
 export function renderTimeTracker(): HTMLElement {
     const div = document.createElement("div");
-
-    div.style.position = "fixed";
-    div.style.top = "50%"; //Makes the button stay in the middle
-    div.style.right = "0"; //0px from the right edge
-    div.style.transform = "translateY(-50%)";
+    div.className = "time-tracker-container";
 
     const openCardButton = document.createElement("button");
-    openCardButton.className = "btn";
-    openCardButton.style.backgroundColor = "#007bff";
-    openCardButton.style.color = "white";
+    openCardButton.className = "time-tracker-button";
     openCardButton.innerHTML = "⏱️";
 
     openCardButton.addEventListener("click", (): void => {
