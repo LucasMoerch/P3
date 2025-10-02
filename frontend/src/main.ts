@@ -3,7 +3,7 @@ import "./styles/custom.scss"
 import { resolveRoute } from "./routers/routers"
 
 function render() {
-    const app = document.getElementById("app")!;
+    const app = document.getElementById("app")! as HTMLElement;
     app.innerHTML = ""; // clear old content
     app.appendChild(resolveRoute(location.pathname)); // insert new content
 }
