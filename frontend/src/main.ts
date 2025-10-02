@@ -1,9 +1,10 @@
 import "./styles/custom.scss"
 import { renderTimeTracker } from "./components/timeTracker/timeTracker";
-import { resolveRoute } from "./routers/routers"
+
+import { resolveRoute } from "./routers/router"
 
 function render() {
-    const app = document.getElementById("app")!;
+    const app = document.getElementById("app")! as HTMLElement;
     app.innerHTML = ""; // clear old content
     app.appendChild(resolveRoute(location.pathname)); // insert new content
 
@@ -33,11 +34,14 @@ window.addEventListener("popstate", render);
 
 // Navigate on link click
 document.addEventListener("click", (e) => {
-    const target = e.target as HTMLElement;
-    if (target.tagName === "A" && target.getAttribute("data-link")) {
-        e.preventDefault();
-        const href = target.getAttribute("href")!;
-        navigate(href);
-    }
+    const target = e.target as HTMLElement | null;
+    const anchor = target?.closest('a[data-link]') as HTMLAnchorElement | null;
+    if (!anchor) return;
+
+    const href = anchor.getAttribute("href");
+    if (!href) return;
+
+    e.preventDefault();
+    navigate(href);
 });
 
