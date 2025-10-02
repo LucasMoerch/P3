@@ -35,6 +35,7 @@ export function renderTimeTracker(): HTMLElement {
     });
 
 
+
     div.appendChild(openCardButton);
 
     function renderTimeTrackingCard(): HTMLElement {

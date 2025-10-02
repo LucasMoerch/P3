@@ -1,10 +1,25 @@
-/* 1) Overrides Bootstrap */
-$primary: #085708;
-$secondary: #333333;
-$font-family-base: ("Inter", sans-serif);
+/* Overrides Bootstrap */
+$primary: #796D4C;
+$secondary: #F7F7F7;
+$danger: #8E3131;
+$warning: #B18E30;
+$font-family-sans-serif: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+$body-bg: #EBE8E5;
+$card-bg: #EFECE5;
+
+
 
 /* Bring in Bootstrap */
 @import "bootstrap/scss/bootstrap";
 
 /* extras */
-body { background: #fafafa; }
+body {
+  background: $body-bg;
+  font-family: $font-family-sans-serif;
+}
+
+.btn-primary,
+.btn-warning,
+.btn-danger {
+  --bs-btn-color: #{$secondary};
+}
