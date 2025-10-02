@@ -1,6 +1,7 @@
 import http from "../../api/http";
 import "./timetracker.scss";
 import { renderCard } from "../cardComponent/cardComponent";
+import { renderCalendar } from "../calendarComponent/calendar"
 
 // Utility function to get current time as HH:MM:SS
 function getTimeNow(): string {
@@ -26,46 +27,50 @@ export function renderTimeTracker(): HTMLElement {
     openCardButton.className = "btn btn-primary";
     openCardButton.innerHTML = "Time Tracking";
 
+
     openCardButton.addEventListener("click", (): void => {
         const cardEl = renderTimeTrackingCard();
         document.body.appendChild(cardEl);
         console.log("Time Tracking clicked...");
     });
 
-    
 
-      //Build openCardButton
-        div.appendChild(openCardButton);
+    div.appendChild(openCardButton);
 
     function renderTimeTrackingCard(): HTMLElement {
+        // Create overlay
         const overlay: HTMLElement = renderCard();
         const card: HTMLElement = overlay.querySelector(".card") as HTMLElement;
         const header: HTMLElement = card.querySelector(".header") as HTMLElement;
         const body: HTMLElement = card.querySelector(".body") as HTMLElement;
+        // Add your custom content
 
-        // Buttons
-        const closeBtn: HTMLButtonElement = document.createElement("button");
-        closeBtn.className = "btn btn-secondary col-1";
+        const closeBtn = document.createElement("button");
+        closeBtn.className = "btn btn-secondary col-3";
         closeBtn.innerText = "X";
+
+        const startTimeBtn = document.createElement("button");
+        startTimeBtn.className = "btn btn-success col-3";
+        startTimeBtn.innerText = "Start Time";
+
+        const stopTimeBtn = document.createElement("button");
+        stopTimeBtn.className = "btn btn-danger col-3";
+        stopTimeBtn.innerText = "Stop Time";
+
+        const pauseBtn = document.createElement("button");
+        pauseBtn.className = "btn btn-warning col-3";
+        pauseBtn.innerText = "Pause Time";
+
+        // Render the calendar field
+        body.appendChild(renderCalendar())
 
         const completeBtn: HTMLButtonElement = document.createElement("button");
         completeBtn.className = "btn btn-primary col-1";
         completeBtn.innerText = "Complete";
 
-        const startTimeBtn: HTMLButtonElement = document.createElement("button");
-        startTimeBtn.className = "btn btn-success col-1";
-        startTimeBtn.innerText = "Start Time";
-
-        const stopTimeBtn: HTMLButtonElement = document.createElement("button");
-        stopTimeBtn.className = "btn btn-danger col-1";
-        stopTimeBtn.innerText = "Stop Time";
-
         const timeDisplay: HTMLDivElement = document.createElement("div")
         timeDisplay.innerHTML = "00:00:00"
-        
-        
-        
-      
+
         // Build card
         overlay.appendChild(card);
         card.appendChild(closeBtn);
@@ -74,15 +79,21 @@ export function renderTimeTracker(): HTMLElement {
         body.appendChild(timeDisplay);
         body.appendChild(startTimeBtn);
 
-        // Event listeners
-        closeBtn.addEventListener("click", (): void => {
+        // Events
+        closeBtn.addEventListener("click", () => {
             overlay.remove();
+
+            //Build openCardButton
+            div.appendChild(openCardButton);
         });
 
+        // Buttons
+        // Event listeners
         startTimeBtn.addEventListener("click", (): void => {
             const startTimeNow: string = getTimeNow();
             timeDisplay.innerHTML = startTimeNow ;
             startTimeBtn.remove();
+            body.appendChild(pauseBtn);
             body.appendChild(stopTimeBtn);
             console.log("Start Time clicked...", startTimeNow);
         });
