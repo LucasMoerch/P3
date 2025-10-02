@@ -2,6 +2,11 @@ import "./styles/custom.scss"
 
 import { resolveRoute } from "./routers/routers"
 
+import { renderHeaderAndNavbar } from "./components/navbar";
+
+// Renders the navbar at the top of site for every page
+document.body.prepend(renderHeaderAndNavbar());
+
 function render() {
     const app = document.getElementById("app")!;
     app.innerHTML = ""; // clear old content
