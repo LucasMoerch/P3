@@ -26,7 +26,7 @@ export function renderTimeTracker(): HTMLElement {
 
   const openCardButton = document.createElement('button');
   openCardButton.className = 'time-tracker-button';
-  openCardButton.innerHTML = '⏱️';
+  openCardButton.innerHTML = '<i class="fa-solid fa-stopwatch"></i>';
 
   openCardButton.addEventListener('click', (): void => {
     const cardEl = renderTimeTrackingCard();
