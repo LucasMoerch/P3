@@ -2,11 +2,11 @@ export function renderHeaderAndNavbar(): HTMLElement {
 
     // Header container
     const header = document.createElement("nav");
-    header.className = "Header";
+    header.className = "header";
 
     // Page title
     const title = document.createElement("span");
-    title.className = "Navbar";
+    title.className = "navbar";
     title.innerText = "Page name";
     header.appendChild(title);
 
