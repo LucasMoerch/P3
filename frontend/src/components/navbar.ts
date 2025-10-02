@@ -2,11 +2,11 @@ export function renderHeaderAndNavbar(): HTMLElement {
 
     // Header container
     const header = document.createElement("nav");
-    header.className = "navbar navbar-dark bg-dark px-3";
+    header.className = "Header";
 
     // Page title
     const title = document.createElement("span");
-    title.className = "navbar-brand mb-0 h1";
+    title.className = "Navbar";
     title.innerText = "Page name";
     header.appendChild(title);
 
@@ -21,7 +21,7 @@ export function renderHeaderAndNavbar(): HTMLElement {
 
     // Sidebar
     const sidebar = document.createElement("div");
-    sidebar.className = "offcanvas offcanvas-start bg-dark text-white";
+    sidebar.className = "offcanvas-start";
     sidebar.id = "sidebar";
     sidebar.tabIndex = -1;
 
@@ -45,7 +45,7 @@ export function renderHeaderAndNavbar(): HTMLElement {
     sidebarBody.className = "offcanvas-body";
 
     const ul = document.createElement("ul");
-    ul.className = "list-unstyled";
+    ul.className = "list";
 
     // Menu items
     const menuItems: { label: string; page: string; icon: string }[] = [
@@ -60,7 +60,7 @@ export function renderHeaderAndNavbar(): HTMLElement {
         const li = document.createElement("li");
         const a = document.createElement("a");
         a.href = "/" + item.page;
-        a.className = "nav-link text-white";
+        a.className = "nav-link";
         a.dataset.page = item.page;
         a.innerText = `${item.icon} ${item.label}`;
         li.appendChild(a);
