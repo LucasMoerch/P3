@@ -20,13 +20,12 @@ function closeElement(element: HTMLElement): void {
 
 
 export function renderTimeTracker(): HTMLElement {
-    const div: HTMLDivElement = document.createElement("div");
-    div.className = "col text-end pl-3 mt-3";
+    const div = document.createElement("div");
+    div.className = "time-tracker-container";
 
-    const openCardButton: HTMLButtonElement = document.createElement("button");
-    openCardButton.className = "btn btn-primary";
-    openCardButton.innerHTML = "Time Tracking";
-
+    const openCardButton = document.createElement("button");
+    openCardButton.className = "time-tracker-button";
+    openCardButton.innerHTML = "⏱️";
 
     openCardButton.addEventListener("click", (): void => {
         const cardEl = renderTimeTrackingCard();
@@ -111,3 +110,5 @@ export function renderTimeTracker(): HTMLElement {
 
     return div;
 }
+
+
