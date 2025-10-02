@@ -30,6 +30,7 @@ export function renderTable(data: Array<Record<string, unknown>>): HTMLElement {
         th.textContent = col.charAt(0).toUpperCase() + col.slice(1);
         headTr.appendChild(th);
     }
+    thead.classList.add("table-dark");
     thead.appendChild(headTr);
 
     // Build rows
