@@ -5,9 +5,8 @@ export function renderHomePage(): HTMLElement{
     const div = document.createElement("div");
     div.innerHTML = `<h1>Home page</h1>`;
 
-   
-
-    const container = document.createElement("container");
+    div.className = "primary"
+    const container = document.createElement("div");
     container.appendChild(div);
     container.appendChild(renderHealthCheck())
 

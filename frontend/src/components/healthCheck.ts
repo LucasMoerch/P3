@@ -5,7 +5,7 @@ export function renderHealthCheck(): HTMLElement {
     const button = document.createElement("button");
     button.id = "ping"
     button.className = "btn btn-primary"
-    button.innerHTML = "Check"
+    button.innerHTML = "Ping Server"
 
     // test connection
     button.addEventListener("click", async ()=> {
