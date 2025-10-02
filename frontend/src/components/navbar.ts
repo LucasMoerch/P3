@@ -12,7 +12,7 @@ export function renderHeaderAndNavbar(): HTMLElement {
 
     // Buttons
     const button = document.createElement("button");
-    button.className = "btn btn-outline-light";
+    button.className = "btn";
     button.setAttribute("type", "button");
     button.setAttribute("data-bs-toggle", "offcanvas");
     button.setAttribute("data-bs-target", "#sidebar");
@@ -33,7 +33,7 @@ export function renderHeaderAndNavbar(): HTMLElement {
     sidebarTitle.className = "offcanvas-title";
 
     const closeBtn = document.createElement("button");
-    closeBtn.className = "btn-close btn-close-white";
+    closeBtn.className = "btn-close";
     closeBtn.setAttribute("data-bs-dismiss", "offcanvas");
     sidebarHeader.appendChild(sidebarTitle);
     sidebarHeader.appendChild(closeBtn);
