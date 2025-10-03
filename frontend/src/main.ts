@@ -51,15 +51,3 @@ window.addEventListener('load', render);
 // Handle back/forward buttons
 window.addEventListener('popstate', render);
 
-// Navigate on link click
-document.addEventListener('click', (e) => {
-  const target = e.target as HTMLElement | null;
-  const anchor = target?.closest('a[data-link]') as HTMLAnchorElement | null;
-  if (!anchor) return;
-
-  const href = anchor.getAttribute('href');
-  if (!href) return;
-
-  e.preventDefault();
-  navigate(href);
-});
