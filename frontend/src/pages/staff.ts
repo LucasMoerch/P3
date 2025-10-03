@@ -1,4 +1,5 @@
 import { renderTable } from "../components/tableComponent/tableComponent"
+import {renderSearchComponent} from "../components/searchBar/searchBar";
 
 export function renderStaffPage(): HTMLElement {
     const div = document.createElement("div");
@@ -7,6 +8,8 @@ export function renderStaffPage(): HTMLElement {
     const container = document.createElement("div");
     container.classList.add("container");
     container.appendChild(div);
+    container.appendChild(renderSearchComponent());
+
 
     const placeholderData: {name: string; role: string}[] = [
         { name: "John Johnson", role: "CEO" },
