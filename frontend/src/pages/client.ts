@@ -1,3 +1,4 @@
+import { renderSearchComponent } from "../components/searchBar/searchBar";
 import { renderTable } from "../components/tableComponent/tableComponent"
 
 export function renderClientPage(): HTMLElement {
@@ -7,6 +8,8 @@ export function renderClientPage(): HTMLElement {
     const container = document.createElement("div");
     container.classList.add("container");
     container.appendChild(div);
+    container.appendChild(renderSearchComponent());
+
 
     const placeholderData: {name: string; address: string; contact:string;}[] = [
         { name: "John Johnson", address: "Falseroad", contact: "+5454544" },
