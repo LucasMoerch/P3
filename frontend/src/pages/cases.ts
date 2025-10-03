@@ -1,5 +1,5 @@
+import { renderSearchComponent } from "../components/searchBar/searchBar";
 import { renderTable } from "../components/tableComponent/tableComponent"
-import {renderSearchComponent} from "../components/searchBar/searchBar";
 
 export function renderCasesPage(): HTMLElement {
     const div = document.createElement("div");

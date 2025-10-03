@@ -65,6 +65,7 @@ export function renderHeaderAndNavbar(): HTMLElement {
         a.className = "nav-link text-white";
         a.dataset.page = item.page;
         a.innerText = `${item.icon} ${item.label}`;
+
         li.appendChild(a);
         ul.appendChild(li);
     });
