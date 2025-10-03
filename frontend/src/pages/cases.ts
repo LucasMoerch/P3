@@ -1,4 +1,5 @@
 import { renderTable } from "../components/tableComponent/tableComponent"
+import {renderSearchComponent} from "../components/searchBar/searchBar";
 
 export function renderCasesPage(): HTMLElement {
     const div = document.createElement("div");
@@ -7,6 +8,8 @@ export function renderCasesPage(): HTMLElement {
     const container = document.createElement("div");
     container.classList.add("container");
     container.appendChild(div);
+    container.appendChild(renderSearchComponent());
+
 
     const placeholderData: {title: string; address: string; deadline:string;}[] = [
         { title: "Floor fix", address: "Falseroad 27", deadline: "23/10/2026" },
