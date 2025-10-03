@@ -6,8 +6,6 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import { resolveRoute } from './routers/router';
 import { renderHeaderAndNavbar } from "./components/navbar";
 
-// Renders the navbar at the top of site for every page
-document.body.prepend(renderHeaderAndNavbar());
 
 function render() {
   const app = document.getElementById('app')! as HTMLElement;
@@ -24,10 +22,25 @@ function render() {
     tracker.id = 'time-tracker-button'; //prevent duplicates
     document.body.appendChild(tracker);
   }
+// Renders the navbar on all pages
+  if (!excludedPages.includes(location.pathname)) {
+    let navbar = document.getElementById("navbar-container");
+    if (!navbar) {
+      navbar = document.createElement("div");
+      navbar.id = "navbar-container";
+      navbar.appendChild(renderHeaderAndNavbar());
+      document.body.prepend(navbar);
+    }
+  } else {
+      const navbar = document.getElementById("navbar-container");
+      if (navbar) {
+          navbar.remove();
+      }
+  }
 }
 
 // Handle navigation
-function navigate(path: string) {
+export function navigate(path: string) {
   history.pushState({}, '', path);
   render();
 }

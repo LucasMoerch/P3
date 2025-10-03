@@ -1,18 +1,20 @@
+import { navigate } from "../main";
+
 export function renderHeaderAndNavbar(): HTMLElement {
 
     // Header container
     const header = document.createElement("nav");
-    header.className = "header";
+    header.className = "navbar navbar-dark bg-dark px-3";
 
     // Page title
     const title = document.createElement("span");
-    title.className = "navbar";
+    title.className = "navbar-brand mb-0 h1";
     title.innerText = "Page name";
     header.appendChild(title);
 
     // Buttons
     const button = document.createElement("button");
-    button.className = "btn";
+    button.className = "btn btn-outline-light";
     button.setAttribute("type", "button");
     button.setAttribute("data-bs-toggle", "offcanvas");
     button.setAttribute("data-bs-target", "#sidebar");
@@ -21,7 +23,7 @@ export function renderHeaderAndNavbar(): HTMLElement {
 
     // Sidebar
     const sidebar = document.createElement("div");
-    sidebar.className = "offcanvas-start";
+    sidebar.className = "offcanvas offcanvas-start bg-dark text-white";
     sidebar.id = "sidebar";
     sidebar.tabIndex = -1;
 
@@ -33,7 +35,7 @@ export function renderHeaderAndNavbar(): HTMLElement {
     sidebarTitle.className = "offcanvas-title";
 
     const closeBtn = document.createElement("button");
-    closeBtn.className = "btn-close";
+    closeBtn.className = "btn-close btn-close-white";
     closeBtn.setAttribute("data-bs-dismiss", "offcanvas");
     sidebarHeader.appendChild(sidebarTitle);
     sidebarHeader.appendChild(closeBtn);
@@ -45,7 +47,7 @@ export function renderHeaderAndNavbar(): HTMLElement {
     sidebarBody.className = "offcanvas-body";
 
     const ul = document.createElement("ul");
-    ul.className = "list";
+    ul.className = "list-unstyled";
 
     // Menu items
     const menuItems: { label: string; page: string; icon: string }[] = [
@@ -60,7 +62,7 @@ export function renderHeaderAndNavbar(): HTMLElement {
         const li = document.createElement("li");
         const a = document.createElement("a");
         a.href = "/" + item.page;
-        a.className = "nav-link";
+        a.className = "nav-link text-white";
         a.dataset.page = item.page;
         a.innerText = `${item.icon} ${item.label}`;
         li.appendChild(a);
@@ -92,30 +94,4 @@ export function renderHeaderAndNavbar(): HTMLElement {
     container.appendChild(sidebar);
 
     return container;
-}
-
-// Navigate function
-function navigate(page: string) {
-    const content = document.getElementById("content");
-    if (!content) return;
-
-    switch (page) {
-        case "dashboard":
-            content.innerHTML = "<h2>Dashboard</h2><p>This is the dashboard page.</p>";
-            break;
-        case "staff":
-            content.innerHTML = "<h2>Staff</h2><p>Here is your staff list.</p>";
-            break;
-        case "clients":
-            content.innerHTML = "<h2>Clients</h2><p>Here are your clients.</p>";
-            break;
-        case "cases":
-            content.innerHTML = "<h2>Cases</h2><p>Case management goes here.</p>";
-            break;
-        case "profile":
-            content.innerHTML = "<h2>My Profile</h2><p>User profile details here.</p>";
-            break;
-        default:
-            content.innerHTML = "<h2>Not Found</h2><p>Page not found.</p>";
-    }
 }
