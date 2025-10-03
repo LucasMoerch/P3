@@ -44,10 +44,6 @@ export function renderTimeTracker(): HTMLElement {
     const body: HTMLElement = card.querySelector('.body') as HTMLElement;
     // Add your custom content
 
-    const closeBtn = document.createElement('button');
-    closeBtn.className = 'btn btn-secondary col-3';
-    closeBtn.innerText = 'X';
-
     const startTimeBtn = document.createElement('button');
     startTimeBtn.className = 'btn btn-success col-3';
     startTimeBtn.innerText = 'Start Time';
@@ -72,19 +68,10 @@ export function renderTimeTracker(): HTMLElement {
 
     // Build card
     overlay.appendChild(card);
-    card.appendChild(closeBtn);
     card.appendChild(header);
     card.appendChild(body);
     body.appendChild(timeDisplay);
     body.appendChild(startTimeBtn);
-
-    // Events
-    closeBtn.addEventListener('click', () => {
-      overlay.remove();
-
-      //Build openCardButton
-      div.appendChild(openCardButton);
-    });
 
     // Buttons
     // Event listeners
