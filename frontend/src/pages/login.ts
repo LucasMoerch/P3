@@ -11,7 +11,6 @@ export function renderLoginPage(): HTMLElement {
     card.style.flexDirection = "column";
     card.style.justifyContent = "center";
 
-    // Logo
     const logoDiv = document.createElement("div");
     logoDiv.className = "text-center mb-4";
     logoDiv.innerHTML = `
@@ -19,7 +18,6 @@ export function renderLoginPage(): HTMLElement {
        class="img-fluid mb-3" style="max-height: 150px;">
     `;
 
-    // Form
     const form = document.createElement("form");
     form.id = "login-form";
 
@@ -41,14 +39,13 @@ export function renderLoginPage(): HTMLElement {
   </div>
 `;
 
-
     form.addEventListener("submit", (e) => {
         console.log("Form submitted!");
         e.preventDefault();
         window.location.href = "/home";
     });
 
-    // Assemble
+
     card.appendChild(logoDiv);
     card.appendChild(form);
     container.appendChild(card);
