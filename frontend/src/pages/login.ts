@@ -27,8 +27,14 @@ export function renderLoginPage(): HTMLElement {
     <div class="d-grid">
       <button type="submit" class="btn btn-primary">Log in</button>
     </div>
+    <div class="d-grid">
+</div>
   `;
 
+    const googleBtn = document.createElement("div");
+    googleBtn.className = "";
+    googleBtn.innerHTML = '<a href="http://localhost:8080/api/oauth2/authorization/google">Sign in with Google</a>';
+    form.appendChild(googleBtn);
 
     form.addEventListener("submit", (e) => {
         e.preventDefault();
