@@ -1,7 +1,6 @@
 import './styles/custom.scss';
 import { renderTimeTracker } from './components/timeTracker/timeTracker';
-import "@fortawesome/fontawesome-free/css/all.min.css";
-
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 import { resolveRoute } from './routers/router';
 import { renderHeaderAndNavbar } from "./components/navbar";
