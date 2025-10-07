@@ -3,7 +3,7 @@ export function renderLogo(): HTMLElement {
     const logoDiv = document.createElement("div");
     logoDiv.className = "text-center mb-4";
     logoDiv.innerHTML = `
-    <img src="/enevold.jpg" alt="Logo" class="img-fluid mb-3 login-logo">
+    <img src="/images/enevold.jpg" alt="Logo" class="img-fluid mb-3 login-logo">
   `;
 
     div.appendChild(logoDiv);
