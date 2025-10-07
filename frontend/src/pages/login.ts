@@ -1,54 +1,45 @@
+import { renderLogo } from "../components/logoComponent/logo"
+
 export function renderLoginPage(): HTMLElement {
     const container = document.createElement("div");
     container.className = "container d-flex justify-content-center align-items-center vh-100";
 
-    const card = document.createElement("div");
-    card.className = "card p-5 shadow";
-    card.style.maxWidth = "800px";
-    card.style.width = "100%";
-    card.style.minHeight = "500px";  // ⬅️ makes it taller
-    card.style.display = "flex";
-    card.style.flexDirection = "column";
-    card.style.justifyContent = "center";
+    const row = document.createElement("div");
+    row.className = "row w-100 justify-content-center";
 
-    const logoDiv = document.createElement("div");
-    logoDiv.className = "text-center mb-4";
-    logoDiv.innerHTML = `
-      <img src="/enevold.jpg" alt="Logo" 
-       class="img-fluid mb-3" style="max-height: 150px;">
-    `;
+    const col = document.createElement("div");
+    col.className = "col-12 col-md-8 col-lg-6";
+
+    const card = document.createElement("div");
+    card.className = "card p-5 login-card d-flex flex-column justify-content-center";
 
     const form = document.createElement("form");
     form.id = "login-form";
-
     form.innerHTML = `
-  <div class="mb-3">
-    <label for="email" class="form-label">E-mail</label>
-    <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
-  </div>
-  <div class="mb-3">
-    <label for="password" class="form-label">Password</label>
-    <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
-  </div>
-  <div class="d-grid">
-    <button type="submit" 
-            class="btn text-white rounded-pill" 
-            style="background-color: #867B5E; border: none;">
-      Log in
-    </button>
-  </div>
-`;
+    <div class="mb-3">
+      <label for="email" class="form-label">E-mail</label>
+      <input type="email" class="form-control" id="email" placeholder="Enter your email" /*required*/>
+    </div>
+    <div class="mb-3">
+      <label for="password" class="form-label">Password</label>
+      <input type="password" class="form-control" id="password" placeholder="Enter your password" /*required*/>
+    </div>
+    <div class="d-grid">
+      <button type="submit" class="btn btn-primary">Log in</button>
+    </div>
+  `;
+
 
     form.addEventListener("submit", (e) => {
-        console.log("Form submitted!");
         e.preventDefault();
         window.location.href = "/home";
     });
 
-
-    card.appendChild(logoDiv);
+    card.appendChild(renderLogo());
     card.appendChild(form);
-    container.appendChild(card);
+    col.appendChild(card);
+    row.appendChild(col);
+    container.appendChild(row);
 
     return container;
 }
