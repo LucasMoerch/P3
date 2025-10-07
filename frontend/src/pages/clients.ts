@@ -1,9 +1,9 @@
 import { renderSearchComponent } from "../components/searchBar/searchBar";
 import { renderTable } from "../components/tableComponent/tableComponent"
 
-export function renderClientPage(): HTMLElement {
+export function renderClientsPage(): HTMLElement {
     const div = document.createElement("div");
-    div.innerHTML = `<h1>Client page</h1>`;
+    div.innerHTML = `<h1>Clients page</h1>`;
 
     const container = document.createElement("div");
     container.classList.add("container");
