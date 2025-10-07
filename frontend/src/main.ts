@@ -1,9 +1,10 @@
 import './styles/custom.scss';
 import { renderTimeTracker } from './components/timeTracker/timeTracker';
-import "@fortawesome/fontawesome-free/css/all.min.css";
-
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 import { resolveRoute } from './routers/router';
+import { renderHeaderAndNavbar } from "./components/navbar";
+
 
 function render() {
   const app = document.getElementById('app')! as HTMLElement;
@@ -20,10 +21,25 @@ function render() {
     tracker.id = 'time-tracker-button'; //prevent duplicates
     document.body.appendChild(tracker);
   }
+// Renders the navbar on all pages
+  if (!excludedPages.includes(location.pathname)) {
+    let navbar = document.getElementById("navbar-container");
+    if (!navbar) {
+      navbar = document.createElement("div");
+      navbar.id = "navbar-container";
+      navbar.appendChild(renderHeaderAndNavbar());
+      document.body.prepend(navbar);
+    }
+  } else {
+      const navbar = document.getElementById("navbar-container");
+      if (navbar) {
+          navbar.remove();
+      }
+  }
 }
 
 // Handle navigation
-function navigate(path: string) {
+export function navigate(path: string) {
   history.pushState({}, '', path);
   render();
 }
@@ -34,15 +50,3 @@ window.addEventListener('load', render);
 // Handle back/forward buttons
 window.addEventListener('popstate', render);
 
-// Navigate on link click
-document.addEventListener('click', (e) => {
-  const target = e.target as HTMLElement | null;
-  const anchor = target?.closest('a[data-link]') as HTMLAnchorElement | null;
-  if (!anchor) return;
-
-  const href = anchor.getAttribute('href');
-  if (!href) return;
-
-  e.preventDefault();
-  navigate(href);
-});

@@ -1,21 +1,17 @@
 /* Overrides Bootstrap */
-$primary: #796d4c;
-$secondary: #f7f7f7;
-$danger: #8e3131;
-$warning: #b18e30;
-$font-family-sans-serif:
-  'Inter',
-  system-ui,
-  -apple-system,
-  'Segoe UI',
-  Roboto,
-  Arial,
-  sans-serif;
-$body-bg: #ebe8e5;
-$card-bg: #efece5;
+$primary: #796D4C;
+$secondary: #F7F7F7;
+$danger: #8E3131;
+$warning: #B18E30;
+$font-family-sans-serif: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+$body-bg: #EBE8E5;
+$card-bg: #EFECE5;
+$dark: #2D332C;
+
+
 
 /* Bring in Bootstrap */
-@import 'bootstrap/scss/bootstrap';
+@import "bootstrap/scss/bootstrap";
 
 /* extras */
 body {
