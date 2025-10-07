@@ -10,9 +10,7 @@ export function renderHomePage(): HTMLElement {
   container.appendChild(renderHealthCheck());
 
   const loginLink = document.createElement('a');
-  loginLink.innerHTML = 'Login';
-  loginLink.href = '/login';
-  loginLink.setAttribute('data-link', '');
+  loginLink.innerHTML = '<a href="http://localhost:8080/api/oauth2/authorization/google">Sign in with Google</a>';
 
   container.appendChild(loginLink);
 
