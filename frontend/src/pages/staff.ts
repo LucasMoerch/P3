@@ -15,6 +15,7 @@ export function renderStaffPage(): HTMLElement {
         { name: "John Johnson", role: "CEO" },
         { name: "Bruce Wayne", role: "Staff" },
         { name: "Guy Black", role: "Manager" },
+        { name: "Bro Big", role: "Big Bro"}
     ];
 
     container.appendChild(renderTable(placeholderData));
