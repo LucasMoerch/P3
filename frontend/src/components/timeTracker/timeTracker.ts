@@ -17,9 +17,16 @@ function getTimeNow(): string {
   return timeNow;
 }
 
-function closeElement(element: HTMLElement): void {
-  element.remove();
+function displayTime(elementId: string, time: string):void{
+  const element = document.getElementById(elementId);
+      if (element){
+        element.innerHTML = time
+      }
 }
+
+
+
+  
 
 export function renderTimeTracker(): HTMLElement {
   const div = document.createElement('div');
@@ -28,6 +35,7 @@ export function renderTimeTracker(): HTMLElement {
   const openCardButton = document.createElement('button');
   openCardButton.className = 'time-tracker-button ';
   openCardButton.innerHTML = '<i class="fa-solid fa-stopwatch"></i>';
+  
 
   openCardButton.addEventListener('click', (): void => {
     const cardEl = renderTimeTrackingCard();
@@ -48,7 +56,6 @@ export function renderTimeTracker(): HTMLElement {
     const dropDownRow: HTMLDivElement = document.createElement('div');
     dropDownRow.innerHTML = `
     <div class="container p-4 rounded">
-      <label for="caseSelect" class="form-label">Case</label>
       <select class="form-select" id="caseSelect">
         <option selected>Choose a case...</option>
         <option value="1">1</option>
@@ -60,7 +67,7 @@ export function renderTimeTracker(): HTMLElement {
 
 
     const description: HTMLDivElement = document.createElement('div')
-    description.className = 'col-12 p-4';
+    description.className = 'container col-12 p-4';
     description.innerHTML = `
     
     <textarea class="form-control border-0 shadow-sm rounded-3" id="description" 
@@ -69,10 +76,10 @@ export function renderTimeTracker(): HTMLElement {
     `
 
     const buttonRow: HTMLDivElement = document.createElement('div');
-    buttonRow.className =  'position-fixed bottom-0 start-0 w-100 d-flex justify-content-between px-4 pb-5';
-
+    buttonRow.className =  'container d-flex justify-content-between px-4 pb-5';
+  
     const startTimeBtn = document.createElement('button');
-    startTimeBtn.className = 'btn btn-success col-6 rounded-pill position-fixed bottom-0 start-50 translate-middle-x mb-5';
+    startTimeBtn.className = 'btn btn-success col-4 rounded-pill ms-4';
     startTimeBtn.innerText = 'Start Time';
 
     const stopTimeBtn = document.createElement('button');
@@ -84,22 +91,37 @@ export function renderTimeTracker(): HTMLElement {
     completeBtn.innerText = 'Complete';
 
     const clockField: HTMLDivElement = document.createElement('div');
-    clockField.className = 'clock-field text-center bg-fuckoff mx-5 p-4 rounded';
-    clockField.innerHTML = '00:00:00';
-
+    clockField.className = "container rounded";
+    clockField.innerHTML = `
+    <div class="d-flex justify-content-center">
+     <span id="clockText" class="clock-field text-center light-bg p-4 m-5 rounded w-auto">
+        00:00:00
+     </span>
+    </div>
+    `;
     const startStopTimeRow: HTMLDivElement = document.createElement('div');
-    startStopTimeRow.className = 'container p-4 rounded d-flex justify-content-between';
+    startStopTimeRow.className = 'container p-4 rounded d-flex justify-content-between ';
     startStopTimeRow.innerHTML = `
-    <div class="container col-4 rounded text-center light-bg py-2">
+    <div class="container col-6 col-md-4 mx-1 rounded text-center light-bg py-2">
       <label for="startTime" class="form-label">Start Time</label> <br>
-      <div class="container col rounded text-center lighter-bg">
-      <span  id="startTime">00:00</span>
+      <div class="container col rounded text-center bg-transparent py-1">
+      <input 
+        type="time" 
+        step="1" 
+        class="form-control mx-auto lighter-bg text-center" 
+        id="startTime" 
+        value="00:00:00">
       </div>
     </div>
-    <div class="container col-4 rounded text-center light-bg py-2">
+    <div class="container col-6 col-md-4 mx-1 rounded text-center light-bg py-2">
       <label for="stopTime" class="form-label">Stop Time</label> <br>
-      <div class="container col rounded text-center lighter-bg">
-      <span  id="stopTime">00:00</span>
+      <div class="container col rounded text-center bg-transparent py-1">
+      <input 
+        type="time" 
+        step="1" 
+        class="form-control mx-auto lighter-bg text-center" 
+        id="stopTime" 
+        value="00:00:00">
       </div>
     </div>`
       
@@ -122,28 +144,22 @@ export function renderTimeTracker(): HTMLElement {
     // Events
    
 
+
+
     // Event listeners
     startTimeBtn.addEventListener('click', (): void => {
       const startTimeNow: string = getTimeNow();
-      clockField.innerHTML = startTimeNow;
       startTimeBtn.remove();
       buttonRow.appendChild(stopTimeBtn);
-      console.log('Start Time clicked...', startTimeNow);
-      const startTimeElement = document.getElementById('startTime');
-      if (startTimeElement){
-        startTimeElement.innerHTML =startTimeNow
-      }
+      displayTime("clockText", startTimeNow)
+      displayTime("startTime", startTimeNow)
     });
 
     stopTimeBtn.addEventListener('click', (): void => {
       const stopTimeNow: string = getTimeNow();
-      clockField.innerHTML = stopTimeNow;
       buttonRow.appendChild(completeBtn);
-      console.log('Stop Time clicked...', stopTimeNow);
-      const stopTimeElement = document.getElementById('stopTime');
-      if (stopTimeElement){
-        stopTimeElement.innerHTML =stopTimeNow
-      }
+      displayTime("clockText", stopTimeNow)
+      displayTime("stopTime", stopTimeNow)
     });
 
     return overlay;

@@ -2,16 +2,16 @@ import './cardComponent.scss';
 
 export function renderCard(): HTMLElement {
   const overlay = document.createElement('div');
-  overlay.className = 'overlay';
+  overlay.className = 'overlay pt-md-5';
   overlay.setAttribute('role', 'dialog');
   overlay.setAttribute('aria-modal', 'true');
 
   const card = document.createElement('div');
   card.className = 'card bg-card-bg';
 
-    const closeBtn = document.createElement('button');
-    closeBtn.className = 'btn btn-primary col-1 position-absolute top-0 m-3';
-    closeBtn.innerText = 'X';
+ const closeBtn = document.createElement('button');
+ closeBtn.className = 'btn back-button border-0 bg-transparent text-primary position-absolute top-0 m-3 fs-2';
+ closeBtn.innerHTML = '<i class="fa-solid fa-arrow-left"></i>';
 
   // Append card inside overlay
 

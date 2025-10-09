@@ -14,12 +14,6 @@ export function renderCalendar(): HTMLElement {
   calenderBtn.className = 'btn btn-primary rounded';
   calenderBtn.innerHTML = `X`;
 
-  
-  const label = document.createElement('label');
-  label.className = 'form-label';
-  label.setAttribute('for', 'dateInput');
-  label.textContent = 'Date';
-  wrapper.appendChild(label);
 
    
   const input = document.createElement('input');
