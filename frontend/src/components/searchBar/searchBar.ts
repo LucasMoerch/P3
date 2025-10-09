@@ -1,4 +1,4 @@
-import { renderNewClientButton } from "../clientButton/newClientButton";
+import { renderNewButton } from "../newButton/newButton";
 import './searchBar.scss';
 
 export function renderSearchComponent(): HTMLElement {
@@ -33,7 +33,7 @@ export function renderSearchComponent(): HTMLElement {
     searchContainer.appendChild(input);
     searchContainer.appendChild(searchButton);
     searchDiv.appendChild(searchContainer);
-    searchContainer.appendChild(renderNewClientButton())
+    searchContainer.appendChild(renderNewButton())
 
     return searchDiv;
 }
