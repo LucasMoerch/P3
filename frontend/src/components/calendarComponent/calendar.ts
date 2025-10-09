@@ -12,7 +12,7 @@ export function renderCalendar(): HTMLElement {
 
   const calenderBtn = document.createElement('button');
   calenderBtn.className = 'btn btn-primary rounded';
-  calenderBtn.innerHTML = `X`;
+  calenderBtn.innerHTML = `<i class="fa-solid fa-calendar"></i>`;
 
 
    
