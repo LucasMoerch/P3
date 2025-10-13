@@ -1,4 +1,4 @@
-package com.p3.Enevold.users;
+package com.p3.Enevold.time;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -6,19 +6,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Date;
 import java.util.List;
 
+
 @RestController
-@RequestMapping("/times")
+@RequestMapping("/api/time")
 public class TimeController {
 
     private final TimeRepository repo;
-
     public TimeController(TimeRepository repo) {
         this.repo = repo;
     }
-
-    // DTO for request body
-    public static record CompleteTimeRequest(java.util.Date startTime, java.util.Date stopTime) {}
-
 
     @PostMapping("/complete")
     public ResponseEntity<Time> complete(@RequestParam String Id,
@@ -33,8 +29,8 @@ public class TimeController {
         return ResponseEntity.ok(repo.save(time));
     }
 
-    @GetMapping
-    public ResponseEntity<List<Time>> all() {
-        return ResponseEntity.ok(repo.findAll());
+    @GetMapping("/getTime")
+    public List<Time> getTime() {
+        return repo.findAll();
     }
 }

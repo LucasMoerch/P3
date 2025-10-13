@@ -1,8 +1,9 @@
-package com.p3.Enevold.users;
+package com.p3.Enevold.time;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.Date;
+
 
 @Document("time")
 public class Time {
@@ -12,6 +13,7 @@ public class Time {
     private Date startTime; // time of start
     private Date stopTime;  // stop time
     private String totalTime; // total time worked
+    private String description; // description of work done
 
     // Getters and setters
     public String getId() { return id; }
@@ -25,4 +27,11 @@ public class Time {
 
     public String getTotalTime() { return totalTime; }
     public void setTotalTime(String totalTime) { this.totalTime = totalTime; }
+
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 }
+
+/**
+ * Paste one or more documents here
+ */

@@ -1,4 +1,5 @@
 import http from '../../api/http';
+import axios from 'axios';
 import './timetracker.scss';
 import '../../styles/custom.scss';
 import { renderCard } from '../cardComponent/cardComponent';
@@ -6,15 +7,32 @@ import { renderCalendar } from '../calendarComponent/calendar';
 
 
 
-async function sendTimeData(startTime: string, stopTime: string): Promise<void> {
+async function sendTimeData(startTime: string, stopTime: string, id: string): Promise<void> {
   try {
-    const response = await http.post('/times/complete', {
-      startTime: startTime,
-      stopTime: stopTime
-    });
-    console.log('Time data sent successfully:', response.data);
+      await axios.post('/api/time/complete', {
+    startTime: startTime,          // "HH:mm:ss"
+    stopTime: stopTime,           // "HH:mm:ss"
+    id: id,                 // lower-case!
+    totalTime: '01:30:00'
+})
   } catch (error) {
     console.error('Error sending time data:', error);
+  }
+}
+
+
+async function getTimeData(): Promise<void> {
+  try {
+      const response = await axios.get('/api/time/getTime', {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      console.log('getTimeData success:', response.data);
+      return response.data;
+  } catch (error) {
+    console.error('Error sending time data:', error);
+    console.error("Fucking fisse")
   }
 }
 
@@ -31,11 +49,15 @@ function getTimeNow(): string {
   return timeNow;
 }
 
-function displayTime(elementId: string, time: string):void{
+function displayTime(elementId: string, time: string): void {
   const element = document.getElementById(elementId);
-      if (element){
-        element.innerHTML = time
-      }
+  if (element) {
+    if (element instanceof HTMLInputElement) {
+      element.value = time;
+    } else {
+      element.innerHTML = time;
+    }
+  }
 }
 
 
@@ -161,12 +183,14 @@ export function renderTimeTracker(): HTMLElement {
 
 
     // Event listeners
-    startTimeBtn.addEventListener('click', (): void => {
+    startTimeBtn.addEventListener('click', async (): Promise<void> => {
       const startTimeNow: string = getTimeNow();
       startTimeBtn.remove();
       buttonRow.appendChild(stopTimeBtn);
       displayTime("clockText", startTimeNow)
       displayTime("startTime", startTimeNow)
+      const result = await getTimeData();
+      console.log(result); // This will log the actual data from the database
     });
 
     stopTimeBtn.addEventListener('click', (): void => {
@@ -179,7 +203,7 @@ export function renderTimeTracker(): HTMLElement {
     completeBtn.addEventListener('click', (): void => {
       const startTimeInput = (document.getElementById('startTime') as HTMLInputElement).value;
       const stopTimeInput = (document.getElementById('stopTime') as HTMLInputElement).value;
-      sendTimeData(startTimeInput, stopTimeInput);
+      sendTimeData(startTimeInput, stopTimeInput, "060203");
       document.body.removeChild(overlay);
     });
     return overlay;

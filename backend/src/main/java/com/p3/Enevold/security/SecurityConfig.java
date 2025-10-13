@@ -28,7 +28,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         // Public files
-                        .requestMatchers("/", "/index.html", "/login.html", "/static/**").permitAll()
+                        .requestMatchers("/", "/index.html", "/login.html", "/users/**", "/static/**").permitAll()
                         // Admin routes need admin role
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         // Any other API needs an authenticated user
