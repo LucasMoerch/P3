@@ -49,10 +49,9 @@ export default {
   resolve: {
     extensions: ['.ts', '.js'],
   },
-    plugins: [
-        new webpack.DefinePlugin({
-            'process.env.GOOGLE_CLIENT_ID': JSON.stringify(process.env.GOOGLE_CLIENT_ID || '')
-
-})
-    ]
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env.GOOGLE_CLIENT_ID': JSON.stringify(process.env.GOOGLE_CLIENT_ID || ''),
+    }),
+  ],
 };
