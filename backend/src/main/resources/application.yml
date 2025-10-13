@@ -23,7 +23,6 @@ spring:
         provider:
           google:
             issuer-uri: https://accounts.google.com
-
 app:
   # admin emails
   admin-emails: ${ADMIN_EMAILS:}
@@ -35,3 +34,7 @@ management:
     web:
       exposure:
         include: "health,info"
+logging:
+  level:
+    org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping: DEBUG
+    org.mongodb.driver: INFO
