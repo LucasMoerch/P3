@@ -12,7 +12,8 @@
 
   .card {
     width: 95%;
-    height: auto;
+    height: 95%;
+    overflow: auto;
     border-radius: 0;
   }
 }
@@ -27,16 +28,17 @@
 
 @media (min-width: 768px) {
   .overlay {
-    display: block;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    padding: 4vh 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
 
     .card {
       max-width: 1100px;
+      width: 95%;
       margin: 0 auto;
-      overflow: visible;
-      max-height: none;
+      height: auto;
+      overflow: auto;
+      border-radius: 0;
     }
   }
 }

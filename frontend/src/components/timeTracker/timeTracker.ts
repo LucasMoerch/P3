@@ -4,6 +4,20 @@ import '../../styles/custom.scss';
 import { renderCard } from '../cardComponent/cardComponent';
 import { renderCalendar } from '../calendarComponent/calendar';
 
+
+
+async function sendTimeData(startTime: string, stopTime: string): Promise<void> {
+  try {
+    const response = await http.post('/times/complete', {
+      startTime: startTime,
+      stopTime: stopTime
+    });
+    console.log('Time data sent successfully:', response.data);
+  } catch (error) {
+    console.error('Error sending time data:', error);
+  }
+}
+
 // Utility function to get current time as HH:MM:SS
 function getTimeNow(): string {
   const startTime: Date = new Date(); // stores the current time the moment the start button is clicked
@@ -47,7 +61,7 @@ export function renderTimeTracker(): HTMLElement {
 
   function renderTimeTrackingCard(): HTMLElement {
     // Create overlay
-    const overlay: HTMLElement = renderCard();
+    const overlay: HTMLElement = renderCard(true);
     const card: HTMLElement = overlay.querySelector('.card') as HTMLElement;
     const header: HTMLElement = card.querySelector('.header') as HTMLElement;
     const body: HTMLElement = card.querySelector('.body') as HTMLElement;
@@ -162,6 +176,12 @@ export function renderTimeTracker(): HTMLElement {
       displayTime("stopTime", stopTimeNow)
     });
 
+    completeBtn.addEventListener('click', (): void => {
+      const startTimeInput = (document.getElementById('startTime') as HTMLInputElement).value;
+      const stopTimeInput = (document.getElementById('stopTime') as HTMLInputElement).value;
+      sendTimeData(startTimeInput, stopTimeInput);
+      document.body.removeChild(overlay);
+    });
     return overlay;
   }
 
