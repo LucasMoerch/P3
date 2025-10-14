@@ -1,5 +1,24 @@
 import { navigate } from '../main';
 
+export function getPageTitle(path: string): string {
+  switch (path) {
+    case "/dashboard":
+      return "Dashboard";
+    case "/staff":
+      return "Staff";
+    case "/clients":
+      return "Clients";
+    case "/cases":
+      return "Cases";
+    case "/profile":
+      return "My Profile";
+    case "/login":
+      return "Login";
+    default:
+      return "Home";
+  }
+}
+
 export function renderHeaderAndNavbar(): HTMLElement {
   // Header container
   const header = document.createElement('nav');
@@ -8,7 +27,8 @@ export function renderHeaderAndNavbar(): HTMLElement {
   // Page title
   const title = document.createElement('span');
   title.className = 'navbar-brand mb-0 h1';
-  title.innerText = 'Page name';
+  title.id = 'navbar-title';
+  title.innerText = getPageTitle(location.pathname);
   header.appendChild(title);
 
   // Buttons
@@ -50,20 +70,20 @@ export function renderHeaderAndNavbar(): HTMLElement {
 
   // Menu items
   const menuItems: { label: string; page: string; icon: string }[] = [
-    { label: 'Dashboard', page: 'dashboard', icon: '🏠' },
-    { label: 'Staff', page: 'staff', icon: '👤' },
-    { label: 'Clients', page: 'clients', icon: '👥' },
-    { label: 'Cases', page: 'cases', icon: '📑' },
-    { label: 'My Profile', page: 'profile', icon: '🙍' },
+   { label: "Dashboard", page: "/dashboard", icon: '<i class="fa-solid fa-house-user"></i>' },
+   { label: "Staff", page: "/staff", icon: '<i class="fa-solid fa-user-tie"></i>' },
+   { label: "Clients", page: "/clients", icon: '<i class="fa-solid fa-users"></i>' },
+   { label: "Cases", page: "/cases", icon: '<i class="fa-solid fa-folder-open"></i>' },
+   { label: "My Profile", page: "/profile", icon: '<i class="fa-solid fa-user"></i>' },
   ];
 
   menuItems.forEach((item) => {
     const li = document.createElement('li');
     const a = document.createElement('a');
     a.href = '/' + item.page;
-    a.className = 'nav-link text-white';
+    a.className = 'nav-link text-white fs-1';
     a.dataset.page = item.page;
-    a.innerText = `${item.icon} ${item.label}`;
+    a.innerHTML = `${item.icon} <span class="ms-2">${item.label}</span>`;
 
     li.appendChild(a);
     ul.appendChild(li);
