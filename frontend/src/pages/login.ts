@@ -1,3 +1,4 @@
+import http from "../api/http";
 import { renderLogo } from '../components/logoComponent/logo';
 import { navigate } from '../main';
 // Uses google_client_id from .env
@@ -56,31 +57,28 @@ export function renderLoginPage(): HTMLElement {
   // global callback for GIS
   (window as any).onGoogleCredential = async (resp: { credential: string }) => {
     try {
-      // Try to activate user
+      // Try to activate the user
       const id_token = resp.credential;
-      const res = await fetch('/api/users/activate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({ id_token }),
-      });
-
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) {
-        // common error
-        if (data?.message?.includes('Invite not found')) {
-          alert('You are not yet invited to the platform. Contact an administrator');
-        } else if (data?.error === 'InvalidIdToken') {
-          alert('Login failed: Invalid token');
-        } else {
-          alert('Login failed: ' + (data?.message || res.statusText));
-        }
-        return;
-      }
+      const data = await http.post('/users/activate', new URLSearchParams({ id_token }));
 
       // success
       navigate('home');
-    } catch (e: any) {
-      alert('Login error: ' + (e?.message || e));
+    } catch (err: any) {
+        // Axios errors, err.response?.data has server message
+        const api = err?.response?.data;
+        const msg =
+            api?.message ||
+            api?.error ||
+            err?.message ||
+            'Login failed';
+
+        if (String(msg).includes('Invite not found')) {
+            alert('You are not yet invited to the platform. Contact an administrator.');
+        } else if (api?.error === 'InvalidIdToken') {
+            alert('Login failed: Invalid token');
+        } else {
+            alert(`Login failed: ${msg}`);
+        }
     }
   };
 

@@ -12,12 +12,13 @@ import org.springframework.security.oauth2.jwt.*;
 @Configuration
 public class GoogleJwtConfig {
 
-    @Value("${spring.security.oauth2.client.registration.google.client-id}")
+    @Value("${app.google.client-id}")
     private String googleClientId;
 
     // Validate signature via Google
     @Bean
     public JwtDecoder googleJwtDecoder() {
+        // DOCS: https://cloud.google.com/api-gateway/docs/authenticating-users-googleid
         NimbusJwtDecoder decoder =
                 NimbusJwtDecoder.withJwkSetUri("https://www.googleapis.com/oauth2/v3/certs")
                         .build();

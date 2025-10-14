@@ -1,5 +1,6 @@
 package com.p3.Enevold.users;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -11,6 +12,9 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserRepository repo;
     private final JwtDecoder googleJwtDecoder;
+    // Admin emails to grant admin role to from .env
+    @Value("${app.admin-emails:}")
+    private String adminEmails;
 
     public UserController(UserRepository repo, JwtDecoder googleJwtDecoder) { this.repo = repo;
         this.googleJwtDecoder = googleJwtDecoder;
@@ -59,7 +63,7 @@ public class UserController {
         }
     }
     @PostMapping("/activate")
-    public ResponseEntity<?> activate(@RequestParam("id_token") String idToken) {
+    public ResponseEntity<?> activate(@RequestParam("id_token") String idToken, jakarta.servlet.http.HttpSession session) {
        try {
            // Verify token with Google
            Jwt jwt = googleJwtDecoder.decode(idToken);
@@ -104,7 +108,12 @@ public class UserController {
            if (user.getAudit() == null) user.setAudit(new User.Audit());
            user.getAudit().setUpdatedAt(java.time.Instant.now());
 
+           if (adminEmails.contains(lowerEmail)) {
+               user.setRoles(java.util.List.of("admin","staff"));
+           }
+
            var saved = repo.save(user);
+           session.setAttribute("uid", saved.getId());
            return ResponseEntity.ok(saved);
        } catch(Exception e) {
            return ResponseEntity.badRequest().body(java.util.Map.of("error", e.getClass().getSimpleName(), "message", e.getMessage()));
