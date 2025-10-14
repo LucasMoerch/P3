@@ -33,7 +33,7 @@ export function renderTimeTracker(): HTMLElement {
   div.className = 'time-tracker-container p-4 rounded';
 
   const openCardButton = document.createElement('button');
-  openCardButton.className = 'time-tracker-button ';
+  openCardButton.className = 'time-tracker-button shadow';
   openCardButton.innerHTML = '<i class="fa-solid fa-stopwatch"></i>';
   
 

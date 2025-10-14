@@ -4,28 +4,28 @@ import { renderLogoNavbar } from "./logoComponent/logo";
 export function renderHeaderAndNavbar(): HTMLElement {
   // Header container
   const header = document.createElement('nav');
-  header.className = 'navbar navbar-dark bg-dark px-3';
+  header.className = 'navbar navbar-dark bg-dark px-3 shadow-lg';
   const logo = renderLogoNavbar();
   header.appendChild(logo);
 
   // Page title
   const title = document.createElement('span');
-  title.className = 'navbar-brand mb-0 h1';
+  title.className = 'navbar-brand mb-0 fw-bold text-secondary';
   title.innerText = 'Dashboard';
   header.appendChild(title);
 
   // Buttons
   const button = document.createElement('button');
-  button.className = 'btn btn-outline-light';
+  button.className = 'btn btn-outline-secondary';
   button.setAttribute('type', 'button');
   button.setAttribute('data-bs-toggle', 'offcanvas');
   button.setAttribute('data-bs-target', '#sidebar');
-  button.innerText = '...';
+  button.innerHTML = '<i class="fa-solid fa-ellipsis"></i>';
   header.appendChild(button);
 
   // Sidebar
   const sidebar = document.createElement('div');
-  sidebar.className = 'offcanvas offcanvas-start bg-dark text-white';
+  sidebar.className = 'offcanvas offcanvas-start bg-dark text-white shadow-lg';
   sidebar.id = 'sidebar';
   sidebar.tabIndex = -1;
   sidebar.style.setProperty('--bs-offcanvas-width', 'fit-content');
