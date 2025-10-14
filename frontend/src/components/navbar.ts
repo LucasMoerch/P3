@@ -1,4 +1,5 @@
 import { navigate } from '../main';
+import { renderLogoNavbar } from "./logoComponent/logo";
 
 export function getPageTitle(path: string): string {
   switch (path) {
@@ -22,7 +23,9 @@ export function getPageTitle(path: string): string {
 export function renderHeaderAndNavbar(): HTMLElement {
   // Header container
   const header = document.createElement('nav');
-  header.className = 'navbar navbar-dark bg-dark px-3';
+  header.className = 'navbar navbar-dark bg-dark px-3 shadow-lg';
+  const logo = renderLogoNavbar();
+  header.appendChild(logo);
 
   // Page title
   const title = document.createElement('span');
@@ -33,18 +36,19 @@ export function renderHeaderAndNavbar(): HTMLElement {
 
   // Buttons
   const button = document.createElement('button');
-  button.className = 'btn btn-outline-light';
+  button.className = 'btn btn-outline-secondary';
   button.setAttribute('type', 'button');
   button.setAttribute('data-bs-toggle', 'offcanvas');
   button.setAttribute('data-bs-target', '#sidebar');
-  button.innerText = '...';
+  button.innerHTML = '<i class="fa-solid fa-ellipsis"></i>';
   header.appendChild(button);
 
   // Sidebar
   const sidebar = document.createElement('div');
-  sidebar.className = 'offcanvas offcanvas-start bg-dark text-white';
+  sidebar.className = 'offcanvas offcanvas-start bg-dark text-white shadow-lg';
   sidebar.id = 'sidebar';
   sidebar.tabIndex = -1;
+  sidebar.style.setProperty('--bs-offcanvas-width', 'fit-content');
 
   // Sidebar header
   const sidebarHeader = document.createElement('div');
@@ -70,20 +74,20 @@ export function renderHeaderAndNavbar(): HTMLElement {
 
   // Menu items
   const menuItems: { label: string; page: string; icon: string }[] = [
-   { label: "Dashboard", page: "/dashboard", icon: '<i class="fa-solid fa-house-user"></i>' },
-   { label: "Staff", page: "/staff", icon: '<i class="fa-solid fa-user-tie"></i>' },
-   { label: "Clients", page: "/clients", icon: '<i class="fa-solid fa-users"></i>' },
-   { label: "Cases", page: "/cases", icon: '<i class="fa-solid fa-folder-open"></i>' },
-   { label: "My Profile", page: "/profile", icon: '<i class="fa-solid fa-user"></i>' },
+    { label: 'Dashboard', page: 'dashboard', icon: '<i class="fa-solid fa-house"></i>' },
+    { label: 'Staff', page: 'staff', icon: '<i class="fa-solid fa-clipboard-user"></i>' },
+    { label: 'Clients', page: 'clients', icon: '<i class="fa-solid fa-users"></i>' },
+    { label: 'Cases', page: 'cases', icon: '<i class="fa-solid fa-suitcase"></i>' },
+    { label: 'My Profile', page: 'profile', icon: '<i class="fa-solid fa-user"></i>' },
   ];
 
   menuItems.forEach((item) => {
     const li = document.createElement('li');
     const a = document.createElement('a');
     a.href = '/' + item.page;
-    a.className = 'nav-link text-white fs-1';
+    a.className = 'nav-link text-secondary fs-2 p-3';
     a.dataset.page = item.page;
-    a.innerHTML = `${item.icon} <span class="ms-2">${item.label}</span>`;
+    a.innerHTML = `${item.icon} ${item.label}`;
 
     li.appendChild(a);
     ul.appendChild(li);
@@ -97,7 +101,10 @@ export function renderHeaderAndNavbar(): HTMLElement {
     link.addEventListener('click', (event: MouseEvent) => {
       event.preventDefault();
       const page = (event.currentTarget as HTMLElement).dataset.page;
-      if (page) navigate(page);
+      if (page){
+          navigate(page);
+          title.innerText = page.charAt(0).toUpperCase() + page.slice(1);
+      }
 
       // Close sidebar after click
       const sidebarEl = document.getElementById('sidebar');
@@ -107,6 +114,12 @@ export function renderHeaderAndNavbar(): HTMLElement {
       }
     });
   });
+
+  logo.addEventListener('click', () => {
+      navigate('dashboard');
+      title.innerText = "Dashboard";
+  });
+
 
   // Wrapper container
   const container = document.createElement('div');
