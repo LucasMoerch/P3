@@ -8,13 +8,10 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/time")
+@RequestMapping("/time")
 public class TimeController {
-
     private final TimeRepository repo;
-    public TimeController(TimeRepository repo) {
-        this.repo = repo;
-    }
+    public TimeController(TimeRepository repo) {this.repo = repo;}
 
     @PostMapping("/complete")
     public ResponseEntity<Time> complete(@RequestParam String Id,
