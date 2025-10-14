@@ -19,5 +19,34 @@ export function renderStaffPage(): HTMLElement {
     ];
 
     container.appendChild(renderTable(placeholderData));
+
+    //new section for real data from backend
+    const realDataSection = document.createElement("div");
+    realDataSection.innerHTML = `<h2>Users from Database</h2><p>Loading...</p>`;
+    container.appendChild(realDataSection);
+
+    // fetch users from backend
+    fetch("http://localhost:5173/api/users")
+        .then((res) => {
+            if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+            return res.json();
+        })
+        //Takes the display name and role from the database. Map takes the specific piece of data that is needed.
+        .then((data) => {
+            const staffData = data.map((user: any) => ({
+                name: user.profile?.displayName || "Unknown",
+                role: user.roles?.join(", ") || "N/A",
+            }));
+            //Loads a title and renders the table from before with user data.
+            realDataSection.innerHTML = "<h2>Users from Database</h2>";
+            realDataSection.appendChild(renderTable(staffData));
+        })
+        //Error message, if anything goes wrong
+        .catch((err) => {
+            console.error("Failed to load staff:", err);
+            realDataSection.innerHTML =
+                "<h2>Users from Database</h2><p>Failed to load staff data.</p>";
+        });
+
     return container;
 }
