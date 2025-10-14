@@ -28,6 +28,7 @@ export function renderHeaderAndNavbar(): HTMLElement {
   sidebar.className = 'offcanvas offcanvas-start bg-dark text-white';
   sidebar.id = 'sidebar';
   sidebar.tabIndex = -1;
+  sidebar.style.setProperty('--bs-offcanvas-width', 'fit-content');
 
   // Sidebar header
   const sidebarHeader = document.createElement('div');
@@ -53,20 +54,20 @@ export function renderHeaderAndNavbar(): HTMLElement {
 
   // Menu items
   const menuItems: { label: string; page: string; icon: string }[] = [
-    { label: 'Dashboard', page: 'dashboard', icon: '🏠' },
-    { label: 'Staff', page: 'staff', icon: '👤' },
-    { label: 'Clients', page: 'clients', icon: '👥' },
-    { label: 'Cases', page: 'cases', icon: '📑' },
-    { label: 'My Profile', page: 'profile', icon: '🙍' },
+    { label: 'Dashboard', page: 'dashboard', icon: '<i class="fa-solid fa-house"></i>' },
+    { label: 'Staff', page: 'staff', icon: '<i class="fa-solid fa-clipboard-user"></i>' },
+    { label: 'Clients', page: 'clients', icon: '<i class="fa-solid fa-users"></i>' },
+    { label: 'Cases', page: 'cases', icon: '<i class="fa-solid fa-suitcase"></i>' },
+    { label: 'My Profile', page: 'profile', icon: '<i class="fa-solid fa-user"></i>' },
   ];
 
   menuItems.forEach((item) => {
     const li = document.createElement('li');
     const a = document.createElement('a');
     a.href = '/' + item.page;
-    a.className = 'nav-link text-white';
+    a.className = 'nav-link text-secondary fs-2 p-3';
     a.dataset.page = item.page;
-    a.innerText = `${item.icon} ${item.label}`;
+    a.innerHTML = `${item.icon} ${item.label}`;
 
     li.appendChild(a);
     ul.appendChild(li);
