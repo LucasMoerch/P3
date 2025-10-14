@@ -10,9 +10,7 @@ import java.util.List;
 public class Case {
 
     @Id
-    private ObjectId _id;
-
-    private String ID;
+    private String id;
     private ObjectId clientId;
     private String title;
     private String description;
@@ -27,11 +25,9 @@ public class Case {
     }
 
     // Getters and Setters
-    public ObjectId get_id() { return _id; }
-    public void set_id(ObjectId _id) { this._id = _id; }
 
-    public String getID() { return ID; }
-    public void setID(String ID) { this.ID = ID; }
+    public String getID() { return id; }
+    public void setID(String id) { this.id = id; }
 
     public ObjectId getClientId() { return clientId; }
     public void setClientId(ObjectId clientId) { this.clientId = clientId; }
