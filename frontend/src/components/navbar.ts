@@ -1,6 +1,25 @@
 import { navigate } from '../main';
 import { renderLogoNavbar } from "./logoComponent/logo";
 
+export function getPageTitle(path: string): string {
+  switch (path) {
+    case "/dashboard":
+      return "Dashboard";
+    case "/staff":
+      return "Staff";
+    case "/clients":
+      return "Clients";
+    case "/cases":
+      return "Cases";
+    case "/profile":
+      return "My Profile";
+    case "/login":
+      return "Login";
+    default:
+      return "Home";
+  }
+}
+
 export function renderHeaderAndNavbar(): HTMLElement {
   // Header container
   const header = document.createElement('nav');
@@ -10,8 +29,9 @@ export function renderHeaderAndNavbar(): HTMLElement {
 
   // Page title
   const title = document.createElement('span');
-  title.className = 'navbar-brand mb-0 fw-bold text-secondary';
-  title.innerText = 'Dashboard';
+  title.className = 'navbar-brand mb-0 h1';
+  title.id = 'navbar-title';
+  title.innerText = getPageTitle(location.pathname);
   header.appendChild(title);
 
   // Buttons

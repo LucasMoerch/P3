@@ -4,6 +4,7 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 
 import { resolveRoute } from './routers/router';
 import { renderHeaderAndNavbar } from './components/navbar';
+import { getPageTitle } from './components/navbar';
 
 function render() {
   const app = document.getElementById('app')! as HTMLElement;
@@ -35,6 +36,12 @@ function render() {
       navbar.remove();
     }
   }
+
+ // Update navbar title
+    const titleElement = document.getElementById("navbar-title");
+    if (titleElement) {
+      titleElement.textContent = getPageTitle(location.pathname);
+    }
 }
 
 // Handle navigation
