@@ -8,26 +8,25 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/time")
+@RequestMapping("/times")
 public class TimeController {
     private final TimeRepository repo;
     public TimeController(TimeRepository repo) {this.repo = repo;}
 
-    @PostMapping("/complete")
-    public ResponseEntity<Time> complete(@RequestParam String Id,
-                                    @RequestParam Date startTime,
-                                    @RequestParam Date stopTime,
-                                    @RequestParam String totalTime) {
-        Time time = new Time();
-        time.setStartTime(startTime);
-        time.setStopTime(stopTime);
-        time.setTotalTime(totalTime);
+    record TimeCompleteDTO(Date startTime, Date stopTime, String totalTime) {}
 
+    @PostMapping("/complete")
+    public ResponseEntity<Time> complete(@RequestBody TimeCompleteDTO body) {
+        Time time = new Time();
+        time.setStartTime(body.startTime());
+        time.setStopTime(body.stopTime());
+        time.setTotalTime(body.totalTime());
         return ResponseEntity.ok(repo.save(time));
     }
 
-    @GetMapping("/getTime")
-    public List<Time> getTime() {
+
+    @GetMapping("/getTimes")
+    public List<Time> getTimes() {
         return repo.findAll();
     }
 }

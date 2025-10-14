@@ -5,11 +5,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.Date;
 
 
-@Document("time")
+@Document("times")
 public class Time {
 
-    @Id
-    private String id; // Either "staff" or "admin"
+    @Id private String id;
     private Date startTime; // time of start
     private Date stopTime;  // stop time
     private String totalTime; // total time worked
