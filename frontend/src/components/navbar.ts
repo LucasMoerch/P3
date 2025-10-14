@@ -1,14 +1,17 @@
 import { navigate } from '../main';
+import { renderLogoNavbar } from "./logoComponent/logo";
 
 export function renderHeaderAndNavbar(): HTMLElement {
   // Header container
   const header = document.createElement('nav');
   header.className = 'navbar navbar-dark bg-dark px-3';
+  const logo = renderLogoNavbar();
+  header.appendChild(logo);
 
   // Page title
   const title = document.createElement('span');
   title.className = 'navbar-brand mb-0 h1';
-  title.innerText = 'Page name';
+  title.innerText = 'Dashboard';
   header.appendChild(title);
 
   // Buttons
@@ -77,7 +80,10 @@ export function renderHeaderAndNavbar(): HTMLElement {
     link.addEventListener('click', (event: MouseEvent) => {
       event.preventDefault();
       const page = (event.currentTarget as HTMLElement).dataset.page;
-      if (page) navigate(page);
+      if (page){
+          navigate(page);
+          title.innerText = page.charAt(0).toUpperCase() + page.slice(1);
+      }
 
       // Close sidebar after click
       const sidebarEl = document.getElementById('sidebar');
@@ -87,6 +93,12 @@ export function renderHeaderAndNavbar(): HTMLElement {
       }
     });
   });
+
+  logo.addEventListener('click', () => {
+      navigate('dashboard');
+      title.innerText = "Dashboard";
+  });
+
 
   // Wrapper container
   const container = document.createElement('div');
