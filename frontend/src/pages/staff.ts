@@ -1,5 +1,7 @@
 import { renderTable } from "../components/tableComponent/tableComponent"
-import {renderSearchComponent} from "../components/searchBar/searchBar";
+import { renderSearchComponent } from "../components/searchBar/searchBar";
+import { renderAddNewStaffCard } from "../components/newCard/addNewStaffCard"
+import { renderNewButton } from "../components/newButton/newButton"
 
 export function renderStaffPage(): HTMLElement {
     const div = document.createElement("div");

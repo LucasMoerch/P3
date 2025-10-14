@@ -1,5 +1,8 @@
 import { renderSearchComponent } from "../components/searchBar/searchBar";
 import { renderTable } from "../components/tableComponent/tableComponent";
+import { renderAddNewClientCard } from "../components/newCard/addNewClientCard"
+import { renderNewButton } from "../components/newButton/newButton"
+import {renderAddNewStaffCard} from "../components/newCard/addNewStaffCard";
 
 export function renderClientsPage(): HTMLElement {
     const div = document.createElement("div");
