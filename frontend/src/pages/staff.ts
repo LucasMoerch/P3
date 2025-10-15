@@ -1,6 +1,8 @@
-import axios from "axios";
 import { renderTable } from "../components/tableComponent/tableComponent"
-import {renderSearchComponent} from "../components/searchBar/searchBar";
+import { renderSearchComponent } from "../components/searchBar/searchBar";
+import { renderAddNewStaffCard } from "../components/newCard/addNewStaffCard"
+import { renderNewButton } from "../components/newButton/newButton"
+import axios from "axios";
 
 export function renderStaffPage(): HTMLElement {
     const div = document.createElement("div");
@@ -10,16 +12,6 @@ export function renderStaffPage(): HTMLElement {
     container.classList.add("container");
     container.appendChild(div);
     container.appendChild(renderSearchComponent());
-
-
-    const placeholderData: {name: string; role: string}[] = [
-        { name: "John Johnson", role: "CEO" },
-        { name: "Bruce Wayne", role: "Staff" },
-        { name: "Guy Black", role: "Manager" },
-        { name: "Bro Big", role: "Big Bro"}
-    ];
-
-    container.appendChild(renderTable(placeholderData));
 
     //new section for real data from backend
     const realDataSection = document.createElement("div");
