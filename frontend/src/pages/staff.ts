@@ -1,3 +1,4 @@
+import axios from "axios";
 import { renderTable } from "../components/tableComponent/tableComponent"
 import {renderSearchComponent} from "../components/searchBar/searchBar";
 
@@ -25,14 +26,12 @@ export function renderStaffPage(): HTMLElement {
     realDataSection.innerHTML = `<h2>Users from Database</h2><p>Loading...</p>`;
     container.appendChild(realDataSection);
 
-    // fetch users from backend
-    fetch("http://localhost:5173/api/users")
+    // fetch users from backend using axios, which auto-parses JSON.
+    //Takes the display name and role from the database. Map takes the specific piece of data that is needed.
+    axios
+        .get("http://localhost:5173/api/users")
         .then((res) => {
-            if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-            return res.json();
-        })
-        //Takes the display name and role from the database. Map takes the specific piece of data that is needed.
-        .then((data) => {
+            const data = res.data;
             const staffData = data.map((user: any) => ({
                 name: user.profile?.displayName || "Unknown",
                 role: user.roles?.join(", ") || "N/A",
