@@ -30,6 +30,8 @@ services:
     volumes:
       - ./frontend:/app
       - /app/node_modules
+    environment:
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
     depends_on:
       - api
 

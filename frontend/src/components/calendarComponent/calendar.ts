@@ -3,17 +3,30 @@ import 'vanilla-calendar-pro/styles/index.css';
 import './calendar.custom.scss';
 
 export function renderCalendar(): HTMLElement {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'container p-4 rounded';
+
+  const inputGroup = document.createElement('div');
+  inputGroup.className = 'd-flex gap-2 align-items-center';
+
+  const calenderBtn = document.createElement('button');
+  calenderBtn.className = 'btn btn-primary rounded';
+  calenderBtn.innerHTML = `<i class="fa-solid fa-calendar"></i>`;
+
   const input = document.createElement('input');
+  input.id = 'dateInput';
   input.type = 'text';
   input.placeholder = 'Choose date';
-  input.className = 'form-control';
 
-  // DOCS: https://vanilla-calendar.pro/docs/learn/type-default
+  input.className = 'form-control rounded w-100';
+  inputGroup.appendChild(input);
+  inputGroup.appendChild(calenderBtn);
+  wrapper.appendChild(inputGroup);
+
   const options: Options = {
     inputMode: true,
     positionToInput: 'auto',
     onChangeToInput(self) {
-      // inserts selected date to input field
       if (!self.context.inputElement) return;
       if (self.context.selectedDates[0]) {
         self.context.inputElement.value = self.context.selectedDates[0];
@@ -23,9 +36,12 @@ export function renderCalendar(): HTMLElement {
       }
     },
   };
+
   const calendar = new Calendar(input, options);
-
   calendar.init();
+  calenderBtn.addEventListener('click', () => {
+    calendar.show();
+  });
 
-  return input;
+  return wrapper;
 }

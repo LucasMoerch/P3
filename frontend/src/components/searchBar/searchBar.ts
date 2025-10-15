@@ -1,26 +1,39 @@
+import { renderNewButton } from '../newButton/newButton';
+import './searchBar.scss';
+
 export function renderSearchComponent(): HTMLElement {
-    const searchDiv = document.createElement('div');
-    searchDiv.className = 'Search';
+  const searchDiv = document.createElement('div');
+  searchDiv.className = 'Search';
 
-    // Create input
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.placeholder = 'Search...';
-    input.className = 'Search-input';
+  // Create input
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.placeholder = 'Search...';
+  input.className = 'Search-input';
 
-    // Create button
-    const button = document.createElement('button');
-    button.textContent = 'Search';
-    button.className = 'Search-button';
+  // Create search button
+  const searchButton = document.createElement('button');
+  searchButton.className = 'search-button';
 
-    // Example: log input value when clicked
-    button.addEventListener('click', () => {
-        console.log('Searching for:', input.value);
-    });
+  // Import icon from Font Awesome
+  const searchIcon = document.createElement('i');
+  searchIcon.className = 'fa-solid fa-magnifying-glass';
+  searchButton.appendChild(searchIcon);
 
-    // Append input and button to the container
-    searchDiv.appendChild(input);
-    searchDiv.appendChild(button);
+  // Example: log input value when clicked
+  searchButton.addEventListener('click', () => {
+    console.log('Searching for:', input.value);
+  });
 
-    return searchDiv;
+  // Group the input field and search button into a nested container
+  const searchContainer = document.createElement('div');
+  searchContainer.className = 'search-container';
+
+  // Append input and button to the container
+  searchContainer.appendChild(input);
+  searchContainer.appendChild(searchButton);
+  searchDiv.appendChild(searchContainer);
+  searchContainer.appendChild(renderNewButton());
+
+  return searchDiv;
 }

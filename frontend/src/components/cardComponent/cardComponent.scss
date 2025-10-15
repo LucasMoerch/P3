@@ -6,13 +6,37 @@
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   z-index: 1050;
 
   .card {
     width: 95%;
-    height: 95%;
-    border-radius: 0; // removes rounded corners so it fits perfectly
+    height: auto;
+    border-radius: 0;
+  }
+}
+
+.back-button {
+  transition: transform 0.2s ease;
+}
+
+.back-button:hover {
+  transform: scale(1.2);
+}
+
+@media (min-width: 768px) {
+  .overlay {
+    display: block;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 4vh 0;
+
+    .card {
+      max-width: 1100px;
+      margin: 0 auto;
+      overflow: visible;
+      max-height: none;
+    }
   }
 }

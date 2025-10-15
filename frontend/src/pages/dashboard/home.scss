@@ -1,0 +1,55 @@
+.home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 1rem;
+}
+
+.cards-container {
+  display: flex;
+  justify-content: space-between; /* pushes one card left, one card right */
+  align-items: flex-start;
+  width: 100%;
+  gap: 1rem;
+}
+
+/*---------------------------------------------------------------------*/
+.hours-worked-container,
+.create-new-container {
+  width: 48%;
+  margin: 0;
+}
+
+//size increase of time shown
+.fs-large {
+  font-size: 2rem;
+}
+
+//the clock icon (Size increase)
+.fs-big {
+  font-size: 2rem;
+}
+
+/*---------------------------------------------------------------------*/
+.cases-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.active-cases {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #333;
+  text-decoration: underline;
+  margin: 1.5rem 0.3rem 0.5rem 0.3rem;
+}
+
+.sort-by {
+  font-size: 1.3rem;
+  color: #333;
+  margin: 1.5rem 0.3rem 0.5rem 0.3rem;
+  cursor: pointer;
+}
+/*---------------------------------------------------------------------*/
