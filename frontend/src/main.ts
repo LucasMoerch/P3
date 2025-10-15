@@ -37,11 +37,11 @@ function render() {
     }
   }
 
- // Update navbar title
-    const titleElement = document.getElementById("navbar-title");
-    if (titleElement) {
-      titleElement.textContent = getPageTitle(location.pathname);
-    }
+  // Update navbar title
+  const titleElement = document.getElementById('navbar-title');
+  if (titleElement) {
+    titleElement.textContent = getPageTitle(location.pathname);
+  }
 }
 
 // Handle navigation

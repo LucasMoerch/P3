@@ -1,22 +1,22 @@
 import { navigate } from '../main';
-import { renderLogoNavbar } from "./logoComponent/logo";
+import { renderLogoNavbar } from './logoComponent/logo';
 
 export function getPageTitle(path: string): string {
   switch (path) {
-    case "/dashboard":
-      return "Dashboard";
-    case "/staff":
-      return "Staff";
-    case "/clients":
-      return "Clients";
-    case "/cases":
-      return "Cases";
-    case "/profile":
-      return "My Profile";
-    case "/login":
-      return "Login";
+    case '/dashboard':
+      return 'Dashboard';
+    case '/staff':
+      return 'Staff';
+    case '/clients':
+      return 'Clients';
+    case '/cases':
+      return 'Cases';
+    case '/profile':
+      return 'My Profile';
+    case '/login':
+      return 'Login';
     default:
-      return "Home";
+      return 'Home';
   }
 }
 
@@ -101,9 +101,9 @@ export function renderHeaderAndNavbar(): HTMLElement {
     link.addEventListener('click', (event: MouseEvent) => {
       event.preventDefault();
       const page = (event.currentTarget as HTMLElement).dataset.page;
-      if (page){
-          navigate(page);
-          title.innerText = page.charAt(0).toUpperCase() + page.slice(1);
+      if (page) {
+        navigate(page);
+        title.innerText = page.charAt(0).toUpperCase() + page.slice(1);
       }
 
       // Close sidebar after click
@@ -116,10 +116,9 @@ export function renderHeaderAndNavbar(): HTMLElement {
   });
 
   logo.addEventListener('click', () => {
-      navigate('dashboard');
-      title.innerText = "Dashboard";
+    navigate('dashboard');
+    title.innerText = 'Dashboard';
   });
-
 
   // Wrapper container
   const container = document.createElement('div');

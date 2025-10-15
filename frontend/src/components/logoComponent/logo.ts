@@ -12,11 +12,11 @@ export function renderLogo(): HTMLElement {
 }
 // Logo for navbar
 export function renderLogoNavbar(): HTMLImageElement {
-    const img = document.createElement('img');
-    img.src = '/images/logo-transparent-bg.png';
-    img.alt = 'Logo';
-    img.style.height = '40px';
-    img.style.width = 'auto';
-    img.style.display = 'block';
-    return img;
+  const img = document.createElement('img');
+  img.src = '/images/logo-transparent-bg.png';
+  img.alt = 'Logo';
+  img.style.height = '40px';
+  img.style.width = 'auto';
+  img.style.display = 'block';
+  return img;
 }

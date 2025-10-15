@@ -1,6 +1,8 @@
-import http from "../api/http";
+import http from '../api/http';
 import { renderLogo } from '../components/logoComponent/logo';
 import { navigate } from '../main';
+import { initAuth } from '../auth/auth';
+
 // Uses google_client_id from .env
 const GOOGLE_CLIENT_ID = (process.env.GOOGLE_CLIENT_ID as string) || '';
 
@@ -63,22 +65,19 @@ export function renderLoginPage(): HTMLElement {
 
       // success
       navigate('home');
+      await initAuth();
     } catch (err: any) {
-        // Axios errors, err.response?.data has server message
-        const api = err?.response?.data;
-        const msg =
-            api?.message ||
-            api?.error ||
-            err?.message ||
-            'Login failed';
+      // Axios errors, err.response?.data has server message
+      const api = err?.response?.data;
+      const msg = api?.message || api?.error || err?.message || 'Login failed';
 
-        if (String(msg).includes('Invite not found')) {
-            alert('You are not yet invited to the platform. Contact an administrator.');
-        } else if (api?.error === 'InvalidIdToken') {
-            alert('Login failed: Invalid token');
-        } else {
-            alert(`Login failed: ${msg}`);
-        }
+      if (String(msg).includes('Invite not found')) {
+        alert('You are not yet invited to the platform. Contact an administrator.');
+      } else if (api?.error === 'InvalidIdToken') {
+        alert('Login failed: Invalid token');
+      } else {
+        alert(`Login failed: ${msg}`);
+      }
     }
   };
 
