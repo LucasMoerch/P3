@@ -7,23 +7,32 @@ import { renderCalendar } from '../calendarComponent/calendar';
 
 
 
-async function sendTimeData(startTime: string, stopTime: string, id: string): Promise<void> {
+async function sendStartTimeData(startTime: string): Promise<void> {
   try {
-      await axios.post('/api/time/complete', {
-    startTime: startTime,          // "HH:mm:ss"
-    stopTime: stopTime,           // "HH:mm:ss"
-    id: id,                 // lower-case!
-    totalTime: '01:30:00'
-})
-  } catch (error) {
-    console.error('Error sending time data:', error);
+    const response = await axios.post(
+      `http://localhost:8080/api/times/complete?startTime=${startTime}`
+    );
+    console.log("Response:", response.data);
+  } catch (error: any) {
+    console.error("Error:", error.response?.data || error.message);
+  }
+}
+
+async function sendTimeData(startTime: string, stopTime: string, totalTime: string, description: string): Promise<void> {
+  try {
+    const response = await axios.post(
+      `http://localhost:8080/api/times/complete?startTime=${startTime}&stopTime=${stopTime}&totalTime=${totalTime}&description=${description}`
+    );
+    console.log("Response:", response.data);
+  } catch (error: any) {
+    console.error("Error:", error.response?.data || error.message);
   }
 }
 
 
 async function getTimeData(): Promise<void> {
   try {
-      const response = await axios.get('/api/time/getTime', {
+      const response = await axios.get('/api/times/getTimes', {
         headers: {
           'Content-Type': 'application/json'
         }
@@ -31,8 +40,6 @@ async function getTimeData(): Promise<void> {
       console.log('getTimeData success:', response.data);
       return response.data;
   } catch (error) {
-    console.error('Error sending time data:', error);
-    console.error("Fucking fisse")
   }
 }
 
@@ -83,7 +90,7 @@ export function renderTimeTracker(): HTMLElement {
 
   function renderTimeTrackingCard(): HTMLElement {
     // Create overlay
-    const overlay: HTMLElement = renderCard(true);
+    const overlay: HTMLElement = renderCard(false);
     const card: HTMLElement = overlay.querySelector('.card') as HTMLElement;
     const header: HTMLElement = card.querySelector('.header') as HTMLElement;
     const body: HTMLElement = card.querySelector('.body') as HTMLElement;
@@ -189,8 +196,9 @@ export function renderTimeTracker(): HTMLElement {
       buttonRow.appendChild(stopTimeBtn);
       displayTime("clockText", startTimeNow)
       displayTime("startTime", startTimeNow)
-      const result = await getTimeData();
-      console.log(result); // This will log the actual data from the database
+      //const result = await getTimeData();
+      sendStartTimeData(startTimeNow);
+      //console.log(result); // This will log the actual data from the database
     });
 
     stopTimeBtn.addEventListener('click', (): void => {
@@ -203,7 +211,7 @@ export function renderTimeTracker(): HTMLElement {
     completeBtn.addEventListener('click', (): void => {
       const startTimeInput = (document.getElementById('startTime') as HTMLInputElement).value;
       const stopTimeInput = (document.getElementById('stopTime') as HTMLInputElement).value;
-      sendTimeData(startTimeInput, stopTimeInput, "060203");
+      sendTimeData(startTimeInput, stopTimeInput, "060203", "Test description");
       document.body.removeChild(overlay);
     });
     return overlay;
