@@ -1,5 +1,6 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
+import webpack from 'webpack';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -48,4 +49,9 @@ export default {
   resolve: {
     extensions: ['.ts', '.js'],
   },
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env.GOOGLE_CLIENT_ID': JSON.stringify(process.env.GOOGLE_CLIENT_ID || ''),
+    }),
+  ],
 };

@@ -3,7 +3,6 @@ import 'vanilla-calendar-pro/styles/index.css';
 import './calendar.custom.scss';
 
 export function renderCalendar(): HTMLElement {
-   
   const wrapper = document.createElement('div');
   wrapper.className = 'container p-4 rounded';
 
@@ -14,14 +13,11 @@ export function renderCalendar(): HTMLElement {
   calenderBtn.className = 'btn btn-primary rounded';
   calenderBtn.innerHTML = `<i class="fa-solid fa-calendar"></i>`;
 
-
-   
   const input = document.createElement('input');
   input.id = 'dateInput';
   input.type = 'text';
   input.placeholder = 'Choose date';
-  
-  
+
   input.className = 'form-control rounded w-100';
   inputGroup.appendChild(input);
   inputGroup.appendChild(calenderBtn);
@@ -45,7 +41,6 @@ export function renderCalendar(): HTMLElement {
   calendar.init();
   calenderBtn.addEventListener('click', () => {
     calendar.show();
-    
   });
 
   return wrapper;
