@@ -2,7 +2,9 @@ package com.p3.Enevold.cases;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 import org.bson.types.ObjectId;
+
 import java.util.Date;
 import java.util.List;
 
@@ -10,24 +12,33 @@ import java.util.List;
 public class Case {
 
     @Id
+    @Field("_id")                  // ensure written exactly as "_id"
     private String id;
+
+    @Field("clientId")
     private ObjectId clientId;
+
+    @Field("title")
     private String title;
+
+    @Field("description")
     private String description;
-    private String status; // OPEN | ON_HOLD | CLOSED
+
+    @Field("status")
+    private String status;
+
+    @Field("assignedUserIds")
     private List<ObjectId> assignedUserIds;
+
+    @Field("createdAt")
     private Date createdAt;
+
+    @Field("updatedAt")
     private Date updatedAt;
 
-    public Case() {
-        this.createdAt = new Date();
-        this.updatedAt = new Date();
-    }
-
-    // Getters and Setters
-
-    public String getID() { return id; }
-    public void setID(String id) { this.id = id; }
+    // getters and setters
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
 
     public ObjectId getClientId() { return clientId; }
     public void setClientId(ObjectId clientId) { this.clientId = clientId; }

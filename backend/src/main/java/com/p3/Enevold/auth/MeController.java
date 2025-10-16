@@ -1,22 +1,46 @@
 package com.p3.Enevold.auth;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import com.p3.Enevold.users.User;
+import com.p3.Enevold.users.UserRepository;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
 @RestController
+@RequestMapping("/me") // final url = /api/me
 public class MeController {
 
-    @GetMapping("/me")
-    public Map<String, Object> me(@org.springframework.security.core.annotation.AuthenticationPrincipal OidcUser user) {
-        if (user == null) return Map.of("authenticated", false);
-        return Map.of(
+    private final UserRepository repo;
+    public MeController(UserRepository repo) { this.repo = repo; }
+
+    @GetMapping
+    public ResponseEntity<?> me(HttpSession session) {
+        var uid = (String) session.getAttribute("uid");
+        if (uid == null) return ResponseEntity.ok(Map.of("authenticated", false));
+
+        var user = repo.findById(uid).orElse(null);
+        if (user == null) return ResponseEntity.ok(Map.of("authenticated", false));
+
+        // Return only safe fields
+        var auth = user.getAuth();
+        var profile = user.getProfile();
+
+        return ResponseEntity.ok(Map.of(
                 "authenticated", true,
-                "email", user.getEmail(),
-                "name", user.getFullName(),
-                "roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList()
-        );
+                "id", user.getId(),
+                "email", auth != null ? auth.getEmail() : null,
+                "displayName", profile != null ? profile.getDisplayName() : null,
+                "roles", user.getRoles(),
+                "status", user.getStatus(),
+                "pictureUrl", auth != null ? auth.getPictureUrl() : null
+        ));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpSession session) {
+        session.invalidate();
+        return ResponseEntity.ok(Map.of("ok", true));
     }
 }
