@@ -78,5 +78,6 @@ export function renderAddNewCaseCard(): HTMLElement {
         }
     });
 
+
     return overlay;
 }

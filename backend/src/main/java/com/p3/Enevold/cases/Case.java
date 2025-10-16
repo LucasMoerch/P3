@@ -12,7 +12,7 @@ import java.util.List;
 public class Case {
 
     @Id
-    @Field("_id")                  // ensure written exactly as "_id"
+    @Field("_id")
     private String id;
 
     @Field("clientId")

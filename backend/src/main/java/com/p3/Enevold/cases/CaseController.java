@@ -9,7 +9,7 @@ import java.time.Instant;
 import java.util.*;
 
 @RestController
-@RequestMapping("/api/cases")
+@RequestMapping("/cases")
 public class CaseController {
 
     @Autowired
@@ -31,14 +31,13 @@ public class CaseController {
                 ));
             }
 
-            // Create new Case instance
             Case c = new Case();
 
-            // _id must be a String according to your MongoDB validator
+            // _id (id) is a string according to your schema
             c.setId("CASE-" + (int) (Math.random() * 10000));
 
-            // Temporary/dummy clientId until real client integration
-            c.setClientId(new ObjectId("652bc56efba9ab8ef7ab9a91"));
+            // Dummy clientId for now
+            c.setClientId(new ObjectId("000"));
 
             c.setTitle(title);
             c.setDescription(description);
@@ -50,7 +49,6 @@ public class CaseController {
             c.setUpdatedAt(now);
 
             Case saved = repo.save(c);
-
             return ResponseEntity.ok(saved);
 
         } catch (Exception e) {

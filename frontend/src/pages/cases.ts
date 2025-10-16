@@ -10,12 +10,35 @@ export function renderCasesPage(): HTMLElement {
   container.appendChild(div);
   container.appendChild(renderSearchComponent());
 
-  const placeholderData: { title: string; address: string; deadline: string }[] = [
-    { title: 'Floor fix', address: 'Falseroad 27', deadline: '23/10/2026' },
-    { title: 'Roof', address: 'GotHam', deadline: '23/10/2026' },
-    { title: 'Kitchen', address: 'Milkyway', deadline: '23/10/2026' },
-  ];
+    async function loadCases() {
+        try {
+            const response = await fetch('/api/cases', { method: 'GET' });
+            if (!response.ok) throw new Error(`Failed to fetch cases (${response.status})`);
 
-  container.appendChild(renderTable(placeholderData));
+            const cases = await response.json();
+
+            const tableData = cases.map((c: any) => ({
+                title: c.title || 'Untitled',
+                description: c.description || '-',
+                date: new Date(c.createdAt).toLocaleDateString('da-DK'),
+                status: c.status || '-'
+            }));
+
+            const oldTable = container.querySelector('table');
+            if (oldTable) oldTable.remove();
+
+            container.appendChild(renderTable(tableData));
+        } catch (err) {
+            console.error('Error loading cases:', err);
+        }
+    }
+
+// Initial load
+    loadCases();
+
+// Auto-refresh every 10 seconds
+    setInterval(loadCases, 10000);
+
+
   return container;
 }
