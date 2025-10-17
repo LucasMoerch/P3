@@ -1,9 +1,6 @@
 import { renderTable } from '../components/tableComponent/tableComponent';
 import { renderSearchComponent } from '../components/searchBar/searchBar';
-import { renderAddNewCaseCard } from '../components/newCard/addNewCaseCard';
-import { renderNewButton } from '../components/newButton/newButton';
 import axios from 'axios';
-import { isAdmin } from '../auth/auth';
 
 export function renderCasesPage(): HTMLElement {
     const div = document.createElement('div');
@@ -18,10 +15,11 @@ export function renderCasesPage(): HTMLElement {
     realDataSection.innerHTML = `<h2>Cases from Database</h2><p>Loading...</p>`;
     container.appendChild(realDataSection);
 
-    axios
-        .get('/api/cases')
-        .then((res) => {
+    async function loadCases() {
+        try {
+            const res = await axios.get('/api/cases');
             const cases = res.data;
+
             const caseData = cases.map((c: any) => ({
                 title: c.title || 'Untitled',
                 description: c.description || '-',
@@ -31,18 +29,18 @@ export function renderCasesPage(): HTMLElement {
 
             realDataSection.innerHTML = '<h2>Cases from Database</h2>';
             realDataSection.appendChild(renderTable(caseData));
-        })
-        .catch((err) => {
+        } catch (err) {
             console.error('Failed to load cases:', err);
             realDataSection.innerHTML = '<h2>Cases from Database</h2><p>Failed to load cases data.</p>';
-        });
-
-    if (isAdmin()) {
-        console.log('You are Admin');
-
-    } else {
-        console.log('You are not Admin');
+        }
     }
+
+    // Initial load
+    loadCases();
+
+    // 🔄 Auto-refresh every 10 seconds
+    setInterval(loadCases, 10000);
+
 
     return container;
 }
