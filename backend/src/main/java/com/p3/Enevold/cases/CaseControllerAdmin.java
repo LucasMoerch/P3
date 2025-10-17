@@ -87,12 +87,43 @@ public class CaseControllerAdmin {
             }
 
             repo.deleteById(caseId);
-
             return ResponseEntity.ok(Map.of(
                     "message", "Case deleted successfully",
                     "caseId", caseId
             ));
 
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @PostMapping("/assignClient")
+    public ResponseEntity<?> assignClient(@RequestParam String caseId,
+                                          @RequestParam String clientId) {
+        try {
+            Optional<Case> optCase = repo.findById(caseId);
+            if (optCase.isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of("error", "Case not found"));
+            }
+
+            Case c = optCase.get();
+
+            // Safely set new clientId
+            c.setClientId(new ObjectId(clientId));
+            c.setUpdatedAt(new Date());
+
+            repo.save(c);
+
+            return ResponseEntity.ok(Map.of(
+                    "message", "Client assigned successfully",
+                    "caseId", caseId,
+                    "clientId", clientId
+            ));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "error", "Invalid clientId format",
+                    "message", e.getMessage()
+            ));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
