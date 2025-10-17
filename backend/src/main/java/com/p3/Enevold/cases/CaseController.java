@@ -20,7 +20,6 @@ public class CaseController {
                                         @RequestParam String description,
                                         @RequestParam String status) {
         try {
-            // Validate allowed status values
             List<String> allowedStatuses = List.of("OPEN", "ON_HOLD", "CLOSED");
             String normalizedStatus = status.toUpperCase();
 
@@ -33,11 +32,10 @@ public class CaseController {
 
             Case c = new Case();
 
-            // _id (id) is a string according to your schema
             c.setId("CASE-" + (int) (Math.random() * 10000));
 
-            // Dummy clientId for now
-            c.setClientId(new ObjectId("000"));
+            // ✅ Ensure this exists:
+            c.setClientId(new ObjectId("652bc56efba9ab8ef7ab9a91")); // temporary dummy client
 
             c.setTitle(title);
             c.setDescription(description);
@@ -59,6 +57,7 @@ public class CaseController {
             ));
         }
     }
+
 
     @GetMapping
     public ResponseEntity<List<Case>> getAllCases() {
