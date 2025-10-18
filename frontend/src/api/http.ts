@@ -1,5 +1,6 @@
 // @ts-ignore
 import axios from 'axios';
+import { AxiosResponse } from 'axios';
 
 export const http = axios.create({
   baseURL: '/api', // proxy to backend
@@ -9,7 +10,7 @@ export const http = axios.create({
 
 // unwrap data so callers get JSON directly
 http.interceptors.response.use(
-  (res: any) => res.data,
+  <T>(res: AxiosResponse<T>) => res.data as T,
   (err: any) => Promise.reject(err),
 );
 

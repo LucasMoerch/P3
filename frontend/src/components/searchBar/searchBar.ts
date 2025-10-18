@@ -1,6 +1,6 @@
 import { renderNewButton } from '../newButton/newButton';
 import './searchBar.scss';
-import {isAdmin} from "../../auth/auth";
+import { isAdmin } from '../../auth/auth';
 
 export function renderSearchComponent(): HTMLElement {
   const searchDiv = document.createElement('div');
@@ -35,15 +35,12 @@ export function renderSearchComponent(): HTMLElement {
   searchContainer.appendChild(searchButton);
   searchDiv.appendChild(searchContainer);
 
-    if (isAdmin()) {
-        console.log('You are Admin');
-        searchContainer.appendChild(renderNewButton());
-
-    } else {
-        console.log('You are not Admin');
-    }
-
-
+  if (isAdmin()) {
+    console.log('You are Admin');
+    searchContainer.appendChild(renderNewButton());
+  } else {
+    console.log('You are not Admin');
+  }
 
   return searchDiv;
 }
