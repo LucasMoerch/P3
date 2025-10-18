@@ -2,8 +2,44 @@ import { renderTable } from '../components/tableComponent/tableComponent';
 import { renderSearchComponent } from '../components/searchBar/searchBar';
 import { renderAddNewStaffCard } from '../components/newCard/addNewStaffCard';
 import { renderNewButton } from '../components/newButton/newButton';
-import axios from 'axios';
 import { isAdmin } from '../auth/auth';
+import http from '../api/http';
+
+export type UserRole = 'staff' | 'admin';
+export type UserStatus = 'invited' | 'active' | 'disabled';
+
+export type UserDTO = {
+  id: string;
+  roles: UserRole[];
+  status: UserStatus;
+  auth: {
+    provider: 'google';
+    email: string;
+    emailVerified: boolean;
+    pictureUrl?: string | null; // optional on some users
+  };
+
+  profile?: {
+    firstName?: string | null;
+    lastName?: string | null;
+    displayName?: string | null;
+    phone?: string | null;
+    locale?: string | null;
+  } | null;
+
+  staff?: {
+    employeeNo?: string | null;
+    hourlyRate?: number | null;
+    defaultCaseIds?: string[] | null;
+  } | null;
+
+  audit?: {
+    createdAt?: string | null; // ISO strings from API
+    updatedAt?: string | null;
+    createdBy?: string | null;
+    updatedBy?: string | null;
+  } | null;
+};
 
 export function renderStaffPage(): HTMLElement {
   const div = document.createElement('div');
@@ -21,23 +57,22 @@ export function renderStaffPage(): HTMLElement {
 
   // fetch users from backend using axios, which auto-parses JSON.
   //Takes the display name and role from the database. Map takes the specific piece of data that is needed.
-  axios
-    .get('http://localhost:5173/api/users')
-    .then((res) => {
-      const data = res.data;
-      const staffData = data.map((user: any) => ({
-        name: user.profile?.displayName || 'Unknown',
-        role: user.roles?.join(', ') || 'N/A',
+  async function loadStaff() {
+    try {
+      const users = (await http.get('/users')) as UserDTO[];
+      const staffData = (users ?? []).map((user) => ({
+        id: user.id,
+        name: user.profile?.displayName,
+        role: user.roles.join(', '),
       }));
-      //Loads a title and renders the table from before with user data.
       realDataSection.innerHTML = '<h2>Users from Database</h2>';
       realDataSection.appendChild(renderTable(staffData));
-    })
-    //Error message, if anything goes wrong
-    .catch((err) => {
+    } catch (err) {
       console.error('Failed to load staff:', err);
       realDataSection.innerHTML = '<h2>Users from Database</h2><p>Failed to load staff data.</p>';
-    });
+    }
+  }
+  loadStaff();
 
   if (isAdmin()) {
     console.log('You are Admin');
