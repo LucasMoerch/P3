@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/times")
@@ -41,4 +42,42 @@ public class TimeController {
                     ));
         }
     }
+
+    @PostMapping("/start")
+    public ResponseEntity<?> start(@RequestParam String startTime){
+
+        try {
+            var time = new Time();
+            time.setStartTime(startTime);
+
+            return ResponseEntity.ok(repo.save(time));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                    .body(java.util.Map.of(
+                            "error", e.getClass().getSimpleName(),
+                            "message", String.valueOf(e.getMessage())
+                    ));
+        }
+    }
+    @PatchMapping("/update")
+    public ResponseEntity<?> updateByStartTime(@RequestParam String startTime,
+                                               @RequestParam String stopTime,
+                                               @RequestParam String totalTime,
+                                               @RequestParam String description) {
+
+        var optionalTime = repo.findByStartTime(startTime);
+
+        if (optionalTime.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        var time = optionalTime.get();
+        time.setStopTime(stopTime);
+        time.setTotalTime(totalTime);
+        time.setDescription(description);
+
+        var saved = repo.save(time);
+        return ResponseEntity.ok(saved);
+    }
+
 }

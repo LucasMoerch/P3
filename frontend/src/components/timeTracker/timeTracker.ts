@@ -5,12 +5,12 @@ import '../../styles/custom.scss';
 import { renderCard } from '../cardComponent/cardComponent';
 import { renderCalendar } from '../calendarComponent/calendar';
 
-
+//api functions
 
 async function sendStartTimeData(startTime: string): Promise<void> {
   try {
     const response = await axios.post(
-      `http://localhost:8080/api/times/complete?startTime=${startTime}`
+      `http://localhost:8080/api/times/start?startTime=${startTime}`
     );
     console.log("Response:", response.data);
   } catch (error: any) {
@@ -22,6 +22,17 @@ async function sendTimeData(startTime: string, stopTime: string, totalTime: stri
   try {
     const response = await axios.post(
       `http://localhost:8080/api/times/complete?startTime=${startTime}&stopTime=${stopTime}&totalTime=${totalTime}&description=${description}`
+    );
+    console.log("Response:", response.data);
+  } catch (error: any) {
+    console.error("Error:", error.response?.data || error.message);
+  }
+}
+
+async function updateTimeData(startTime: string, stopTime: string, totalTime: string, description: string): Promise<void> {
+  try {
+    const response = await axios.patch(
+      `http://localhost:8080/api/times/update?startTime=${startTime}&stopTime=${stopTime}&totalTime=${totalTime}&description=${description}`
     );
     console.log("Response:", response.data);
   } catch (error: any) {
@@ -68,8 +79,24 @@ function displayTime(elementId: string, time: string): void {
 }
 
 
+function calculateTotalTime(startTime: string, stopTime: string): string {
+  const [startHours, startMinutes, startSeconds] = startTime.split(':').map(Number);
+  const [stopHours, stopMinutes, stopSeconds] = stopTime.split(':').map(Number);
 
+  let totalSeconds = (stopHours * 3600 + stopMinutes * 60 + stopSeconds) - (startHours * 3600 + startMinutes * 60 + startSeconds);
   
+  if (totalSeconds < 0) {
+    totalSeconds += 24 * 3600; // Adjust for times that cross midnight
+  }
+
+  const hours = Math.floor(totalSeconds / 3600).toString().padStart(2, '0');
+  const minutes = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, '0');
+  const seconds = (totalSeconds % 60).toString().padStart(2, '0');
+  const totalTime: string = `${hours}:${minutes}:${seconds}`;
+  return totalTime;
+}
+  
+
 
 export function renderTimeTracker(): HTMLElement {
   const div = document.createElement('div');
@@ -192,6 +219,8 @@ export function renderTimeTracker(): HTMLElement {
     // Event listeners
     startTimeBtn.addEventListener('click', async (): Promise<void> => {
       const startTimeNow: string = getTimeNow();
+      //This time needs to be stored the same place as the Id so that each account has a latest time that can be queried
+      const originalStartTime = startTimeNow; 
       startTimeBtn.remove();
       buttonRow.appendChild(stopTimeBtn);
       displayTime("clockText", startTimeNow)
@@ -202,6 +231,7 @@ export function renderTimeTracker(): HTMLElement {
     });
 
     stopTimeBtn.addEventListener('click', (): void => {
+      //Gets the time of stopping
       const stopTimeNow: string = getTimeNow();
       buttonRow.appendChild(completeBtn);
       displayTime("clockText", stopTimeNow)
@@ -209,9 +239,18 @@ export function renderTimeTracker(): HTMLElement {
     });
 
     completeBtn.addEventListener('click', (): void => {
-      const startTimeInput = (document.getElementById('startTime') as HTMLInputElement).value;
-      const stopTimeInput = (document.getElementById('stopTime') as HTMLInputElement).value;
-      sendTimeData(startTimeInput, stopTimeInput, "060203", "Test description");
+      //gets the start time
+      const startTimeInput: string = (document.getElementById('startTime') as HTMLInputElement).value;
+      //gets the stop time
+      const stopTimeInput: string = (document.getElementById('stopTime') as HTMLInputElement).value;
+      //Gets the text from the description
+      const description: string = (document.getElementById('description') as HTMLInputElement).value;
+      //updates the values after pressing complete
+      updateTimeData(startTimeInput,
+                    stopTimeInput,
+                    calculateTotalTime(startTimeInput, stopTimeInput),
+                    description);
+
       document.body.removeChild(overlay);
     });
     return overlay;

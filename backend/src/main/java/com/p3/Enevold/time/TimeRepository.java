@@ -1,9 +1,8 @@
 package com.p3.Enevold.time;
 
-import java.util.Optional;
 import org.springframework.data.mongodb.repository.MongoRepository;
-
+import java.util.Optional;
 
 public interface TimeRepository extends MongoRepository<Time, String> {
-    Optional<Time> findById(String id);
+    Optional<Time> findByStartTime(String startTime);
 }
