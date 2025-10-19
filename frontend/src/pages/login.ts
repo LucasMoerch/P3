@@ -55,7 +55,6 @@ export function renderLoginPage(): HTMLElement {
     s.defer = true;
     document.head.appendChild(s);
   }
-
   // global callback for GIS
   (window as any).onGoogleCredential = async (resp: { credential: string }) => {
     try {

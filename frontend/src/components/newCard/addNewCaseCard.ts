@@ -22,10 +22,10 @@ export function renderAddNewCaseCard(): HTMLElement {
     <div class="mb-3">
       <label for="caseStatus" class="form-label">Status</label>
       <select id="caseStatus" class="form-select">
-        <option selected>Choose status...</option>
-        <option value="open">Open</option>
-        <option value="inProgress">In Progress</option>
-        <option value="closed">Closed</option>
+        <option selected disabled>Choose status...</option>
+        <option value="OPEN">Open</option>
+        <option value="ON_HOLD">On Hold</option>
+        <option value="CLOSED">Closed</option>
       </select>
     </div>
   `;
@@ -47,12 +47,37 @@ export function renderAddNewCaseCard(): HTMLElement {
   body.appendChild(buttonRow);
 
   cancelBtn.addEventListener('click', () => overlay.remove());
-  saveBtn.addEventListener('click', () => {
-    const title = (formContainer.querySelector('#caseTitle') as HTMLInputElement).value;
-    const desc = (formContainer.querySelector('#caseDescription') as HTMLTextAreaElement).value;
+
+  saveBtn.addEventListener('click', async () => {
+    const title = (formContainer.querySelector('#caseTitle') as HTMLInputElement).value.trim();
+    const description = (
+      formContainer.querySelector('#caseDescription') as HTMLTextAreaElement
+    ).value.trim();
     const status = (formContainer.querySelector('#caseStatus') as HTMLSelectElement).value;
-    console.log('Saving new case:', { title, desc, status });
-    overlay.remove();
+
+    if (!title || !description || !status) {
+      alert('Please fill in all fields before saving.');
+      return;
+    }
+
+    const params = new URLSearchParams({ title, description, status });
+
+    try {
+      const response = await fetch(`/api/cases/create?${params.toString()}`, { method: 'POST' });
+
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`Server responded with ${response.status}: ${text}`);
+      }
+
+      const data = await response.json();
+      console.log('Case created successfully:', data);
+      alert(`Case "${data.title}" created successfully.`);
+      overlay.remove();
+    } catch (err) {
+      console.error('Error creating case:', err);
+      alert('Failed to create case. Check console for details.');
+    }
   });
 
   return overlay;
