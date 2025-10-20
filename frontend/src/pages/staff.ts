@@ -96,23 +96,24 @@ export function renderStaffPage(): HTMLElement {
     loadStaff();
 
   function inspectUser (user: any): HTMLElement {
-      const overlay: HTMLElement = renderCard();
+      const overlay: HTMLElement = renderCard(true);
       const card: HTMLElement = overlay.querySelector('.card') as HTMLElement;
       const header: HTMLElement = card.querySelector('.header') as HTMLElement;
       const body: HTMLElement = card.querySelector('.body') as HTMLElement;
+
       //Added this because we don't want the back button from renderCard.
-      const backButton = overlay.querySelector('.back-button');
+      const backButton = overlay.querySelector('.closeBtn');
       if (backButton) backButton.remove();
 
+      const editBtn = card.querySelector('.back-button.end-0') as HTMLElement | null;
 
-      //This is the header which includes the back button, edit button and name of the user.
       header.className = `
       profile-header d-flex align-items-center justify-content-between
       px-4 py-3 bg-white shadow-sm rounded mt-4 position-relative
       `;
 
       header.innerHTML = `
-      <button class="btn back-button border-0 bg-transparent text-primary position-absolute start-0 ps-3">
+      <button class="btn exit-button border-0 bg-transparent text-primary position-absolute start-0 ps-3">
         <i class="fa-solid fa-arrow-left fs-1"></i>
       </button>
     
@@ -122,39 +123,46 @@ export function renderStaffPage(): HTMLElement {
             ${user.profile?.displayName || 'Unknown User'}
           </h2>
         </div>
-        <i class="fa-solid fa-pen edit-icon text-primary fs-4 ms-3" role="button"></i>
       </div>
       `;
 
+      // manipulates the DOM structure, it doesn't handle styling, only placement and setup.
+      if (editBtn) {
+          // Adjust style to fit the profile header layout
+          editBtn.classList.remove('top-0', 'm-3', 'fs-2');
+          editBtn.classList.add('end-0', 'position-absolute');
+          editBtn.style.top = '50%';
+          editBtn.style.transform = 'translateY(-50%)';
+          header.appendChild(editBtn);
+      }
+
     // Back button functionality
-      const back = header.querySelector('.back-button');
+      const back = header.querySelector('.exit-button');
       back?.addEventListener('click', () => overlay.remove());
 
     // This is the body where the information is displayed like mail, mobile number etc.
       body.innerHTML = `
-      <div class="profile-body d-flex flex-column align-items-center py-4">
-        <div class="card profile-card w-100 shadow-sm border-0">
-          <div class="card-body fs-5">
-            <div class="info-row d-flex justify-content-between border-bottom py-3">
-              <span class="label text-muted fw-medium">Birthdate</span>
-              <span class="value fw-semibold">${user.profile?.birthDate || 'N/A'}</span>
-            </div>
-            <div class="info-row d-flex justify-content-between border-bottom py-3">
-              <span class="label text-muted fw-medium">Mobile Number</span>
-              <span class="value fw-semibold">${user.profile?.phone || 'N/A'}</span>
-            </div>
-            <div class="info-row d-flex justify-content-between border-bottom py-3">
-              <span class="label text-muted fw-medium">E-mail</span>
-              <span class="value fw-semibold">${user.auth?.email || 'N/A'}</span>
-            </div>
-            <div class="info-row d-flex justify-content-between border-bottom py-3">
-              <span class="label text-muted fw-medium">Address</span>
-              <span class="value fw-semibold text-end">${user.profile?.adress || 'N/A'}</span>
-            </div>
-            <div class="info-row d-flex justify-content-between py-3">
-              <span class="label text-muted fw-medium">CPR Number</span>
-              <span class="value fw-semibold">${user.profile?.CPR || 'N/A'}</span>
-            </div>
+      <div class="card profile-card w-100 shadow-sm border-0">
+        <div class="card-body fs-5">
+          <div class="info-row d-flex justify-content-between border-bottom py-3">
+            <span class="label text-muted fw-medium">Birthdate</span>
+            <span class="value fw-semibold">${user.profile?.birthDate || 'N/A'}</span>
+          </div>
+          <div class="info-row d-flex justify-content-between border-bottom py-3">
+            <span class="label text-muted fw-medium">Mobile Number</span>
+            <span class="value fw-semibold">${user.profile?.phone || 'N/A'}</span>
+          </div>
+          <div class="info-row d-flex justify-content-between border-bottom py-3">
+            <span class="label text-muted fw-medium">E-mail</span>
+            <span class="value fw-semibold">${user.auth?.email || 'N/A'}</span>
+          </div>
+          <div class="info-row d-flex justify-content-between border-bottom py-3">
+            <span class="label text-muted fw-medium">Address</span>
+            <span class="value fw-semibold text-end">${user.profile?.adress || 'N/A'}</span>
+          </div>
+          <div class="info-row d-flex justify-content-between py-3">
+            <span class="label text-muted fw-medium">CPR Number</span>
+            <span class="value fw-semibold">${user.profile?.CPR || 'N/A'}</span>
           </div>
         </div>
       </div>
