@@ -22,19 +22,15 @@ public class SecurityConfig {
     }
 
     @Bean
-    SecurityFilterChain security(HttpSecurity http) throws Exception {
+    SecurityFilterChain security(HttpSecurity http, SessionAuthenticationFilter f) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        // Public assets
-                        .requestMatchers("/", "/index.html", "/login.html", "/static/**").permitAll()
-                        // Public endpoints for current flow
-                        .requestMatchers("/api/ping", "/api/users/invite", "/api/users/activate", "/api/me/logout").permitAll()
-                        // Everything else under /api requires an authenticated session
-                        .requestMatchers("/api/**").authenticated()
-                        // Other requests allowed
-                        .anyRequest().permitAll()
+                  // Context-path '/api' open endpoints
+                   .requestMatchers("/ping", "/users/activate", "/me/logout").permitAll()
+                   // Everything else under the context-path 'api' requires auth
+                   .anyRequest().authenticated()
                 )
                 // Insert session auth before Spring filter
                 .addFilterBefore(sessionAuthFilter, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);
