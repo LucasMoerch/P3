@@ -15,7 +15,7 @@ export type CaseDto = {
 
 export function renderCasesPage(): HTMLElement {
   const div = document.createElement('div');
-  div.innerHTML = `<h1>Cases</h1>`;
+  div.innerHTML = `<h1>Cases Overview</h1>`;
 
   const container = document.createElement('div');
   container.classList.add('container');
@@ -23,7 +23,7 @@ export function renderCasesPage(): HTMLElement {
   container.appendChild(renderSearchComponent());
 
   const realDataSection = document.createElement('div');
-  realDataSection.innerHTML = `<h2>Cases from Database</h2><p>Loading...</p>`;
+  realDataSection.innerHTML = `<p>Loading...</p>`;
   container.appendChild(realDataSection);
 
   async function loadCases() {
@@ -37,11 +37,11 @@ export function renderCasesPage(): HTMLElement {
         createdAt: new Date(c.createdAt).toLocaleDateString('da-DK'),
       }));
 
-      realDataSection.innerHTML = '<h2>Cases from Database</h2>';
+      realDataSection.innerHTML = '';
       realDataSection.appendChild(renderTable(caseData));
     } catch (err) {
       console.error('Failed to load cases:', err);
-      realDataSection.innerHTML = '<h2>Cases from Database</h2><p>Failed to load cases data.</p>';
+      realDataSection.innerHTML = '';
     }
   }
 

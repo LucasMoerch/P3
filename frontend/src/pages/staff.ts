@@ -71,7 +71,6 @@ export function renderStaffPage(): HTMLElement {
 
       //render table
       const tableElement = renderTable(staffData);
-      tableElement.classList.add("mt-4")
       realDataSection.appendChild(tableElement);
 
       //Taking each row and adding a eventListener
