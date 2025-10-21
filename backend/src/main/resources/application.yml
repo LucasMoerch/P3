@@ -8,7 +8,8 @@ spring:
     name: enevold
   data:
     mongodb:
-      uri: ${MONGO_URI:mongodb://localhost:27017/enevold}
+      uri: ${MONGO_URI:mongodb://localhost:27017/enevold},
+
   jackson:
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false

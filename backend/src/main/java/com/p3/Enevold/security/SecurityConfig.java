@@ -3,7 +3,11 @@ package com.p3.Enevold.security;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.*;
 import java.util.Arrays;
@@ -22,19 +26,15 @@ public class SecurityConfig {
     }
 
     @Bean
-    SecurityFilterChain security(HttpSecurity http) throws Exception {
+    SecurityFilterChain security(HttpSecurity http, SessionAuthenticationFilter f) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        // Public assets
-                        .requestMatchers("/", "/index.html", "/login.html", "/static/**").permitAll()
-                        // Public endpoints for current flow
-                        .requestMatchers("/api/ping", "/api/users/invite", "/api/users/activate", "/api/me/logout").permitAll()
-                        // Everything else under /api requires an authenticated session
-                        .requestMatchers("/api/**").authenticated()
-                        // Other requests allowed
-                        .anyRequest().permitAll()
+                  // Context-path '/api' open endpoints
+                   .requestMatchers("/ping", "/users/activate", "/me/logout").permitAll()
+                   // Everything else under the context-path 'api' requires auth
+                   .anyRequest().authenticated()
                 )
                 // Insert session auth before Spring filter
                 .addFilterBefore(sessionAuthFilter, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);

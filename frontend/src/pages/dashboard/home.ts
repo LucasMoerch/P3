@@ -94,8 +94,7 @@ export function renderHomePage(): HTMLElement {
       newCase.style.height = '130px';
       newCase.style.width = '48%'; // Two cards per row
 
-      newCase.innerHTML = `<p class="fw-medium text-dark mb-0">Empty Case</p>
-`;
+      newCase.innerHTML = `<p class="fw-medium text-dark mb-0">Empty Case</p>`;
 
       active_cases_container.appendChild(newCase);
 
