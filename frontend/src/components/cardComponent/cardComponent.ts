@@ -1,6 +1,6 @@
 import './cardComponent.scss';
 
-export function renderCard(edit:Boolean): HTMLElement {
+export function renderCard(edit?:Boolean): HTMLElement {
   const overlay = document.createElement('div');
   overlay.className = 'overlay pt-md-5';
   overlay.setAttribute('role', 'dialog');

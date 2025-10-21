@@ -43,16 +43,18 @@ public class TimeController {
                                                @RequestParam String totalTime,
                                                @RequestParam String description,
                                                @RequestParam String date,
-                                               @RequestParam String caseId
+                                               @RequestParam String caseId,
+                                               @RequestParam String originalStartTime
                                                ) {
 
-        var optionalTime = repo.findByStartTime(startTime);
+        var optionalTime = repo.findByStartTime(originalStartTime);
 
         if (optionalTime.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
         var time = optionalTime.get();
+        time.setStartTime(startTime);
         time.setStopTime(stopTime);
         time.setTotalTime(totalTime);
         time.setDescription(description);

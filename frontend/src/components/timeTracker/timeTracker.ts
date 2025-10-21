@@ -1,5 +1,4 @@
 import http from '../../api/http';
-import axios from 'axios';
 import './timetracker.scss';
 import '../../styles/custom.scss';
 import { renderCard } from '../cardComponent/cardComponent';
@@ -37,39 +36,23 @@ async function loadCases() {
 
 async function sendStartTimeData(startTime: string): Promise<void> {
   try {
-    const response = await axios.post(
-      `http://localhost:8080/api/times/start?startTime=${startTime}`
-    );
-    console.log("Response:", response.data);
+    const response = await http.post('/times/start', new URLSearchParams({ startTime }));
+    console.log("Response:", response);
   } catch (error: any) {
     console.error("Error:", error.response?.data || error.message);
   }
 }
 
-async function updateTimeData(startTime: string, stopTime: string, totalTime: string, description: string, date: string, caseId: string): Promise<void> {
+async function updateTimeData(startTime: string, stopTime: string, totalTime: string, description: string, date: string, caseId: string, originalStartTime: string): Promise<void> {
   try {
-    const response = await axios.patch(
-      `http://localhost:8080/api/times/update?startTime=${startTime}&stopTime=${stopTime}&totalTime=${totalTime}&description=${description}&date=${date}&caseId=${caseId}`
-    );
-    console.log("Response:", response.data);
+    const response = await http.patch('/times/update', new URLSearchParams({ startTime, stopTime, totalTime, description, date, caseId, originalStartTime }));
+    console.log("Response:", response);
   } catch (error: any) {
     console.error("Error:", error.response?.data || error.message);
   }
 }
 
 
-async function getTimeData(): Promise<void> {
-  try {
-      const response = await axios.get('/api/times/getTimes', {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-      console.log('getTimeData success:', response.data);
-      return response.data;
-  } catch (error) {
-  }
-}
 
 // Regular functions
 function getTimeNow(): string {
@@ -150,7 +133,7 @@ export function renderTimeTracker(): HTMLElement {
 
   function renderTimeTrackingCard(): HTMLElement {
     // Create overlay
-    const overlay: HTMLElement = renderCard(false);
+    const overlay: HTMLElement = renderCard();
     const card: HTMLElement = overlay.querySelector('.card') as HTMLElement;
     const header: HTMLElement = card.querySelector('.header') as HTMLElement;
     const body: HTMLElement = card.querySelector('.body') as HTMLElement;
@@ -242,19 +225,20 @@ export function renderTimeTracker(): HTMLElement {
     buttonRow.appendChild(startTimeBtn);
 
     loadCases();
-
+    let originalStartTime: string;
     // Event listeners
     startTimeBtn.addEventListener('click', async (): Promise<void> => {
       const startTimeNow: string = getTimeNow();
       //This time needs to be stored the same place as the Id so that each account has a latest time that can be queried
-      const originalStartTime = startTimeNow;
+      originalStartTime = startTimeNow;
+    
       startTimeBtn.remove();
       buttonRow.appendChild(stopTimeBtn);
       displayTime("clockText", startTimeNow)
       displayTime("startTime", startTimeNow)
       //const result = await getTimeData();
       sendStartTimeData(startTimeNow);
-  
+      
 
     });
 
@@ -280,6 +264,8 @@ export function renderTimeTracker(): HTMLElement {
 
       const caseId: string = getCaseIdFromSelect();
 
+      
+
       console.log("Selected case ID:", caseId);
 
       //updates the values after pressing complete
@@ -288,7 +274,8 @@ export function renderTimeTracker(): HTMLElement {
                     calculateTotalTime(startTimeInput, stopTimeInput),
                     description,
                     getDateNow(calenderField),
-                    caseId);
+                    caseId,
+                    originalStartTime);
 
       document.body.removeChild(overlay);
     });
