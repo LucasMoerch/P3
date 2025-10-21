@@ -17,25 +17,20 @@ function getTimeNow(): string {
   return timeNow;
 }
 
-function displayTime(elementId: string, time: string):void{
+function displayTime(elementId: string, time: string): void {
   const element = document.getElementById(elementId);
-      if (element){
-        element.innerHTML = time
-      }
+  if (element) {
+    element.innerHTML = time;
+  }
 }
-
-
-
-  
 
 export function renderTimeTracker(): HTMLElement {
   const div = document.createElement('div');
   div.className = 'time-tracker-container p-4 rounded';
 
   const openCardButton = document.createElement('button');
-  openCardButton.className = 'time-tracker-button ';
+  openCardButton.className = 'time-tracker-button shadow';
   openCardButton.innerHTML = '<i class="fa-solid fa-stopwatch"></i>';
-  
 
   openCardButton.addEventListener('click', (): void => {
     const cardEl = renderTimeTrackingCard();
@@ -63,21 +58,20 @@ export function renderTimeTracker(): HTMLElement {
         <option value="3">3</option>
         <option value="4">4</option>
       </select>
-    </div>`
+    </div>`;
 
-
-    const description: HTMLDivElement = document.createElement('div')
+    const description: HTMLDivElement = document.createElement('div');
     description.className = 'container col-12 p-4';
     description.innerHTML = `
     
     <textarea class="form-control border-0 shadow-sm rounded-3" id="description" 
     rows="6" placeholder="Add a short description..."
     ></textarea>
-    `
+    `;
 
     const buttonRow: HTMLDivElement = document.createElement('div');
-    buttonRow.className =  'container d-flex justify-content-between px-4 pb-5';
-  
+    buttonRow.className = 'container d-flex justify-content-between px-4 pb-5';
+
     const startTimeBtn = document.createElement('button');
     startTimeBtn.className = 'btn btn-success col-4 rounded-pill ms-4';
     startTimeBtn.innerText = 'Start Time';
@@ -91,7 +85,7 @@ export function renderTimeTracker(): HTMLElement {
     completeBtn.innerText = 'Complete';
 
     const clockField: HTMLDivElement = document.createElement('div');
-    clockField.className = "container rounded";
+    clockField.className = 'container rounded';
     clockField.innerHTML = `
     <div class="d-flex justify-content-center">
      <span id="clockText" class="clock-field text-center light-bg p-4 m-5 rounded w-auto">
@@ -123,11 +117,7 @@ export function renderTimeTracker(): HTMLElement {
         id="stopTime" 
         value="00:00:00">
       </div>
-    </div>`
-      
-
-
-    
+    </div>`;
 
     // Build card
     body.appendChild(dropDownRow);
@@ -142,24 +132,21 @@ export function renderTimeTracker(): HTMLElement {
     buttonRow.appendChild(startTimeBtn);
 
     // Events
-   
-
-
 
     // Event listeners
     startTimeBtn.addEventListener('click', (): void => {
       const startTimeNow: string = getTimeNow();
       startTimeBtn.remove();
       buttonRow.appendChild(stopTimeBtn);
-      displayTime("clockText", startTimeNow)
-      displayTime("startTime", startTimeNow)
+      displayTime('clockText', startTimeNow);
+      displayTime('startTime', startTimeNow);
     });
 
     stopTimeBtn.addEventListener('click', (): void => {
       const stopTimeNow: string = getTimeNow();
       buttonRow.appendChild(completeBtn);
-      displayTime("clockText", stopTimeNow)
-      displayTime("stopTime", stopTimeNow)
+      displayTime('clockText', stopTimeNow);
+      displayTime('stopTime', stopTimeNow);
     });
 
     return overlay;

@@ -9,9 +9,10 @@ export function renderCard(): HTMLElement {
   const card = document.createElement('div');
   card.className = 'card bg-card-bg';
 
- const closeBtn = document.createElement('button');
- closeBtn.className = 'btn back-button border-0 bg-transparent text-primary position-absolute top-0 m-3 fs-2';
- closeBtn.innerHTML = '<i class="fa-solid fa-arrow-left"></i>';
+  const closeBtn = document.createElement('button');
+  closeBtn.className =
+    'btn back-button border-0 bg-transparent text-primary position-absolute top-0 m-3 fs-2';
+  closeBtn.innerHTML = '<i class="fa-solid fa-arrow-left"></i>';
 
   // Append card inside overlay
 
@@ -22,10 +23,9 @@ export function renderCard(): HTMLElement {
   const body = document.createElement('div');
   body.className = 'body';
 
-
-   closeBtn.addEventListener('click', () => {
-      overlay.remove();
-    });
+  closeBtn.addEventListener('click', () => {
+    overlay.remove();
+  });
   card.appendChild(closeBtn);
   overlay.appendChild(card);
   card.appendChild(header);

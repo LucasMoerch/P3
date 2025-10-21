@@ -1,17 +1,12 @@
-.Search {
-  display: flex;
-  gap: 0.5rem;
-  margin: 1rem 0;
+.search-container input {
+  width: 80%;
+  padding: 10px 40px 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 25px;
+  outline: none;
 }
-
-.Search-input {
-  flex: 1;
-  padding: 0.5rem;
-  font-size: 1rem;
-}
-
-.Search-button {
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
+.search-container .search-button {
   cursor: pointer;
+  border: none;
+  background: none;
 }

@@ -1,15 +1,35 @@
 import './newButton.scss';
+import { renderAddNewStaffCard } from '../newCard/addNewStaffCard';
+import { renderAddNewClientCard } from '../newCard/addNewClientCard';
+import { renderAddNewCaseCard } from '../newCard/addNewCaseCard';
 
-export function renderNewButton(){
+export function renderNewButton(): HTMLElement {
+  const addButton = document.createElement('button');
+  addButton.className = 'button';
 
-    // Create client button
-    const addNewButton = document.createElement('button');
-    addNewButton.className = 'newClient-button';
+  // Import icon from Font Awesome
+  const newClientIcon = document.createElement('i');
+  newClientIcon.className = 'fa-solid fa-user-plus';
+  addButton.appendChild(newClientIcon);
 
-    // Import icon from Font Awesome
-    const newClientIcon = document.createElement ('i');
-    newClientIcon.className = "fa-solid fa-user-plus"
-    addNewButton.appendChild(newClientIcon);
+  addButton.addEventListener('click', () => {
+    const path = window.location.pathname.toLowerCase();
 
-    return addNewButton;
+    let cardEl: HTMLElement | null = null;
+
+    if (path.includes('staff')) {
+      cardEl = renderAddNewStaffCard();
+    } else if (path.includes('client')) {
+      cardEl = renderAddNewClientCard();
+    } else if (path.includes('case')) {
+      cardEl = renderAddNewCaseCard();
+    } else {
+      console.warn('No matching overlay found for path:', path);
+      return;
+    }
+
+    document.body.appendChild(cardEl);
+  });
+
+  return addButton;
 }

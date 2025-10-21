@@ -17,7 +17,6 @@ services:
     environment:
       MONGO_URI: ${MONGO_URI}
       SPRING_PROFILES_ACTIVE: prod
-      JWT_SECRET: ${JWT_SECRET}
     ports:
       - "8080:8080"
     depends_on:
