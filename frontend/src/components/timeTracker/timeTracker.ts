@@ -139,6 +139,7 @@ export function renderTimeTracker(): HTMLElement {
     const body: HTMLElement = card.querySelector('.body') as HTMLElement;
     // Add your custom content
 
+
     const dropDownRow: HTMLDivElement = document.createElement('div');
     dropDownRow.innerHTML = `
     <div class="container p-4 rounded">
