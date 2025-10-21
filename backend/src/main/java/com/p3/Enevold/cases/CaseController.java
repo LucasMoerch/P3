@@ -32,8 +32,6 @@ public class CaseController {
 
             Case c = new Case();
 
-            c.setId("CASE-" + (int) (Math.random() * 10000));
-
             // ✅ Ensure this exists:
             c.setClientId(new ObjectId("652bc56efba9ab8ef7ab9a91")); // temporary dummy client
 
@@ -43,7 +41,6 @@ public class CaseController {
             c.setAssignedUserIds(new ArrayList<>());
 
             Date now = Date.from(Instant.now());
-            c.setCreatedAt(now);
             c.setUpdatedAt(now);
 
             Case saved = repo.save(c);

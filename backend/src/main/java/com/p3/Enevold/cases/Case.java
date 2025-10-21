@@ -1,6 +1,8 @@
 package com.p3.Enevold.cases;
 
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.bson.types.ObjectId;
@@ -30,15 +32,17 @@ public class Case {
     @Field("assignedUserIds")
     private List<ObjectId> assignedUserIds;
 
-    @Field("createdAt")
+    @CreatedDate
     private Date createdAt;
 
     @Field("updatedAt")
     private Date updatedAt;
 
+    @CreatedBy
+    private String createdBy;
+
     // getters and setters
     public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
 
     public ObjectId getClientId() { return clientId; }
     public void setClientId(ObjectId clientId) { this.clientId = clientId; }
@@ -56,8 +60,8 @@ public class Case {
     public void setAssignedUserIds(List<ObjectId> assignedUserIds) { this.assignedUserIds = assignedUserIds; }
 
     public Date getCreatedAt() { return createdAt; }
-    public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
-
     public Date getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(Date updatedAt) { this.updatedAt = updatedAt; }
+
+    public String getCreatedBy() { return createdBy; }
 }

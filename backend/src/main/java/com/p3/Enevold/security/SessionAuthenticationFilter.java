@@ -48,12 +48,9 @@ public class SessionAuthenticationFilter extends OncePerRequestFilter {
                                 .map(SimpleGrantedAuthority::new)
                                 .toList();
 
-                        // Build principal
-                        var principal = new SessionUserPrincipal(user.getId(),
-                                user.getAuth() != null ? user.getAuth().getEmail() : null,
-                                user.getRoles());
-                        // Create and insert auth into Springs SecurityContext
-                        var auth = new UsernamePasswordAuthenticationToken(principal, null, authorities);
+
+                        // principal = user id (String)
+                        var auth = new UsernamePasswordAuthenticationToken(uid, null, authorities);
                         auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                         SecurityContextHolder.getContext().setAuthentication(auth);
                     }
