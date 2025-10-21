@@ -44,7 +44,7 @@ export type UserDTO = {
 
 export function renderStaffPage(): HTMLElement {
   const div = document.createElement('div');
-  div.innerHTML = `<h1>Staff page</h1>`;
+  div.innerHTML = `<h1>Staff Overview</h1>`;
 
   const container = document.createElement('div');
   container.classList.add('container');
@@ -66,11 +66,12 @@ export function renderStaffPage(): HTMLElement {
         name: user.profile?.displayName,
         role: user.roles.join(', '),
       }));
-      //Loads a title and renders the table from before with user data.
-      realDataSection.innerHTML = '<h2>Staff List</h2>';
+      // remove "loading..."
+      realDataSection.innerHTML = '';
 
       //render table
       const tableElement = renderTable(staffData);
+      tableElement.classList.add("mt-4")
       realDataSection.appendChild(tableElement);
 
       //Taking each row and adding a eventListener

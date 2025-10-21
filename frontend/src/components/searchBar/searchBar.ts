@@ -18,7 +18,7 @@ export function renderSearchComponent(): HTMLElement {
 
   // Import icon from Font Awesome
   const searchIcon = document.createElement('i');
-  searchIcon.className = 'fa-solid fa-magnifying-glass';
+  searchIcon.className = 'fa-solid fa-magnifying-glass text-dark';
   searchButton.appendChild(searchIcon);
 
   // Example: log input value when clicked
@@ -28,7 +28,7 @@ export function renderSearchComponent(): HTMLElement {
 
   // Group the input field and search button into a nested container
   const searchContainer = document.createElement('div');
-  searchContainer.className = 'search-container';
+  searchContainer.className = 'search-container d-flex justify-content-between';
 
   // Append input and button to the container
   searchContainer.appendChild(input);
@@ -36,10 +36,7 @@ export function renderSearchComponent(): HTMLElement {
   searchDiv.appendChild(searchContainer);
 
   if (isAdmin()) {
-    console.log('You are Admin');
     searchContainer.appendChild(renderNewButton());
-  } else {
-    console.log('You are not Admin');
   }
 
   return searchDiv;
