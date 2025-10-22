@@ -1,6 +1,6 @@
 import './cardComponent.scss';
 
-export function renderCard(edit?:Boolean): HTMLElement {
+export function renderCard(edit?: Boolean): HTMLElement {
   const overlay = document.createElement('div');
   overlay.className = 'overlay pt-md-5';
   overlay.setAttribute('role', 'dialog');
@@ -14,14 +14,13 @@ export function renderCard(edit?:Boolean): HTMLElement {
     'btn back-button border-0 bg-transparent text-primary position-absolute top-0 m-3 fs-2';
   closeBtn.innerHTML = '<i class="fa-solid fa-arrow-left"></i>';
 
-
-
-if (edit){
- const editBtn = document.createElement('button');
- editBtn.className = 'btn back-button border-0 bg-transparent text-primary position-absolute top-0  end-0 m-3 fs-2';
- editBtn.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
-  card.appendChild(editBtn);
-}
+  if (edit) {
+    const editBtn = document.createElement('button');
+    editBtn.className =
+      'btn back-button border-0 bg-transparent text-primary position-absolute top-0  end-0 m-3 fs-2';
+    editBtn.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
+    card.appendChild(editBtn);
+  }
   // Append card inside overlay
 
   const header = document.createElement('div');

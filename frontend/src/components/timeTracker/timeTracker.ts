@@ -8,51 +8,68 @@ import { CaseDto } from '../../pages/cases';
 //api functions
 
 async function loadCases() {
-    try {
-      const cases = (await http.get('/cases')) as CaseDto[];
+  try {
+    const cases = (await http.get('/cases')) as CaseDto[];
 
-      const caseData = (cases ?? []).map((c) => ({
-        title: c.title || 'Untitled',
-        id: c.id || 'Untitled'
-      }));
+    const caseData = (cases ?? []).map((c) => ({
+      title: c.title || 'Untitled',
+      id: c.id || 'Untitled',
+    }));
 
-      console.log('Loaded cases:', caseData);
-      const casesSelect = document.getElementById('caseSelect') as HTMLSelectElement;
-      if (!casesSelect) {
-        console.error('Case select element not found');
-        return;
-      }
-      caseData.forEach(caseItem => {
-        const option = document.createElement('option');
-        option.value = caseItem.title;
-        option.textContent = caseItem.title;
-        option.id = caseItem.id;
-        casesSelect.appendChild(option);
-      });
-    } catch (err) {
-      console.error('Failed to load cases:', err);
+    console.log('Loaded cases:', caseData);
+    const casesSelect = document.getElementById('caseSelect') as HTMLSelectElement;
+    if (!casesSelect) {
+      console.error('Case select element not found');
+      return;
     }
+    caseData.forEach((caseItem) => {
+      const option = document.createElement('option');
+      option.value = caseItem.title;
+      option.textContent = caseItem.title;
+      option.id = caseItem.id;
+      casesSelect.appendChild(option);
+    });
+  } catch (err) {
+    console.error('Failed to load cases:', err);
   }
+}
 
 async function sendStartTimeData(startTime: string): Promise<void> {
   try {
     const response = await http.post('/times/start', new URLSearchParams({ startTime }));
-    console.log("Response:", response);
+    console.log('Response:', response);
   } catch (error: any) {
-    console.error("Error:", error.response?.data || error.message);
+    console.error('Error:', error.response?.data || error.message);
   }
 }
 
-async function updateTimeData(startTime: string, stopTime: string, totalTime: string, description: string, date: string, caseId: string, originalStartTime: string): Promise<void> {
+async function updateTimeData(
+  startTime: string,
+  stopTime: string,
+  totalTime: string,
+  description: string,
+  date: string,
+  caseId: string,
+  originalStartTime: string,
+): Promise<void> {
   try {
-    const response = await http.patch('/times/update', new URLSearchParams({ startTime, stopTime, totalTime, description, date, caseId, originalStartTime }));
-    console.log("Response:", response);
+    const response = await http.patch(
+      '/times/update',
+      new URLSearchParams({
+        startTime,
+        stopTime,
+        totalTime,
+        description,
+        date,
+        caseId,
+        originalStartTime,
+      }),
+    );
+    console.log('Response:', response);
   } catch (error: any) {
-    console.error("Error:", error.response?.data || error.message);
+    console.error('Error:', error.response?.data || error.message);
   }
 }
-
-
 
 // Regular functions
 function getTimeNow(): string {
@@ -84,20 +101,29 @@ function calculateTotalTime(startTime: string, stopTime: string): string {
   const [startHours, startMinutes, startSeconds] = startTime.split(':').map(Number);
   const [stopHours, stopMinutes, stopSeconds] = stopTime.split(':').map(Number);
 
-  let totalSeconds = (stopHours * 3600 + stopMinutes * 60 + stopSeconds) - (startHours * 3600 + startMinutes * 60 + startSeconds);
+  let totalSeconds =
+    stopHours * 3600 +
+    stopMinutes * 60 +
+    stopSeconds -
+    (startHours * 3600 + startMinutes * 60 + startSeconds);
 
   if (totalSeconds < 0) {
     totalSeconds += 24 * 3600; // Adjust for times that cross midnight
   }
 
-  const hours = Math.floor(totalSeconds / 3600).toString().padStart(2, '0');
-  const minutes = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, '0');
+  const hours = Math.floor(totalSeconds / 3600)
+    .toString()
+    .padStart(2, '0');
+  const minutes = Math.floor((totalSeconds % 3600) / 60)
+    .toString()
+    .padStart(2, '0');
   const seconds = (totalSeconds % 60).toString().padStart(2, '0');
   return `${hours}:${minutes}:${seconds}`;
 }
 
 function getDateNow(date: string): string {
-  if (date) { // if date is not empty, return the selected date
+  if (date) {
+    // if date is not empty, return the selected date
     const [year, month, day] = date.split('-').map(Number);
     return `${day}-${month}-${year}`;
   }
@@ -108,7 +134,7 @@ function getDateNow(date: string): string {
   const year: string = dateObj.getFullYear().toString();
   return `${day}-${month}-${year}`;
 }
-function getCaseIdFromSelect(): string{
+function getCaseIdFromSelect(): string {
   const casesSelect = document.getElementById('caseSelect') as HTMLSelectElement;
   const selectedOption = casesSelect.options[casesSelect.selectedIndex];
   const selectedCaseId = selectedOption.id;
@@ -122,7 +148,6 @@ export function renderTimeTracker(): HTMLElement {
   const openCardButton = document.createElement('button');
   openCardButton.className = 'time-tracker-button shadow';
   openCardButton.innerHTML = '<i class="fa-solid fa-stopwatch"></i>';
-  
 
   openCardButton.addEventListener('click', (): void => {
     const cardEl = renderTimeTrackingCard();
@@ -139,7 +164,6 @@ export function renderTimeTracker(): HTMLElement {
     const body: HTMLElement = card.querySelector('.body') as HTMLElement;
     // Add your custom content
 
-
     const dropDownRow: HTMLDivElement = document.createElement('div');
     dropDownRow.innerHTML = `
     <div class="container p-4 rounded">
@@ -147,7 +171,7 @@ export function renderTimeTracker(): HTMLElement {
         <option selected>Choose a case...</option>
 
       </select>
-    </div>`
+    </div>`;
 
     const description: HTMLDivElement = document.createElement('div');
     description.className = 'container col-12 p-4';
@@ -206,11 +230,9 @@ export function renderTimeTracker(): HTMLElement {
         id="stopTime" 
         value="00:00:00">
       </div>
-    </div>`
-      
-    const calender: HTMLElement = renderCalendar();
+    </div>`;
 
-    
+    const calender: HTMLElement = renderCalendar();
 
     // Build card
     body.appendChild(dropDownRow);
@@ -231,15 +253,13 @@ export function renderTimeTracker(): HTMLElement {
       const startTimeNow: string = getTimeNow();
       //This time needs to be stored the same place as the Id so that each account has a latest time that can be queried
       originalStartTime = startTimeNow;
-    
+
       startTimeBtn.remove();
       buttonRow.appendChild(stopTimeBtn);
-      displayTime("clockText", startTimeNow)
-      displayTime("startTime", startTimeNow)
+      displayTime('clockText', startTimeNow);
+      displayTime('startTime', startTimeNow);
       //const result = await getTimeData();
       sendStartTimeData(startTimeNow);
-      
-
     });
 
     stopTimeBtn.addEventListener('click', (): void => {
@@ -248,34 +268,35 @@ export function renderTimeTracker(): HTMLElement {
       buttonRow.appendChild(completeBtn);
       displayTime('clockText', stopTimeNow);
       displayTime('stopTime', stopTimeNow);
-
-
     });
 
     completeBtn.addEventListener('click', (): void => {
       //gets the start time
-      const startTimeInput: string = (document.getElementById('startTime') as HTMLInputElement).value;
+      const startTimeInput: string = (document.getElementById('startTime') as HTMLInputElement)
+        .value;
       //gets the stop time
       const stopTimeInput: string = (document.getElementById('stopTime') as HTMLInputElement).value;
       //Gets the text from the description
-      const description: string = (document.getElementById('description') as HTMLInputElement).value;
+      const description: string = (document.getElementById('description') as HTMLInputElement)
+        .value;
 
-      const calenderField: string = (document.getElementById('dateInput') as HTMLInputElement).value;
+      const calenderField: string = (document.getElementById('dateInput') as HTMLInputElement)
+        .value;
 
       const caseId: string = getCaseIdFromSelect();
 
-      
-
-      console.log("Selected case ID:", caseId);
+      console.log('Selected case ID:', caseId);
 
       //updates the values after pressing complete
-      updateTimeData(startTimeInput,
-                    stopTimeInput,
-                    calculateTotalTime(startTimeInput, stopTimeInput),
-                    description,
-                    getDateNow(calenderField),
-                    caseId,
-                    originalStartTime);
+      updateTimeData(
+        startTimeInput,
+        stopTimeInput,
+        calculateTotalTime(startTimeInput, stopTimeInput),
+        description,
+        getDateNow(calenderField),
+        caseId,
+        originalStartTime,
+      );
 
       document.body.removeChild(overlay);
     });
