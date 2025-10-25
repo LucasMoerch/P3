@@ -1,40 +1,25 @@
-import http from '../api/http';
-import { renderLogo } from '../components/logoComponent/logo';
-import { navigate } from '../main';
-import { initAuth } from '../auth/auth';
+import http from '../../api/http';
+import { renderLogo } from '../../components/logoComponent/logo';
+import { navigate } from '../../main';
+import { initAuth } from '../../auth/auth';
+import './loginStyles.scss';
 
 // Uses google_client_id from .env
 const GOOGLE_CLIENT_ID = (process.env.GOOGLE_CLIENT_ID as string) || '';
 
 export function renderLoginPage(): HTMLElement {
+  document.body.style.backgroundImage = `url("../images/toemrer.jpeg")`;
+  document.body.style.backgroundSize = 'cover';
+  document.body.style.backgroundPosition = 'center';
+  document.body.style.backgroundRepeat = 'no-repeat';
+  document.body.style.backgroundAttachment = 'fixed';
+  document.body.style.overflow = 'hidden';
+
   const container = document.createElement('div');
   container.className = 'container d-flex justify-content-center align-items-center vh-100';
 
-  const row = document.createElement('div');
-  row.className = 'row w-100 justify-content-center';
-
-  const col = document.createElement('div');
-  col.className = 'col-12 col-md-8 col-lg-6';
-
   const card = document.createElement('div');
-  card.className = 'card p-5 login-card d-flex flex-column justify-content-center';
-
-  const form = document.createElement('form');
-  form.id = 'login-form';
-  form.innerHTML = `
-    <div class="mb-3">
-      <label for="email" class="form-label">E-mail</label>
-      <input type="email" class="form-control" id="email" placeholder="Enter your email">
-    </div>
-    <div class="mb-3">
-      <label for="password" class="form-label">Password</label>
-      <input type="password" class="form-control" id="password" placeholder="Enter your password">
-    </div>
-    <div class="d-grid mb-3">
-      <button type="submit" class="btn btn-primary">Log in</button>
-    </div>
-    <div class="text-center text-muted mb-2">or</div>
-  `;
+  card.className = 'card p-5 login-card d-flex flex-column justify-content-center ';
 
   const gContainer = document.createElement('div');
   gContainer.innerHTML = `
@@ -43,7 +28,7 @@ export function renderLoginPage(): HTMLElement {
          data-callback="onGoogleCredential"
          data-auto_prompt="false">
     </div>
-    <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline"></div>
+    <div id="gBtn" class="g_id_signin" data-type="standard" data-size="large" data-theme="outline"></div>
   `;
 
   // load GIS script once
@@ -65,6 +50,7 @@ export function renderLoginPage(): HTMLElement {
       // success
       navigate('home');
       await initAuth();
+      document.body.style.backgroundImage = '';
     } catch (err: any) {
       // Axios errors, err.response?.data has server message
       const api = err?.response?.data;
@@ -80,22 +66,12 @@ export function renderLoginPage(): HTMLElement {
     }
   };
 
-  // regular form submit
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    // For now, just go home
-    navigate('home');
-  });
-
   ensureGisLoaded();
 
   // assemble
+  container.appendChild(card);
   card.appendChild(renderLogo());
-  card.appendChild(form);
   card.appendChild(gContainer);
 
-  col.appendChild(card);
-  row.appendChild(col);
-  container.appendChild(row);
   return container;
 }
