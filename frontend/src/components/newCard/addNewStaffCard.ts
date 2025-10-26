@@ -1,6 +1,7 @@
 import { renderCard } from '../cardComponent/cardComponent';
+import type { UserRole } from '../../pages/staff';
 
-export function renderAddNewStaffCard(): HTMLElement {
+export function renderAddNewStaffCard(onInvite?: (email: string, role: UserRole) => Promise<boolean>): HTMLElement {
   // Create overlay
   const overlay: HTMLElement = renderCard();
   const card: HTMLElement = overlay.querySelector('.card') as HTMLElement;
@@ -17,6 +18,11 @@ export function renderAddNewStaffCard(): HTMLElement {
     <div class="mb-3">
       <label for="itemName" class="form-label">Staff Name</label>
       <input type="text" id="itemName" class="form-control" placeholder="Enter name...">
+    </div>
+
+    <div class="mb-3">
+       <label for="itemName" class="form-label">Staff email</label>
+       <input type="text" id="itemName" class="form-control" placeholder="Enter email...">
     </div>
 
     <div class="mb-3">

@@ -3,9 +3,10 @@ import { renderAddNewStaffCard } from '../newCard/addNewStaffCard';
 import { renderAddNewClientCard } from '../newCard/addNewClientCard';
 import { renderAddNewCaseCard } from '../newCard/addNewCaseCard';
 
-export function renderNewButton(): HTMLElement {
+export function renderNewButton(label: string = 'New'): HTMLElement {
   const addButton = document.createElement('button');
   addButton.className = 'button';
+  addButton.textContent = label + ' ';
 
   // Import icon from Font Awesome
   const newClientIcon = document.createElement('i');

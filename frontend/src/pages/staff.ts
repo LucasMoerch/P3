@@ -41,43 +41,98 @@ export type UserDTO = {
   } | null;
 };
 
-export function renderStaffPage(): HTMLElement {
-  const div = document.createElement('div');
-  div.innerHTML = `<h1>Staff page</h1>`;
+/**
+ * @param email The email of the user to invite.
+ * @param role The role to assign ('staff' or 'admin').
+ * @returns The UserDTO object returned by the server.
+ */
+async function inviteUser(email: string, role: UserRole): Promise<UserDTO> {
 
-  const container = document.createElement('div');
-  container.classList.add('container');
-  container.appendChild(div);
-  container.appendChild(renderSearchComponent());
+  const url = '/api/admin/invite';
+  const data = { email, role };
 
-  //new section for real data from backend
-  const realDataSection = document.createElement('div');
-  realDataSection.innerHTML = `<h2>Users from Database</h2><p>Loading...</p>`;
-  container.appendChild(realDataSection);
+  const response = (await http.post(url, data)) as UserDTO;
+  return response;
+}
 
-  // fetch users from backend using axios, which auto-parses JSON.
-  //Takes the display name and role from the database. Map takes the specific piece of data that is needed.
-  async function loadStaff() {
+function setupInvitationHandler(realDataSection: HTMLElement) {
+    const handleInvite = async (email: string, role: UserRole) => {
+        try {
+            if (!email || !role) {
+                alert('Please provide both email and role.');
+                return false;
+            }
+
+            const newUser = await inviteUser(email, role);
+
+            alert(`Invitation sent successfully to ${newUser.auth.email} with role(s): ${newUser.roles.join(', ')}`);
+
+            loadStaff(realDataSection);
+
+            return true;
+        } catch (err) {
+            console.error('Invitation Failed:', err);
+            const message = (err as any).response?.data?.message || 'Failed to send invitation. Check server logs.';
+            alert(`Invitation failed: ${message}`);
+            return false; // Keep the form/card open on failure
+        }
+    };
+    return handleInvite;
+}
+
+// loadStaff takes realDataSection as an argument to be refreshable
+async function loadStaff(realDataSection: HTMLElement) {
     try {
-      const users = (await http.get('/users')) as UserDTO[];
-      const staffData = (users ?? []).map((user) => ({
-        id: user.id,
-        name: user.profile?.displayName,
-        role: user.roles.join(', '),
-      }));
-      realDataSection.innerHTML = '<h2>Users from Database</h2>';
-      realDataSection.appendChild(renderTable(staffData));
-    } catch (err) {
-      console.error('Failed to load staff:', err);
-      realDataSection.innerHTML = '<h2>Users from Database</h2><p>Failed to load staff data.</p>';
-    }
-  }
-  loadStaff();
+        realDataSection.innerHTML = `<h2>Users from Database</h2><p>Loading...</p>`;
 
-  if (isAdmin()) {
-    console.log('You are Admin');
-  } else {
-    console.log('You are not Admin');
-  }
-  return container;
+        const users = (await http.get('/users')) as UserDTO[];
+
+        const staffData = (users ?? []).map((user) => ({
+            id: user.id,
+            name: user.profile?.displayName || user.auth.email, // Use email if display name is null
+            role: user.roles.join(', '),
+            status: user.status,
+        }));
+
+        realDataSection.innerHTML = '<h2>Users from Database</h2>';
+        realDataSection.appendChild(renderTable(staffData));
+    } catch (err) {
+        console.error('Failed to load staff:', err);
+        realDataSection.innerHTML = '<h2>Users from Database</h2><p>Failed to load staff data.</p>';
+    }
+}
+
+export function renderStaffPage(): HTMLElement {
+    const div = document.createElement('div');
+    div.innerHTML = `<h1>Staff page</h1>`;
+
+    const container = document.createElement('div');
+    container.classList.add('container');
+    container.appendChild(div);
+    container.appendChild(renderSearchComponent());
+
+    // New section for real data from backend
+    const realDataSection = document.createElement('div');
+    realDataSection.innerHTML = `<h2>Users from Database</h2><p>Loading...</p>`;
+
+    loadStaff(realDataSection);
+
+    // Admin only functionality
+    if (isAdmin()) {
+        console.log('You are Admin');
+
+        const handleInvite = setupInvitationHandler(realDataSection);
+        //const newStaffButton = renderNewButton('New Staff');
+        const newStaffCard = renderAddNewStaffCard(handleInvite);
+
+        //container.appendChild(newStaffButton);
+        container.appendChild(newStaffCard);
+
+    } else {
+        console.log('You are not Admin');
+    }
+
+    container.appendChild(realDataSection);
+
+    return container;
 }
