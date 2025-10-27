@@ -100,73 +100,42 @@ export function renderStaffPage(): HTMLElement {
     const header: HTMLElement = card.querySelector('.header') as HTMLElement;
     const body: HTMLElement = card.querySelector('.body') as HTMLElement;
 
-    //Added this because we don't want the back button from renderCard.
-    const backButton = overlay.querySelector('.closeBtn');
-    if (backButton) backButton.remove();
+      //Overwriting the header from cardComponent
+      header.innerHTML = `<h2 class="m-0 text-center fw-semibold">${user.profile?.displayName || 'Unknown User'}</h2>`;
 
-    const editBtn = card.querySelector('.back-button.end-0') as HTMLElement | null;
-
-    header.className = `
-      profile-header d-flex align-items-center justify-content-between
-      px-4 py-3 bg-white shadow-sm rounded mt-4 position-relative
-      `;
-
-    header.innerHTML = `
-      <button class="btn exit-button border-0 bg-transparent text-primary position-absolute start-0 ps-3">
-        <i class="fa-solid fa-arrow-left fs-1"></i>
-      </button>
-
-      <div class="w-100 d-flex align-items-center justify-content-between">
-        <div class="flex-grow-1 text-center">
-          <h2 class="profile-name fw-bold mb-0 text-dark">
-            ${user.profile?.displayName || 'Unknown User'}
-          </h2>
+      //table from bootstrap
+      body.innerHTML = `
+      <div class="space-to-header d-flex justify-content-center">
+        <div class="p-2 rounded-3" style="max-width: 700px; width: 100%;">
+            <table class="table table-striped w-100 text-wrap" style="table-layout: fixed";>
+              <thead>
+                <tr>
+                  <th scope="col" class="fs-4">Birthdate</th>
+                  <td class="fs-4 text-end pe-3">${user.profile?.birthDate || 'N/A'}</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row" class="fs-4">Mobile Number</th>
+                  <td class="fs-4 text-end pe-3">${user.profile?.phone || 'N/A'}</td>
+                </tr>
+                <tr>
+                  <th scope="row" class="fs-4">E-mail</th>
+                  <td class="fs-4 text-end pe-3">${user.auth?.email || 'N/A'}</td>
+                </tr>
+                <tr>
+                  <th scope="row" class="fs-4">Adress</th>
+                  <td class="fs-4 text-end pe-3">${user.profile?.adress || 'N/A'}</td>
+                </tr>
+                <tr>
+                  <th scope="row" class="fs-4">CPR</th>
+                  <td class="fs-4 text-end pe-3">${user.profile?.CPR || 'N/A'}</td>
+                </tr>
+              </tbody>
+            </table>
         </div>
       </div>
-      `;
-
-    // manipulates the DOM structure, it doesn't handle styling, only placement and setup.
-    if (editBtn) {
-      // Adjust style to fit the profile header layout
-      editBtn.classList.remove('top-0', 'm-3', 'fs-2');
-      editBtn.classList.add('end-0', 'position-absolute');
-      editBtn.style.top = '50%';
-      editBtn.style.transform = 'translateY(-50%)';
-      header.appendChild(editBtn);
-    }
-
-    // Back button functionality
-    const back = header.querySelector('.exit-button');
-    back?.addEventListener('click', () => overlay.remove());
-
-    // This is the body where the information is displayed like mail, mobile number etc.
-    body.innerHTML = `
-      <div class="card profile-card w-100 shadow-sm border-0">
-        <div class="card-body fs-5">
-          <div class="info-row d-flex justify-content-between border-bottom py-3">
-            <span class="label text-muted fw-medium">Birthdate</span>
-            <span class="value fw-semibold">${user.profile?.birthDate || 'N/A'}</span>
-          </div>
-          <div class="info-row d-flex justify-content-between border-bottom py-3">
-            <span class="label text-muted fw-medium">Mobile Number</span>
-            <span class="value fw-semibold">${user.profile?.phone || 'N/A'}</span>
-          </div>
-          <div class="info-row d-flex justify-content-between border-bottom py-3">
-            <span class="label text-muted fw-medium">E-mail</span>
-            <span class="value fw-semibold">${user.auth?.email || 'N/A'}</span>
-          </div>
-          <div class="info-row d-flex justify-content-between border-bottom py-3">
-            <span class="label text-muted fw-medium">Address</span>
-            <span class="value fw-semibold text-end">${user.profile?.adress || 'N/A'}</span>
-          </div>
-          <div class="info-row d-flex justify-content-between py-3">
-            <span class="label text-muted fw-medium">CPR Number</span>
-            <span class="value fw-semibold">${user.profile?.CPR || 'N/A'}</span>
-          </div>
-        </div>
-      </div>
-      `;
-
+    `;
     const saveBtn = document.createElement('button');
     saveBtn.className = 'btn btn-primary btn-lg';
     saveBtn.innerText = 'Save';
