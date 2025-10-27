@@ -1,21 +1,137 @@
 import { renderSearchComponent } from '../components/searchBar/searchBar';
 import { renderTable } from '../components/tableComponent/tableComponent';
+import { renderCard } from '../components/cardComponent/cardComponent';
+import { renderTabs } from '../components/tabsComponent/tabsComponent';
+import http from '../api/http';
+
+export type ClientDTO = {
+    id: string;
+    name: string;
+    address?: string;
+    contact?: string;
+    email?: string;
+    phone?: string;
+    createdAt?: string;
+    updatedAt?: string;
+};
 
 export function renderClientsPage(): HTMLElement {
-  const div = document.createElement('div');
-  div.innerHTML = `<h1>Clients Overview</h1>`;
+    const container = document.createElement('div');
+    container.classList.add('container');
 
-  const container = document.createElement('div');
-  container.classList.add('container');
-  container.appendChild(div);
-  container.appendChild(renderSearchComponent());
+    const header = document.createElement('h1');
+    header.textContent = 'Clients Overview';
+    container.appendChild(header);
 
-  const placeholderData: { name: string; address: string; contact: string }[] = [
-    { name: 'John Johnson', address: 'Falseroad', contact: '+5454544' },
-    { name: 'Bruce Wayne', address: 'GotHam', contact: '+454542' },
-    { name: 'Guy Black', address: 'Milkyway', contact: '+88888888' },
-  ];
+    container.appendChild(renderSearchComponent());
 
-  container.appendChild(renderTable(placeholderData));
-  return container;
+    const realDataSection = document.createElement('div');
+    realDataSection.innerHTML = '<p>Loading...</p>';
+    container.appendChild(realDataSection);
+
+    // Fetch clients from backend
+    async function loadClients() {
+        try {
+            const clients = (await http.get('/fetchClients')) as ClientDTO[];
+
+            const clientData = (clients ?? []).map(c => ({
+                id: c.id,
+                name: c.name,
+                address: c.address || '-',
+                contact: c.contact || c.phone || 'N/A',
+            }));
+
+            realDataSection.innerHTML = '';
+            const tableElement = renderTable(clientData);
+            realDataSection.appendChild(tableElement);
+
+            // Clickable rows like InspectUser / InspectCase
+            const rows = tableElement.querySelectorAll('tr');
+            rows.forEach((row, index) => {
+                if (index === 0) return; // skip header
+                row.addEventListener('click', () => {
+                    const client = clients[index - 1];
+                    const popup = inspectClient(client);
+                    document.body.appendChild(popup);
+                    console.log('client clicked');
+                });
+            });
+        } catch (err) {
+            console.error('Failed to load clients:', err);
+            realDataSection.innerHTML = '<p class="text-danger">Failed to load clients.</p>';
+        }
+    }
+
+    // Inspect Client popup — same layout as InspectUser
+    function inspectClient(client: ClientDTO): HTMLElement {
+        const overlay: HTMLElement = renderCard(true);
+        const card: HTMLElement = overlay.querySelector('.card') as HTMLElement;
+        const headerEl: HTMLElement = card.querySelector('.header') as HTMLElement;
+        const body: HTMLElement = card.querySelector('.body') as HTMLElement;
+
+        const backButton = overlay.querySelector('.closeBtn');
+        if (backButton) backButton.remove();
+
+        headerEl.className = `
+      profile-header d-flex align-items-center justify-content-between
+      px-4 py-3 bg-white shadow-sm rounded mt-4 position-relative
+    `;
+
+        headerEl.innerHTML = `
+      <button class="btn exit-button border-0 bg-transparent text-primary position-absolute start-0 ps-3">
+        <i class="fa-solid fa-arrow-left fs-1"></i>
+      </button>
+      <div class="w-100 d-flex align-items-center justify-content-between">
+        <div class="flex-grow-1 text-center">
+          <h2 class="profile-name fw-bold mb-0 text-dark">${client.name}</h2>
+        </div>
+      </div>
+    `;
+
+        const back = headerEl.querySelector('.exit-button');
+        back?.addEventListener('click', () => overlay.remove());
+
+        // Body info like InspectUser
+        body.innerHTML = `
+      <div class="card profile-card w-100 shadow-sm border-0">
+        <div class="card-body fs-5">
+          <div class="info-row d-flex justify-content-between border-bottom py-3">
+            <span class="label text-muted fw-medium">Client ID</span>
+            <span class="value fw-semibold">${client.id}</span>
+          </div>
+          <div class="info-row d-flex justify-content-between border-bottom py-3">
+            <span class="label text-muted fw-medium">Address</span>
+            <span class="value fw-semibold text-end">${client.address || 'N/A'}</span>
+          </div>
+          <div class="info-row d-flex justify-content-between border-bottom py-3">
+            <span class="label text-muted fw-medium">Contact</span>
+            <span class="value fw-semibold">${client.contact || 'N/A'}</span>
+          </div>
+          <div class="info-row d-flex justify-content-between border-bottom py-3">
+            <span class="label text-muted fw-medium">Email</span>
+            <span class="value fw-semibold">${client.email || 'N/A'}</span>
+          </div>
+          <div class="info-row d-flex justify-content-between py-3">
+            <span class="label text-muted fw-medium">Created At</span>
+            <span class="value fw-semibold">${client.createdAt ? new Date(client.createdAt).toLocaleString('da-DK') : 'N/A'}</span>
+          </div>
+        </div>
+      </div>
+    `;
+
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'btn btn-primary btn-lg mt-3';
+        closeBtn.textContent = 'Close';
+        closeBtn.addEventListener('click', () => overlay.remove());
+        card.appendChild(body);
+        card.appendChild(renderTabs());
+        card.appendChild(closeBtn);
+
+        return overlay;
+    }
+
+    loadClients();
+    setInterval(loadClients, 10000);
+
+    return container;
 }
