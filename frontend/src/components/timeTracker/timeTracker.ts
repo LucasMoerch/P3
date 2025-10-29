@@ -205,26 +205,26 @@ export function renderTimeTracker(): HTMLElement {
 
 
     const startStopTimeRow: HTMLDivElement = document.createElement('div');
-    startStopTimeRow.className = 'container p-4 rounded d-flex justify-content-between ';
+    startStopTimeRow.className = 'container p-2 rounded d-flex justify-content-between gap-1';
     startStopTimeRow.innerHTML = `
-    <div class="container col-6 col-md-4 mx-1 rounded text-center shadow-sm light-bg py-2">
+    <div class="container col-5 rounded text-center shadow-sm light-bg py-2">
       <label for="startTime" class="form-label">Start Time</label> <br>
-      <div class="container col rounded text-center bg-transparent py-1">
+      <div class="container col-12 rounded text-center bg-transparent py-1">
       <input 
         type="time" 
         step="1" 
-        class="form-control mx-auto px-2 shadow-sm lighter-bg text-center" 
+        class="form-control mx-auto px-2 shadow-sm lighter-bg clockText text-center" 
         id="startTime" 
         value="00:00:00">
       </div>
     </div>
-    <div class="container col-6 col-md-4 mx-1 rounded text-center shadow-sm light-bg py-2">
+    <div class="container col-5 rounded text-center shadow-sm light-bg py-2">
       <label for="stopTime" class="form-label">Stop Time</label> <br>
-      <div class="container col rounded text-center bg-transparent py-1">
+      <div class="container col-12 rounded text-center bg-transparent py-1">
       <input 
         type="time" 
         step="1" 
-        class="form-control mx-auto px-2 shadow-sm lighter-bg text-center" 
+        class="form-control mx-auto px-2 shadow-sm lighter-bg clockText text-center " 
         id="stopTime" 
         value="00:00:00">
       </div>
