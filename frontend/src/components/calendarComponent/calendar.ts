@@ -7,10 +7,10 @@ export function renderCalendar(): HTMLElement {
   wrapper.className = 'container p-4 rounded';
 
   const inputGroup = document.createElement('div');
-  inputGroup.className = 'd-flex gap-2 align-items-center';
+  inputGroup.className = 'd-flex gap-2 shadow-sm align-items-center';
 
   const calenderBtn = document.createElement('button');
-  calenderBtn.className = 'btn btn-primary rounded';
+  calenderBtn.className = 'btn btn-primary shadow-sm rounded';
   calenderBtn.innerHTML = `<i class="fa-solid fa-calendar"></i>`;
 
   const input = document.createElement('input');
