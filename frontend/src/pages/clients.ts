@@ -72,21 +72,8 @@ export function renderClientsPage(): HTMLElement {
         const backButton = overlay.querySelector('.closeBtn');
         if (backButton) backButton.remove();
 
-        headerEl.className = `
-      profile-header d-flex align-items-center justify-content-between
-      px-4 py-3 bg-white shadow-sm rounded mt-4 position-relative
-    `;
-
-        headerEl.innerHTML = `
-      <button class="btn exit-button border-0 bg-transparent text-primary position-absolute start-0 ps-3">
-        <i class="fa-solid fa-arrow-left fs-1"></i>
-      </button>
-      <div class="w-100 d-flex align-items-center justify-content-between">
-        <div class="flex-grow-1 text-center">
-          <h2 class="profile-name fw-bold mb-0 text-dark">${client.name}</h2>
-        </div>
-      </div>
-    `;
+        
+        headerEl.innerText= client.name;
 
         const back = headerEl.querySelector('.exit-button');
         back?.addEventListener('click', () => overlay.remove());
@@ -118,14 +105,9 @@ export function renderClientsPage(): HTMLElement {
         </div>
       </div>
     `;
-
-        const closeBtn = document.createElement('button');
-        closeBtn.className = 'btn btn-primary btn-lg mt-3';
-        closeBtn.textContent = 'Close';
-        closeBtn.addEventListener('click', () => overlay.remove());
         card.appendChild(body);
         card.appendChild(renderTabs());
-        card.appendChild(closeBtn);
+
 
         return overlay;
     }

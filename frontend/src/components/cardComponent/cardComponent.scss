@@ -25,6 +25,14 @@
 .back-button:hover {
   transform: scale(1.2);
 }
+.edit-button {
+  transition: transform 0.2s ease;
+}
+
+.edit-button:hover {
+  transform: scale(1.2);
+}
+
 
 @media (min-width: 768px) {
   .overlay {

@@ -100,44 +100,20 @@ export function renderStaffPage(): HTMLElement {
     const header: HTMLElement = card.querySelector('.header') as HTMLElement;
     const body: HTMLElement = card.querySelector('.body') as HTMLElement;
 
-    //Added this because we don't want the back button from renderCard.
-    const backButton = overlay.querySelector('.closeBtn');
-    if (backButton) backButton.remove();
-
-    const editBtn = card.querySelector('.back-button.end-0') as HTMLElement | null;
-
-    header.className = `
-      profile-header d-flex align-items-center justify-content-between
-      px-4 py-3 bg-white shadow-sm rounded mt-4 position-relative
-      `;
-
-    header.innerHTML = `
-      <button class="btn exit-button border-0 bg-transparent text-primary position-absolute start-0 ps-3">
-        <i class="fa-solid fa-arrow-left fs-1"></i>
-      </button>
-
-      <div class="w-100 d-flex align-items-center justify-content-between">
-        <div class="flex-grow-1 text-center">
-          <h2 class="profile-name fw-bold mb-0 text-dark">
-            ${user.profile?.displayName || 'Unknown User'}
-          </h2>
-        </div>
-      </div>
-      `;
-
+    header.innerText = user.profile?.displayName || 'No Name';
     // manipulates the DOM structure, it doesn't handle styling, only placement and setup.
-    if (editBtn) {
-      // Adjust style to fit the profile header layout
-      editBtn.classList.remove('top-0', 'm-3', 'fs-2');
-      editBtn.classList.add('end-0', 'position-absolute');
-      editBtn.style.top = '50%';
-      editBtn.style.transform = 'translateY(-50%)';
-      header.appendChild(editBtn);
-    }
+    // if (editBtn) {
+    //   // Adjust style to fit the profile header layout
+    //   editBtn.classList.remove('top-0', 'm-3', 'fs-2');
+    //   editBtn.classList.add('end-0', 'position-absolute');
+    //   editBtn.style.top = '50%';
+    //   editBtn.style.transform = 'translateY(-50%)';
+    //   header.appendChild(editBtn);
+    // }
 
-    // Back button functionality
-    const back = header.querySelector('.exit-button');
-    back?.addEventListener('click', () => overlay.remove());
+    // // Back button functionality
+    // const back = header.querySelector('.exit-button');
+    // back?.addEventListener('click', () => overlay.remove());
 
     // This is the body where the information is displayed like mail, mobile number etc.
     body.innerHTML = `

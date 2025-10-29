@@ -71,45 +71,20 @@ export function renderCasesPage(): HTMLElement {
         const header: HTMLElement = card.querySelector('.header') as HTMLElement;
         const body: HTMLElement = card.querySelector('.body') as HTMLElement;
 
-        // Remove default close button if present
-        const backButton = overlay.querySelector('.closeBtn');
-        if (backButton) backButton.remove();
+    
+        header.innerText = c.title;
 
-        const editBtn = card.querySelector('.back-button.end-0') as HTMLElement | null;
+     
 
-        // Header markup & classes
-        if (header) {
-            header.className = `
-        profile-header d-flex align-items-center justify-content-between
-        px-4 py-3 bg-white shadow-sm rounded mt-4 position-relative
-      `;
+        // const editBtn = card.querySelector('.edit-button') as HTMLElement | null;
 
-            header.innerHTML = `
-        <button class="btn exit-button border-0 bg-transparent text-primary position-absolute start-0 ps-3">
-          <i class="fa-solid fa-arrow-left fs-1"></i>
-        </button>
+        // if (editBtn) {
+        //     editBtn.classList.remove('top-0', 'm-3', 'fs-2');
+        //     editBtn.classList.add('end-0', 'position-absolute');
+        //         editBtn.style.top = '50%';
+        //         editBtn.style.transform = 'translateY(-50%)';
+        //     }
 
-        <div class="w-100 d-flex align-items-center justify-content-between">
-          <div class="flex-grow-1 text-center">
-            <h2 class="profile-name fw-bold mb-0 text-dark">
-              ${c.title || 'Untitled Case'}
-            </h2>
-          </div>
-        </div>
-      `;
-
-            if (editBtn) {
-                editBtn.classList.remove('top-0', 'm-3', 'fs-2');
-                editBtn.classList.add('end-0', 'position-absolute');
-                editBtn.style.top = '50%';
-                editBtn.style.transform = 'translateY(-50%)';
-                header.appendChild(editBtn);
-            }
-
-            // back button behavior
-            const back = header.querySelector('.exit-button');
-            back?.addEventListener('click', () => overlay.remove());
-        }
 
         // Body markup
         if (body) {
@@ -155,25 +130,25 @@ export function renderCasesPage(): HTMLElement {
       `;
         }
 
-        // Close button
-        const closeBtn = document.createElement('button');
-        closeBtn.className = 'btn btn-primary btn-lg';
-        closeBtn.innerText = 'Close';
+        // // Close button
+        // const closeBtn = document.createElement('button');
+        // closeBtn.className = 'btn btn-primary btn-lg';
+        // closeBtn.innerText = 'Close';
 
-        const btnContainer = document.createElement('div');
-        btnContainer.className = 'd-flex justify-content-center mt-3';
-        btnContainer.appendChild(closeBtn);
+        // const btnContainer = document.createElement('div');
+        // btnContainer.className = 'd-flex justify-content-center mt-3';
+        // btnContainer.appendChild(closeBtn);
 
-        closeBtn.addEventListener('click', () => overlay.remove());
+        // closeBtn.addEventListener('click', () => overlay.remove());
 
-        // append button container to card (some renderCard implementations already include card; append safely)
-        if (card) {
-            card.appendChild(btnContainer);
-        } else {
-            // fallback - if renderCard returned overlay with card already appended elsewhere,
-            // ensure the overlay contains the button container so it's visible
-            overlay.appendChild(btnContainer);
-        }
+        // // append button container to card (some renderCard implementations already include card; append safely)
+        // if (card) {
+        //     card.appendChild(btnContainer);
+        // } else {
+        //     // fallback - if renderCard returned overlay with card already appended elsewhere,
+        //     // ensure the overlay contains the button container so it's visible
+        //     overlay.appendChild(btnContainer);
+        // }
 
         return overlay;
     }

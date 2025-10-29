@@ -160,7 +160,7 @@ export function renderTimeTracker(): HTMLElement {
 
   function renderTimeTrackingCard(): HTMLElement {
     // Create overlay
-    const overlay: HTMLElement = renderCard();
+    const overlay: HTMLElement = renderCard(true);
     const card: HTMLElement = overlay.querySelector('.card') as HTMLElement;
     const header: HTMLElement = card.querySelector('.header') as HTMLElement;
     const body: HTMLElement = card.querySelector('.body') as HTMLElement;
@@ -168,6 +168,10 @@ export function renderTimeTracker(): HTMLElement {
     card.classList.add('d-flex', 'flex-column', 'h-100');
     header.classList.add('flex-shrink-0');
     body.classList.add('d-flex', 'flex-column', 'flex-grow-1', 'overflow-auto', 'pb-4');
+
+
+    //To replace the placeholder
+    header.innerText = 'Time Registration';
 
     const dropDownRow: HTMLDivElement = document.createElement('div');
     dropDownRow.innerHTML = `

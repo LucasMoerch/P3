@@ -1,6 +1,7 @@
 import './home.scss';
 import './creatingCaseComponent';
 import { renderNewCase } from './creatingCaseComponent';
+import { renderCard } from '../../components/cardComponent/cardComponent';
 
 export function renderHomePage(): HTMLElement {
   const container = document.createElement('div');
@@ -63,47 +64,37 @@ export function renderHomePage(): HTMLElement {
   });
 
   function creating_case(): HTMLElement {
-    const overlay: HTMLElement = renderNewCase();
+    const overlay: HTMLElement = renderCard();
     const card: HTMLElement = overlay.querySelector('.card') as HTMLElement;
     const header: HTMLElement = card.querySelector('.header') as HTMLElement;
     const body: HTMLElement = card.querySelector('.body') as HTMLElement;
 
-    const closeBtn = document.createElement('button');
-    closeBtn.className = 'btn btn-secondary col-3';
-    closeBtn.innerText = 'X';
-
-    const completeBtn: HTMLButtonElement = document.createElement('button');
-    completeBtn.className = 'btn btn-primary';
-    completeBtn.innerText = 'Complete';
+  
 
     overlay.appendChild(card);
-    card.appendChild(closeBtn);
     card.appendChild(header);
     card.appendChild(body);
-    body.appendChild(completeBtn);
 
-    //Function for what happens when you hit complete button
-    completeBtn.addEventListener('click', (): void => {
-      const newCase = document.createElement('div');
-      newCase.className = `
-            card bg-white text-dark shadow-sm border-0 
-            text-center d-flex justify-content-center align-items-center 
-            p-3 mb-3 col-12 col-md-5
-            `;
+    // //Function for what happens when you hit complete button
+    // completeBtn.addEventListener('click', (): void => {
+    //   const newCase = document.createElement('div');
+    //   newCase.className = `
+    //         card bg-white text-dark shadow-sm border-0 
+    //         text-center d-flex justify-content-center align-items-center 
+    //         p-3 mb-3 col-12 col-md-5
+    //         `;
 
-      newCase.style.height = '130px';
-      newCase.style.width = '48%'; // Two cards per row
+    //   newCase.style.height = '130px';
+    //   newCase.style.width = '48%'; // Two cards per row
 
-      newCase.innerHTML = `<p class="fw-medium text-dark mb-0">Empty Case</p>`;
+    //   newCase.innerHTML = `<p class="fw-medium text-dark mb-0">Empty Case</p>`;
 
-      active_cases_container.appendChild(newCase);
+    //   active_cases_container.appendChild(newCase);
 
-      overlay.remove();
-    });
+    //   overlay.remove();
+    // });
 
-    closeBtn.addEventListener('click', () => {
-      overlay.remove();
-    });
+
 
     return overlay;
   }
