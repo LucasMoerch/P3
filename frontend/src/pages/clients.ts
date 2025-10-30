@@ -5,81 +5,80 @@ import { renderTabs } from '../components/tabsComponent/tabsComponent';
 import http from '../api/http';
 
 export type ClientDTO = {
-    id: string;
-    name: string;
-    address?: string;
-    contact?: string;
-    email?: string;
-    phone?: string;
-    createdAt?: string;
-    updatedAt?: string;
+  id: string;
+  name: string;
+  address?: string;
+  contact?: string;
+  email?: string;
+  phone?: string;
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 export function renderClientsPage(): HTMLElement {
-    const container = document.createElement('div');
-    container.classList.add('container');
+  const container = document.createElement('div');
+  container.classList.add('container');
 
-    const header = document.createElement('h1');
-    header.textContent = 'Clients Overview';
-    container.appendChild(header);
+  const header = document.createElement('h1');
+  header.textContent = 'Clients Overview';
+  container.appendChild(header);
 
-    container.appendChild(renderSearchComponent());
+  container.appendChild(renderSearchComponent());
 
-    const realDataSection = document.createElement('div');
-    realDataSection.innerHTML = '<p>Loading...</p>';
-    container.appendChild(realDataSection);
+  const realDataSection = document.createElement('div');
+  realDataSection.innerHTML = '<p>Loading...</p>';
+  container.appendChild(realDataSection);
 
-    // Fetch clients from backend
-    async function loadClients() {
-        try {
-            const clients = (await http.get('/fetchClients')) as ClientDTO[];
+  // Fetch clients from backend
+  async function loadClients() {
+    try {
+      const clients = (await http.get('/fetchClients')) as ClientDTO[];
 
-            const clientData = (clients ?? []).map(c => ({
-                id: c.id,
-                name: c.name,
-                address: c.address || '-',
-                contact: c.contact || c.phone || 'N/A',
-            }));
+      const clientData = (clients ?? []).map((c) => ({
+        id: c.id,
+        name: c.name,
+        address: c.address || '-',
+        contact: c.contact || c.phone || 'N/A',
+      }));
 
-            realDataSection.innerHTML = '';
-            const tableElement = renderTable(clientData);
-            realDataSection.appendChild(tableElement);
+      realDataSection.innerHTML = '';
+      const tableElement = renderTable(clientData);
+      realDataSection.appendChild(tableElement);
 
-            // Clickable rows like InspectUser / InspectCase
-            const rows = tableElement.querySelectorAll('tr');
-            rows.forEach((row, index) => {
-                if (index === 0) return; // skip header
-                row.addEventListener('click', () => {
-                    const client = clients[index - 1];
-                    const popup = inspectClient(client);
-                    document.body.appendChild(popup);
-                    console.log('client clicked');
-                });
-            });
-        } catch (err) {
-            console.error('Failed to load clients:', err);
-            realDataSection.innerHTML = '<p class="text-danger">Failed to load clients.</p>';
-        }
+      // Clickable rows like InspectUser / InspectCase
+      const rows = tableElement.querySelectorAll('tr');
+      rows.forEach((row, index) => {
+        if (index === 0) return; // skip header
+        row.addEventListener('click', () => {
+          const client = clients[index - 1];
+          const popup = inspectClient(client);
+          document.body.appendChild(popup);
+          console.log('client clicked');
+        });
+      });
+    } catch (err) {
+      console.error('Failed to load clients:', err);
+      realDataSection.innerHTML = '<p class="text-danger">Failed to load clients.</p>';
     }
+  }
 
-    // Inspect Client popup — same layout as InspectUser
-    function inspectClient(client: ClientDTO): HTMLElement {
-        const overlay: HTMLElement = renderCard(true);
-        const card: HTMLElement = overlay.querySelector('.card') as HTMLElement;
-        const headerEl: HTMLElement = card.querySelector('.header') as HTMLElement;
-        const body: HTMLElement = card.querySelector('.body') as HTMLElement;
+  // Inspect Client popup — same layout as InspectUser
+  function inspectClient(client: ClientDTO): HTMLElement {
+    const overlay: HTMLElement = renderCard(true);
+    const card: HTMLElement = overlay.querySelector('.card') as HTMLElement;
+    const headerEl: HTMLElement = card.querySelector('.header') as HTMLElement;
+    const body: HTMLElement = card.querySelector('.body') as HTMLElement;
 
-        const backButton = overlay.querySelector('.closeBtn');
-        if (backButton) backButton.remove();
+    const backButton = overlay.querySelector('.closeBtn');
+    if (backButton) backButton.remove();
 
-        
-        headerEl.innerText= client.name;
+    headerEl.innerText = client.name;
 
-        const back = headerEl.querySelector('.exit-button');
-        back?.addEventListener('click', () => overlay.remove());
+    const back = headerEl.querySelector('.exit-button');
+    back?.addEventListener('click', () => overlay.remove());
 
-        // Body info like InspectUser
-        body.innerHTML = `
+    // Body info like InspectUser
+    body.innerHTML = `
       <div class="card profile-card w-100 shadow-sm border-0">
         <div class="card-body fs-5">
           <div class="info-row d-flex justify-content-between border-bottom py-3">
@@ -105,15 +104,14 @@ export function renderClientsPage(): HTMLElement {
         </div>
       </div>
     `;
-        card.appendChild(body);
-        card.appendChild(renderTabs());
+    card.appendChild(body);
+    card.appendChild(renderTabs());
 
+    return overlay;
+  }
 
-        return overlay;
-    }
+  loadClients();
+  setInterval(loadClients, 10000);
 
-    loadClients();
-    setInterval(loadClients, 10000);
-
-    return container;
+  return container;
 }

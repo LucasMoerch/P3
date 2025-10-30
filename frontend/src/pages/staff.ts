@@ -101,19 +101,6 @@ export function renderStaffPage(): HTMLElement {
     const body: HTMLElement = card.querySelector('.body') as HTMLElement;
 
     header.innerText = user.profile?.displayName || 'No Name';
-    // manipulates the DOM structure, it doesn't handle styling, only placement and setup.
-    // if (editBtn) {
-    //   // Adjust style to fit the profile header layout
-    //   editBtn.classList.remove('top-0', 'm-3', 'fs-2');
-    //   editBtn.classList.add('end-0', 'position-absolute');
-    //   editBtn.style.top = '50%';
-    //   editBtn.style.transform = 'translateY(-50%)';
-    //   header.appendChild(editBtn);
-    // }
-
-    // // Back button functionality
-    // const back = header.querySelector('.exit-button');
-    // back?.addEventListener('click', () => overlay.remove());
 
     // This is the body where the information is displayed like mail, mobile number etc.
     body.innerHTML = `

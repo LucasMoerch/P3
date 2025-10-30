@@ -9,14 +9,13 @@ export function renderHomePage(): HTMLElement {
 
   const cardsContainer = document.createElement('div');
   cardsContainer.className = 'cards-container';
-  /*--------------------------------------------------------------------*/
   //card for hours worked
   const hoursContainer = document.createElement('div');
   hoursContainer.className = 'hours-worked-container';
 
   const hours_worked = document.createElement('button');
   hours_worked.className = `
-      card border-0 shadow-sm bg-white text-dark rounded p-3 
+      card border-0 shadow-sm bg-white text-dark rounded p-3
       d-flex flex-column justify-content-start gap-1 w-100
       `;
   hours_worked.style.height = '130px';
@@ -34,15 +33,14 @@ export function renderHomePage(): HTMLElement {
   hoursContainer.appendChild(hours_worked);
   cardsContainer.appendChild(hoursContainer);
 
-  /*--------------------------------------------------------------------*/
   //Card for when you want to create a new case.
   const create_new_container = document.createElement('div');
   create_new_container.className = 'create-new-container';
 
   const create_new = document.createElement('button');
   create_new.className = `
-      card border-0 shadow-sm bg-white text-dark rounded 
-      d-flex flex-column justify-content-center align-items-center 
+      card border-0 shadow-sm bg-white text-dark rounded
+      d-flex flex-column justify-content-center align-items-center
       w-100 p-3
       `;
   create_new.style.height = '130px';
@@ -69,37 +67,13 @@ export function renderHomePage(): HTMLElement {
     const header: HTMLElement = card.querySelector('.header') as HTMLElement;
     const body: HTMLElement = card.querySelector('.body') as HTMLElement;
 
-  
-
     overlay.appendChild(card);
     card.appendChild(header);
     card.appendChild(body);
 
-    // //Function for what happens when you hit complete button
-    // completeBtn.addEventListener('click', (): void => {
-    //   const newCase = document.createElement('div');
-    //   newCase.className = `
-    //         card bg-white text-dark shadow-sm border-0 
-    //         text-center d-flex justify-content-center align-items-center 
-    //         p-3 mb-3 col-12 col-md-5
-    //         `;
-
-    //   newCase.style.height = '130px';
-    //   newCase.style.width = '48%'; // Two cards per row
-
-    //   newCase.innerHTML = `<p class="fw-medium text-dark mb-0">Empty Case</p>`;
-
-    //   active_cases_container.appendChild(newCase);
-
-    //   overlay.remove();
-    // });
-
-
-
     return overlay;
   }
 
-  /*--------------------------------------------------------------------*/
   //Text for active cases
   const headerRow = document.createElement('div');
   headerRow.className = 'cases-header';
@@ -110,7 +84,6 @@ export function renderHomePage(): HTMLElement {
 
   headerRow.appendChild(active_cases);
 
-  /*--------------------------------------------------------------------*/
   //sort
   const sort = document.createElement('div');
   sort.className = 'sort-by';
@@ -120,7 +93,6 @@ export function renderHomePage(): HTMLElement {
 
   container.appendChild(headerRow);
 
-  /*--------------------------------------------------------------------*/
   //container to hold active tasks (just an empty template for now)
 
   const active_cases_container = document.createElement('div');

@@ -17,7 +17,7 @@ export function renderCard(edit?: Boolean): HTMLElement {
   if (edit) {
     const editBtn = document.createElement('button');
     editBtn.className =
-    'btn edit-button border-0 bg-transparent text-primary position-absolute top-0 end-0 m-3 fs-2';
+      'btn edit-button border-0 bg-transparent text-primary position-absolute top-0 end-0 m-3 fs-2';
     editBtn.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
     card.appendChild(editBtn);
   }
