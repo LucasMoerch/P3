@@ -9,7 +9,7 @@ export function renderNewButton(): HTMLElement {
 
   // Import icon from Font Awesome
   const newClientIcon = document.createElement('i');
-  newClientIcon.className = 'fa-solid fa-user-plus';
+  newClientIcon.className = 'fa-solid fa-user-plus text-dark';
   addButton.appendChild(newClientIcon);
 
   addButton.addEventListener('click', () => {

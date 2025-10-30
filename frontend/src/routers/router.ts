@@ -1,5 +1,5 @@
 import { renderHomePage } from '../pages/dashboard/home';
-import { renderLoginPage } from '../pages/login';
+import { renderLoginPage } from '../pages/loginPage/login';
 import { renderCasesPage } from '../pages/cases';
 import { renderClientsPage } from '../pages/clients';
 import { renderMyProfilePage } from '../pages/myProfile';

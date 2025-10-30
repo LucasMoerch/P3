@@ -22,11 +22,15 @@ public class TimeController {
 
 
     @PostMapping("/start")
-    public ResponseEntity<?> start(@RequestParam String startTime){
+    public ResponseEntity<?> start(@RequestParam String startTime,
+                                   @RequestParam String userId,
+                                   @RequestParam String currentUserName){
 
         try {
             var time = new Time();
             time.setStartTime(startTime);
+            time.setCaseId(userId);
+            time.setUserName(currentUserName);
 
             return ResponseEntity.ok(repo.save(time));
         } catch (Exception e) {
@@ -53,6 +57,7 @@ public class TimeController {
             return ResponseEntity.notFound().build();
         }
 
+
         var time = optionalTime.get();
         time.setStartTime(startTime);
         time.setStopTime(stopTime);
@@ -60,6 +65,7 @@ public class TimeController {
         time.setDescription(description);
         time.setDate(date);
         time.setCaseId(caseId);
+
 
         var saved = repo.save(time);
         return ResponseEntity.ok(saved);
