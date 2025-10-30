@@ -11,21 +11,21 @@ export function renderCard(edit?: Boolean): HTMLElement {
 
   const closeBtn = document.createElement('button');
   closeBtn.className =
-    'btn back-button border-0 bg-transparent text-primary position-absolute top-0 m-3 fs-2';
+    'btn back-button border-0 bg-transparent text-primary position-absolute top-0 start-0 m-3 fs-2';
   closeBtn.innerHTML = '<i class="fa-solid fa-arrow-left"></i>';
 
   if (edit) {
     const editBtn = document.createElement('button');
     editBtn.className =
-      'btn back-button border-0 bg-transparent text-primary position-absolute top-0  end-0 m-3 fs-2';
+      'btn edit-button border-0 bg-transparent text-primary position-absolute top-0 end-0 m-3 fs-2';
     editBtn.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
     card.appendChild(editBtn);
   }
   // Append card inside overlay
 
   const header = document.createElement('div');
-  header.className = 'header mt-4';
-  header.innerHTML = `<h4 class="m-0 text-center fw-semibold">Time Registration</h4>`;
+  header.className = 'header mt-4 text-center fw-semibold fs-3 ';
+  header.innerText = 'placeholder';
 
   const body = document.createElement('div');
   body.className = 'body';

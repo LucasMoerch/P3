@@ -6,7 +6,6 @@ import { renderCalendar } from '../calendarComponent/calendar';
 import { CaseDto } from '../../pages/cases';
 import { userId as getUserId, getDisplayName } from '../../auth/auth';
 
-
 //api functions
 
 async function loadCases() {
@@ -36,9 +35,16 @@ async function loadCases() {
   }
 }
 
-async function sendStartTimeData(startTime: string, userId: string, currentUserName: string): Promise<void> {
+async function sendStartTimeData(
+  startTime: string,
+  userId: string,
+  currentUserName: string,
+): Promise<void> {
   try {
-    const response = await http.post('/times/start', new URLSearchParams({ startTime, userId, currentUserName }));
+    const response = await http.post(
+      '/times/start',
+      new URLSearchParams({ startTime, userId, currentUserName }),
+    );
     console.log('Response:', response);
   } catch (error: any) {
     console.error('Error:', error.response?.data || error.message);
@@ -160,7 +166,7 @@ export function renderTimeTracker(): HTMLElement {
 
   function renderTimeTrackingCard(): HTMLElement {
     // Create overlay
-    const overlay: HTMLElement = renderCard();
+    const overlay: HTMLElement = renderCard(true);
     const card: HTMLElement = overlay.querySelector('.card') as HTMLElement;
     const header: HTMLElement = card.querySelector('.header') as HTMLElement;
     const body: HTMLElement = card.querySelector('.body') as HTMLElement;
@@ -168,6 +174,9 @@ export function renderTimeTracker(): HTMLElement {
     card.classList.add('d-flex', 'flex-column', 'h-100');
     header.classList.add('flex-shrink-0');
     body.classList.add('d-flex', 'flex-column', 'flex-grow-1', 'overflow-auto', 'pb-4');
+
+    //To replace the placeholder
+    header.innerText = 'Time Registration';
 
     const dropDownRow: HTMLDivElement = document.createElement('div');
     dropDownRow.innerHTML = `
@@ -202,7 +211,6 @@ export function renderTimeTracker(): HTMLElement {
     const completeBtn: HTMLButtonElement = document.createElement('button');
     completeBtn.className = 'btn btn-primary shadow col-4 rounded-pill me-4';
     completeBtn.innerText = 'Complete';
-
 
     const startStopTimeRow: HTMLDivElement = document.createElement('div');
     startStopTimeRow.className = 'container p-2 rounded d-flex justify-content-between gap-1';
