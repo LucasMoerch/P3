@@ -1,29 +1,144 @@
 import './tabsStyling.scss';
+import http from '../../api/http';
 
-export function renderTabs() {
+interface TabsConfig {
+  entityType: 'clients' | 'cases' | 'staff';
+  entityId: string;
+}
+
+export function renderTabs(config: TabsConfig) {
+  const { entityType, entityId } = config;
+
   const tabContainer = document.createElement('div');
   const tabDiv = `<ul class="nav nav-tabs nav-fill">
     <li class="nav-item">
-      <a class="nav-link active" aria-current="page"><i class="fa-solid fa-paperclip"></i>Files</a>
+      <a class="nav-link active" data-tab="files"><i class="fa-solid fa-paperclip"></i>Files</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link"><i class="fa-solid fa-italic"></i>Description</a>
+      <a class="nav-link" data-tab="description"><i class="fa-solid fa-italic"></i>Description</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link"><i class="fa-solid fa-note-sticky"></i>Notes</a>
+      <a class="nav-link" data-tab="notes"><i class="fa-solid fa-note-sticky"></i>Notes</a>
     </li>
-    </ul>`;
+    </ul>
+    <div class="tab-content">
+      <div class="tab-pane active" id="files-content"></div>
+      <div class="tab-pane" id="description-content"></div>
+      <div class="tab-pane" id="notes-content"></div>
+    </div>`;
 
-  function handleTabClick(event: Event) {
+  async function loadFiles() {
+    try {
+      const response = await http.get(`/${entityType}/${entityId}/documents`);
+      const filesContent = tabContainer.querySelector('#files-content');
+
+      if (filesContent) {
+        // Render the files list
+        filesContent.innerHTML = renderFilesList(response.data);
+      }
+    } catch (error) {
+      console.error('Error loading files:', error);
+    }
+  }
+
+  function renderFilesList(documents: any[]) {
+    if (!documents || documents.length === 0) {
+      return '<p class="text-muted">No files uploaded yet.</p>';
+    }
+
+    return `
+      <ul class="list-group">
+        ${documents.map((doc, index) => `
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              <i class="fa-solid fa-file"></i>
+              <span class="ms-2">${doc.filename || doc.fileName}</span>
+              <small class="text-muted ms-2">(${formatDate(doc.uploadedAt)})</small>
+            </div>
+            <div>
+              <button class="btn btn-sm btn-primary me-2" onclick="downloadFile(${index})">
+                <i class="fa-solid fa-download"></i> Download
+              </button>
+              <button class="btn btn-sm btn-danger" onclick="deleteFile(${index})">
+                <i class="fa-solid fa-trash"></i> Delete
+              </button>
+            </div>
+          </li>
+        `).join('')}
+      </ul>
+    `;
+  }
+
+  function formatDate(dateString: string) {
+    return new Date(dateString).toLocaleDateString();
+  }
+
+  async function downloadFile(index: number) {
+    try {
+      const response = await http.get(
+        `/${entityType}/${entityId}/documents/${index}/download`,
+        { responseType: 'blob' }
+      );
+
+      // Create download link
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `file_${index}`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error('Error downloading file:', error);
+    }
+  }
+
+  async function deleteFile(index: number) {
+    if (confirm('Are you sure you want to delete this file?')) {
+      try {
+        await http.delete(`/${entityType}/${entityId}/documents/${index}`);
+        loadFiles(); // Reload the files list
+      } catch (error) {
+        console.error('Error deleting file:', error);
+      }
+    }
+  }
+
+  async function handleTabClick(event: Event) {
     const target = event.target as HTMLElement;
+
     if (target.classList.contains('nav-link')) {
       const tabs = tabContainer.querySelectorAll('.nav-link');
+      const panes = tabContainer.querySelectorAll('.tab-pane');
+
       tabs.forEach((tab) => tab.classList.remove('active'));
+      panes.forEach((pane) => pane.classList.remove('active'));
+
       target.classList.add('active');
+
+      const tabName = target.getAttribute('data-tab');
+      const contentPane = tabContainer.querySelector(`#${tabName}-content`);
+
+      if (contentPane) {
+        contentPane.classList.add('active');
+      }
+
+      // Load content based on which tab was clicked
+      if (tabName === 'files') {
+        await loadFiles();
+      } else if (tabName === 'description') {
+        // Load description content
+      } else if (tabName === 'notes') {
+        // Load notes content
+      }
     }
   }
 
   tabContainer.addEventListener('click', handleTabClick);
   tabContainer.innerHTML = tabDiv;
+
+  // Load files on initial render
+  loadFiles();
+
   return tabContainer;
 }

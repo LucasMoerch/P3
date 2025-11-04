@@ -145,7 +145,7 @@ export function renderStaffPage(): HTMLElement {
     overlay.appendChild(card);
     card.appendChild(header);
     card.appendChild(body);
-    card.append(renderTabs());
+    card.append(renderTabs({ entityType: 'staff', entityId: user.id }));
     card.appendChild(btnContainer);
 
     return overlay;
