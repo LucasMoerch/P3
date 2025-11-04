@@ -29,15 +29,21 @@ export function renderTabs(config: TabsConfig) {
 
   async function loadFiles() {
     try {
-      const response = await http.get(`/${entityType}/${entityId}/documents`);
+      const response = (await http.get(`/${entityType}/${entityId}/documents`)) as any[];
       const filesContent = tabContainer.querySelector('#files-content');
 
       if (filesContent) {
-        // Render the files list
-        filesContent.innerHTML = renderFilesList(response.data);
+        filesContent.innerHTML = renderFilesList(response);
+
+        // Attach event listeners after rendering
+        attachFileEventListeners();
       }
     } catch (error) {
       console.error('Error loading files:', error);
+      const filesContent = tabContainer.querySelector('#files-content');
+      if (filesContent) {
+        filesContent.innerHTML = '<p class="text-danger">Failed to load files.</p>';
+      }
     }
   }
 
@@ -56,10 +62,10 @@ export function renderTabs(config: TabsConfig) {
               <small class="text-muted ms-2">(${formatDate(doc.uploadedAt)})</small>
             </div>
             <div>
-              <button class="btn btn-sm btn-primary me-2" onclick="downloadFile(${index})">
+              <button class="btn btn-sm btn-primary me-2" data-action="download" data-index="${index}">
                 <i class="fa-solid fa-download"></i> Download
               </button>
-              <button class="btn btn-sm btn-danger" onclick="deleteFile(${index})">
+              <button class="btn btn-sm btn-danger" data-action="delete" data-index="${index}">
                 <i class="fa-solid fa-trash"></i> Delete
               </button>
             </div>
@@ -67,6 +73,25 @@ export function renderTabs(config: TabsConfig) {
         `).join('')}
       </ul>
     `;
+  }
+
+  function attachFileEventListeners() {
+    const filesContent = tabContainer.querySelector('#files-content');
+    if (!filesContent) return;
+
+    filesContent.querySelectorAll('[data-action]').forEach(button => {
+      button.addEventListener('click', async (e) => {
+        const target = e.currentTarget as HTMLElement;
+        const action = target.getAttribute('data-action');
+        const index = parseInt(target.getAttribute('data-index') || '0', 10);
+
+        if (action === 'download') {
+          await downloadFile(index);
+        } else if (action === 'delete') {
+          await deleteFile(index);
+        }
+      });
+    });
   }
 
   function formatDate(dateString: string) {
@@ -78,18 +103,20 @@ export function renderTabs(config: TabsConfig) {
       const response = await http.get(
         `/${entityType}/${entityId}/documents/${index}/download`,
         { responseType: 'blob' }
-      );
+      ) as any;
 
-      // Create download link
-      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const blob = new Blob([response]);
+      const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', `file_${index}`);
+      link.setAttribute('download', `document_${index}`);
       document.body.appendChild(link);
       link.click();
       link.remove();
+      window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error('Error downloading file:', error);
+      alert('Failed to download file');
     }
   }
 
@@ -97,9 +124,10 @@ export function renderTabs(config: TabsConfig) {
     if (confirm('Are you sure you want to delete this file?')) {
       try {
         await http.delete(`/${entityType}/${entityId}/documents/${index}`);
-        loadFiles(); // Reload the files list
+        await loadFiles(); // Reload the files list
       } catch (error) {
         console.error('Error deleting file:', error);
+        alert('Failed to delete file');
       }
     }
   }
@@ -127,9 +155,9 @@ export function renderTabs(config: TabsConfig) {
       if (tabName === 'files') {
         await loadFiles();
       } else if (tabName === 'description') {
-        // Load description content
+        // TODO: Load description content
       } else if (tabName === 'notes') {
-        // Load notes content
+        // TODO: Load notes content
       }
     }
   }

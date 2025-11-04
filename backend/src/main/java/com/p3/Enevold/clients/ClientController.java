@@ -12,9 +12,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import com.p3.Enevold.clients.ClientDocument;
 
-
-
 @RestController
+@RequestMapping("/clients")
 public class ClientController {
     @Autowired
     ClientRepository clientRepository;
@@ -45,7 +44,7 @@ public class ClientController {
     }
 
     // Upload a file/document to a specific client
-    @PostMapping("/clients/{clientId}/uploadDocument")
+    @PostMapping("/{clientId}/uploadDocument")
     public ResponseEntity<String> uploadDocument(
             @PathVariable String clientId,
             @RequestParam("file") MultipartFile file,
@@ -67,7 +66,8 @@ public class ClientController {
             document.setUploadedAt(new Date());
             document.setCreatedBy(createdBy != null ? createdBy : "Unknown");
 
-            // Add to client's documents list
+            // Add to client's documents list (init if null)
+            if (client.getDocuments() == null) client.setDocuments(new java.util.ArrayList<>());
             client.getDocuments().add(document);
 
             // Save the client
@@ -81,7 +81,7 @@ public class ClientController {
     }
 
     // Get all documents for a specific client
-    @GetMapping("/clients/{clientId}/documents")
+    @GetMapping("/{clientId}/documents")
     public ResponseEntity<List<ClientDocument>> getClientDocuments(@PathVariable String clientId) {
         Client client = clientRepository.findById(clientId).orElse(null);
         if (client == null) {
@@ -91,7 +91,7 @@ public class ClientController {
     }
 
     // Download a specific document
-    @GetMapping("/clients/{clientId}/documents/{documentIndex}/download")
+    @GetMapping("/{clientId}/documents/{documentIndex}/download")
     public ResponseEntity<byte[]> downloadDocument(
             @PathVariable String clientId,
             @PathVariable int documentIndex) {
@@ -112,7 +112,7 @@ public class ClientController {
     }
 
     // Delete a specific document
-    @DeleteMapping("/clients/{clientId}/documents/{documentIndex}")
+    @DeleteMapping("/{clientId}/documents/{documentIndex}")
     public ResponseEntity<String> deleteDocument(
             @PathVariable String clientId,
             @PathVariable int documentIndex) {
@@ -129,6 +129,7 @@ public class ClientController {
 
         return ResponseEntity.ok("Document deleted successfully");
     }
+
     @GetMapping
     public List<Client> getAllClients() {
         return clientRepository.findAll();

@@ -6,28 +6,8 @@ import java.util.List;
 import java.util.Date;
 import java.util.ArrayList;
 import org.springframework.data.annotation.CreatedDate;
+import com.p3.Enevold.clients.ClientDocument;
 
-
-class ClientDocument {
-  private String fileName;
-  private String contentType;
-  private byte[] data;
-  private Date uploadedAt;
-  private String createdBy;
-
-  // Getters
-  public String getFileName() { return fileName; }
-  public String getContentType() { return contentType; }
-  public byte[] getData() { return data; }
-  public Date getUploadedAt() { return uploadedAt; }
-  public String getCreatedBy() { return createdBy; }
-  // Setters
-  public void setFileName(String fileName) { this.fileName = fileName; }
-  public void setContentType(String contentType) { this.contentType = contentType; }
-  public void setData(byte[] data) { this.data = data; }
-  public void setUploadedAt(Date uploadedAt) { this.uploadedAt = uploadedAt; }
-  public void setCreatedBy(String createdBy) { this.createdBy = createdBy; }
-}
 
 @Document ("clients")
 public class Client {
@@ -38,7 +18,7 @@ public class Client {
      private String contactPhone;
      private String notes;
      @CreatedDate private Date createdAt;
-     private List<ClientDocument> documents;
+     private List<ClientDocument> documents = new ArrayList<>();
 
     // Getters
     public String getId() { return id; }

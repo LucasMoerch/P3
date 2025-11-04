@@ -32,7 +32,6 @@ public class CaseController {
 
             Case c = new Case();
 
-            // ✅ Ensure this exists:
             c.setClientId(new ObjectId("652bc56efba9ab8ef7ab9a91")); // temporary dummy client
 
             c.setTitle(title);
