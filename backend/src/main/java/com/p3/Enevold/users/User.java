@@ -43,7 +43,7 @@ public class User {
         private String phone;
         private String locale;
         private String birthDate;
-        private String adress;
+        private String address;
         private String cpr;
         // getters/setters
         public String getFirstName() { return firstName; }
@@ -60,8 +60,8 @@ public class User {
         public String getBirthDate() {return birthDate; }
         public void setBirthDate(String birthDate) { this.birthDate = birthDate; }
 
-        public String getAdress() {return adress; }
-        public void setAdress(String adress) { this.adress = adress; }
+        public String getAddress() {return address; }
+        public void setAddress(String address) { this.address = address; }
 
         public String getCPR() {return cpr; }
         public void setCPR(String cpr) { this.cpr = cpr; }

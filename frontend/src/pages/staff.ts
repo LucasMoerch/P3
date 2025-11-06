@@ -120,7 +120,7 @@ export function renderStaffPage(): HTMLElement {
           </div>
           <div class="info-row d-flex justify-content-between border-bottom py-3">
             <span class="label text-muted fw-medium">Address</span>
-            <span class="value fw-semibold text-end">${user.profile?.adress || 'N/A'}</span>
+            <span class="value fw-semibold text-end">${user.profile?.address || 'N/A'}</span>
           </div>
           <div class="info-row d-flex justify-content-between py-3">
             <span class="label text-muted fw-medium">CPR Number</span>
