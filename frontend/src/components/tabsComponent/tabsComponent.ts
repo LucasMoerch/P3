@@ -1,5 +1,6 @@
 import './tabsStyling.scss';
 import http from '../../api/http';
+import { getMe } from '../../auth/auth';
 
 interface TabsConfig {
   entityType: 'clients' | 'cases' | 'staff';
@@ -33,10 +34,18 @@ export function renderTabs(config: TabsConfig) {
       const filesContent = tabContainer.querySelector('#files-content');
 
       if (filesContent) {
-        filesContent.innerHTML = renderFilesList(response);
-
-        // Attach event listeners after rendering
+        filesContent.innerHTML = `
+          <div class="mb-3">
+            <input type="file" id="upload-input" style="display:inline-block" />
+            <button class="btn btn-sm btn-success ms-2" id="upload-btn">
+              <i class="fa-solid fa-upload"></i> Upload
+            </button>
+            <span id="upload-status" class="ms-2"></span>
+          </div>
+          ${renderFilesList(response)}
+        `;
         attachFileEventListeners();
+        attachUploadListener();
       }
     } catch (error) {
       console.error('Error loading files:', error);
@@ -51,7 +60,7 @@ export function renderTabs(config: TabsConfig) {
     if (!documents || documents.length === 0) {
       return '<p class="text-muted">No files uploaded yet.</p>';
     }
-
+    console.log(documents);
     return `
       <ul class="list-group">
         ${documents.map((doc, index) => `
@@ -59,7 +68,7 @@ export function renderTabs(config: TabsConfig) {
             <div>
               <i class="fa-solid fa-file"></i>
               <span class="ms-2">${doc.filename || doc.fileName}</span>
-              <small class="text-muted ms-2">(${formatDate(doc.uploadedAt)})</small>
+              <small class="text-muted ms-2">(${formatDate(doc.uploadedAt)}) by ${doc.createdBy}</small>
             </div>
             <div>
               <button class="btn btn-sm btn-primary me-2" data-action="download" data-index="${index}">
@@ -78,13 +87,11 @@ export function renderTabs(config: TabsConfig) {
   function attachFileEventListeners() {
     const filesContent = tabContainer.querySelector('#files-content');
     if (!filesContent) return;
-
     filesContent.querySelectorAll('[data-action]').forEach(button => {
       button.addEventListener('click', async (e) => {
         const target = e.currentTarget as HTMLElement;
         const action = target.getAttribute('data-action');
         const index = parseInt(target.getAttribute('data-index') || '0', 10);
-
         if (action === 'download') {
           await downloadFile(index);
         } else if (action === 'delete') {
@@ -92,6 +99,46 @@ export function renderTabs(config: TabsConfig) {
         }
       });
     });
+  }
+
+  // Handle file uploads
+  function attachUploadListener() {
+    const filesContent = tabContainer.querySelector('#files-content');
+    if (!filesContent) return;
+    const fileInput = filesContent.querySelector<HTMLInputElement>('#upload-input');
+    const uploadBtn = filesContent.querySelector<HTMLButtonElement>('#upload-btn');
+    const uploadStatus = filesContent.querySelector<HTMLSpanElement>('#upload-status');
+
+    if (uploadBtn && fileInput) {
+      uploadBtn.addEventListener('click', async () => {
+        if (!fileInput.files || fileInput.files.length === 0) {
+          uploadStatus!.textContent = "Please select a file first.";
+          return;
+        }
+        const file = fileInput.files[0];
+        uploadBtn.disabled = true;
+        uploadStatus!.textContent = "Uploading...";
+
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('createdBy', getMe()?.displayName || 'unknown');
+
+
+        try {
+          await http.post(`/${entityType}/${entityId}/uploadDocument`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+          });
+          uploadStatus!.textContent = "Upload successful!";
+          fileInput.value = '';
+          await loadFiles();
+        } catch (err) {
+          uploadStatus!.textContent = "Upload failed.";
+          console.error('Upload failed:', err);
+        } finally {
+          uploadBtn.disabled = false;
+        }
+      });
+    }
   }
 
   function formatDate(dateString: string) {
@@ -104,7 +151,6 @@ export function renderTabs(config: TabsConfig) {
         `/${entityType}/${entityId}/documents/${index}/download`,
         { responseType: 'blob' }
       ) as any;
-
       const blob = new Blob([response]);
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -124,7 +170,7 @@ export function renderTabs(config: TabsConfig) {
     if (confirm('Are you sure you want to delete this file?')) {
       try {
         await http.delete(`/${entityType}/${entityId}/documents/${index}`);
-        await loadFiles(); // Reload the files list
+        await loadFiles();
       } catch (error) {
         console.error('Error deleting file:', error);
         alert('Failed to delete file');
@@ -134,24 +180,17 @@ export function renderTabs(config: TabsConfig) {
 
   async function handleTabClick(event: Event) {
     const target = event.target as HTMLElement;
-
     if (target.classList.contains('nav-link')) {
       const tabs = tabContainer.querySelectorAll('.nav-link');
       const panes = tabContainer.querySelectorAll('.tab-pane');
-
       tabs.forEach((tab) => tab.classList.remove('active'));
       panes.forEach((pane) => pane.classList.remove('active'));
-
       target.classList.add('active');
-
       const tabName = target.getAttribute('data-tab');
       const contentPane = tabContainer.querySelector(`#${tabName}-content`);
-
       if (contentPane) {
         contentPane.classList.add('active');
       }
-
-      // Load content based on which tab was clicked
       if (tabName === 'files') {
         await loadFiles();
       } else if (tabName === 'description') {
@@ -164,9 +203,6 @@ export function renderTabs(config: TabsConfig) {
 
   tabContainer.addEventListener('click', handleTabClick);
   tabContainer.innerHTML = tabDiv;
-
-  // Load files on initial render
   loadFiles();
-
   return tabContainer;
 }
