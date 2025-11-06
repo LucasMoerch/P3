@@ -4,7 +4,6 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 import org.bson.types.ObjectId;
 
 import java.util.List;
@@ -12,32 +11,19 @@ import java.util.Date;
 import java.util.ArrayList;
 import com.p3.Enevold.utils.FileDocument;
 
-@Document(collection = "cases")
+@Document("cases")
 public class Case {
 
   @Id
-  @Field("_id")
   private String id;
-
-  @Field("clientId")
   private ObjectId clientId;
-
-  @Field("title")
   private String title;
-
-  @Field("description")
   private String description;
-
-  @Field("status")
   private String status;
-
-  @Field("assignedUserIds")
   private List<ObjectId> assignedUserIds;
 
   @CreatedDate
   private Date createdAt;
-
-  @Field("updatedAt")
   private Date updatedAt;
 
   @CreatedBy
