@@ -130,23 +130,10 @@ export function renderStaffPage(): HTMLElement {
       </div>
       `;
 
-    const saveBtn = document.createElement('button');
-    saveBtn.className = 'btn btn-primary btn-lg';
-    saveBtn.innerText = 'Save';
-
-    const btnContainer = document.createElement('div');
-    btnContainer.className = 'd-flex justify-content-center mt-3';
-    btnContainer.appendChild(saveBtn);
-
-    saveBtn.addEventListener('click', () => {
-      overlay.remove();
-    });
-
     overlay.appendChild(card);
     card.appendChild(header);
     card.appendChild(body);
     card.append(renderTabs({ entityType: 'staff', entityId: user.id }));
-    card.appendChild(btnContainer);
 
     return overlay;
   }
