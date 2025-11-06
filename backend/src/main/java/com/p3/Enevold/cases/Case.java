@@ -7,61 +7,110 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.bson.types.ObjectId;
 
-import java.util.Date;
 import java.util.List;
+import java.util.Date;
+import java.util.ArrayList;
+import com.p3.Enevold.utils.FileDocument;
 
 @Document(collection = "cases")
 public class Case {
 
-    @Id
-    @Field("_id")
-    private String id;
+  @Id
+  @Field("_id")
+  private String id;
 
-    @Field("clientId")
-    private ObjectId clientId;
+  @Field("clientId")
+  private ObjectId clientId;
 
-    @Field("title")
-    private String title;
+  @Field("title")
+  private String title;
 
-    @Field("description")
-    private String description;
+  @Field("description")
+  private String description;
 
-    @Field("status")
-    private String status;
+  @Field("status")
+  private String status;
 
-    @Field("assignedUserIds")
-    private List<ObjectId> assignedUserIds;
+  @Field("assignedUserIds")
+  private List<ObjectId> assignedUserIds;
 
-    @CreatedDate
-    private Date createdAt;
+  @CreatedDate
+  private Date createdAt;
 
-    @Field("updatedAt")
-    private Date updatedAt;
+  @Field("updatedAt")
+  private Date updatedAt;
 
-    @CreatedBy
-    private String createdBy;
+  @CreatedBy
+  private String createdBy;
 
-    // getters and setters
-    public String getId() { return id; }
+  private List<FileDocument> documents = new ArrayList<>();
 
-    public ObjectId getClientId() { return clientId; }
-    public void setClientId(ObjectId clientId) { this.clientId = clientId; }
+  // getters and setters
+  public String getId() {
+    return id;
+  }
 
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
+  public ObjectId getClientId() {
+    return clientId;
+  }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+  public void setClientId(ObjectId clientId) {
+    this.clientId = clientId;
+  }
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+  public String getTitle() {
+    return title;
+  }
 
-    public List<ObjectId> getAssignedUserIds() { return assignedUserIds; }
-    public void setAssignedUserIds(List<ObjectId> assignedUserIds) { this.assignedUserIds = assignedUserIds; }
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-    public Date getCreatedAt() { return createdAt; }
-    public Date getUpdatedAt() { return updatedAt; }
-    public void setUpdatedAt(Date updatedAt) { this.updatedAt = updatedAt; }
+  public String getDescription() {
+    return description;
+  }
 
-    public String getCreatedBy() { return createdBy; }
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public String getStatus() {
+    return status;
+  }
+
+  public void setStatus(String status) {
+    this.status = status;
+  }
+
+  public List<ObjectId> getAssignedUserIds() {
+    return assignedUserIds;
+  }
+
+  public void setAssignedUserIds(List<ObjectId> assignedUserIds) {
+    this.assignedUserIds = assignedUserIds;
+  }
+
+  public Date getCreatedAt() {
+    return createdAt;
+  }
+
+  public Date getUpdatedAt() {
+    return updatedAt;
+  }
+
+  public void setUpdatedAt(Date updatedAt) {
+    this.updatedAt = updatedAt;
+  }
+
+  public String getCreatedBy() {
+    return createdBy;
+  }
+
+  public List<FileDocument> getDocuments() {
+    return documents;
+  }
+
+  public void setDocuments(List<FileDocument> documents) {
+    this.documents = documents;
+  }
 }

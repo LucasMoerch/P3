@@ -2,39 +2,78 @@ package com.p3.Enevold.clients;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.p3.Enevold.utils.FileDocument;
+
 import java.util.List;
 import java.util.Date;
 import java.util.ArrayList;
 import org.springframework.data.annotation.CreatedDate;
-import com.p3.Enevold.clients.ClientDocument;
 
-
-@Document ("clients")
+@Document("clients")
 public class Client {
-    @Id
-     private String id;
-     private String name;
-     private String contactEmail;
-     private String contactPhone;
-     private String notes;
-     @CreatedDate private Date createdAt;
-     private List<ClientDocument> documents = new ArrayList<>();
+  @Id
+  private String id;
+  private String name;
+  private String contactEmail;
+  private String contactPhone;
+  private String notes;
+  @CreatedDate
+  private Date createdAt;
+  private List<FileDocument> documents = new ArrayList<>();
 
-    // Getters
-    public String getId() { return id; }
-    public String getName() { return name; }
-    public String getContactEmail() { return contactEmail; }
-    public String getContactPhone() { return contactPhone; }
-    public String getNotes() { return notes; }
-    public Date getCreatedAt() { return createdAt; }
-    public List<ClientDocument> getDocuments() { return documents; }
+  // Getters
+  public String getId() {
+    return id;
+  }
 
-    // Setters
-    public void setId(String id) { this.id = id; }
-    public void setName(String name) { this.name = name; }
-    public void setContactEmail(String contactEmail) { this.contactEmail = contactEmail; }
-    public void setContactPhone(String contactPhone) { this.contactPhone = contactPhone; }
-    public void setNotes(String notes) { this.notes = notes; }
-    public void setDocuments(List<ClientDocument> documents) { this.documents = documents; }
+  public String getName() {
+    return name;
+  }
+
+  public String getContactEmail() {
+    return contactEmail;
+  }
+
+  public String getContactPhone() {
+    return contactPhone;
+  }
+
+  public String getNotes() {
+    return notes;
+  }
+
+  public Date getCreatedAt() {
+    return createdAt;
+  }
+
+  public List<FileDocument> getDocuments() {
+    return documents;
+  }
+
+  // Setters
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public void setContactEmail(String contactEmail) {
+    this.contactEmail = contactEmail;
+  }
+
+  public void setContactPhone(String contactPhone) {
+    this.contactPhone = contactPhone;
+  }
+
+  public void setNotes(String notes) {
+    this.notes = notes;
+  }
+
+  public void setDocuments(List<FileDocument> documents) {
+    this.documents = documents;
+  }
 
 }
