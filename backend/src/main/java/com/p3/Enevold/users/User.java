@@ -6,6 +6,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Date;
+import java.util.ArrayList;
+import com.p3.Enevold.utils.FileDocument;
 
 @Document("users")
 public class User {
@@ -82,6 +85,8 @@ public class User {
         public void setUpdatedBy(String updatedBy) { this.updatedBy = updatedBy; }
     }
 
+    private List<FileDocument> documents = new ArrayList<>();
+
     // root getters/setters
     public String getId() { return id; }
     public List<String> getRoles() { return roles; }
@@ -96,4 +101,6 @@ public class User {
     public void setStaff(Staff staff) { this.staff = staff; }
     public Audit getAudit() { return audit; }
     public void setAudit(Audit audit) { this.audit = audit; }
+    public List<FileDocument> getDocuments() { return documents; }
+    public void setDocuments(List<FileDocument> documents) { this.documents = documents; }
 }
