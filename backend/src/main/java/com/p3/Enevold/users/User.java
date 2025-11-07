@@ -60,14 +60,11 @@ public class User {
     public static class Staff {
         private String employeeNo;
         private Double hourlyRate;
-        private List<String> defaultCaseIds;
         // getters/setters
         public String getEmployeeNo() { return employeeNo; }
         public void setEmployeeNo(String employeeNo) { this.employeeNo = employeeNo; }
         public Double getHourlyRate() { return hourlyRate; }
         public void setHourlyRate(Double hourlyRate) { this.hourlyRate = hourlyRate; }
-        public List<String> getDefaultCaseIds() { return defaultCaseIds; }
-        public void setDefaultCaseIds(List<String> defaultCaseIds) { this.defaultCaseIds = defaultCaseIds; }
     }
     public static class Audit {
         private Instant createdAt;

@@ -3,7 +3,7 @@ import http from '../../api/http';
 import { getMe } from '../../auth/auth';
 
 interface TabsConfig {
-  entityType: 'clients' | 'cases' | 'staff';
+  entityType: 'clients' | 'cases' | 'users'; // users = admin & staff
   entityId: string;
 }
 

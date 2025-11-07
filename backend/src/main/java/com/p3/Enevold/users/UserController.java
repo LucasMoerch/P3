@@ -23,7 +23,8 @@ import org.springframework.http.MediaType;
 @RestController
 @RequestMapping("/users") // final path = /api/users
 public class UserController {
-    private final UserRepository repo;
+    @Autowired
+    UserRepository repo;
     private final JwtDecoder googleJwtDecoder;
     // Admin emails to grant admin role to from .env
     @Value("${app.admin-emails:}")
@@ -137,7 +138,8 @@ public class UserController {
 
     // Upload a file/document to a specific user
     @PostMapping("/{userId}/uploadDocument")
-    public ResponseEntity<String> uploadDocument(@PathVariable String userId,
+    public ResponseEntity<String> uploadDocument(
+        @PathVariable String userId,
         @RequestParam("file") MultipartFile file,
         @RequestParam(value = "createdBy", required = false) String createdBy) {
       try {

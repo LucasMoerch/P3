@@ -31,7 +31,6 @@ export type UserDTO = {
   staff?: {
     employeeNo?: string | null;
     hourlyRate?: number | null;
-    defaultCaseIds?: string[] | null;
   } | null;
 
   audit?: {
@@ -133,7 +132,7 @@ export function renderStaffPage(): HTMLElement {
     overlay.appendChild(card);
     card.appendChild(header);
     card.appendChild(body);
-    card.append(renderTabs({ entityType: 'staff', entityId: user.id }));
+    card.append(renderTabs({ entityType: 'users', entityId: user.id }));
 
     return overlay;
   }
