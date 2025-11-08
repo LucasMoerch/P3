@@ -42,6 +42,9 @@ public class User {
         private String displayName;
         private String phone;
         private String locale;
+        private String birthDate;
+        private String address;
+        private String cpr;
         // getters/setters
         public String getFirstName() { return firstName; }
         public void setFirstName(String firstName) { this.firstName = firstName; }
@@ -53,6 +56,15 @@ public class User {
         public void setPhone(String phone) { this.phone = phone; }
         public String getLocale() { return locale; }
         public void setLocale(String locale) { this.locale = locale; }
+
+        public String getBirthDate() {return birthDate; }
+        public void setBirthDate(String birthDate) { this.birthDate = birthDate; }
+
+        public String getAddress() {return address; }
+        public void setAddress(String address) { this.address = address; }
+
+        public String getCPR() {return cpr; }
+        public void setCPR(String cpr) { this.cpr = cpr; }
     }
     public static class Staff {
         private String employeeNo;
