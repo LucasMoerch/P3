@@ -12,7 +12,7 @@ export function renderCard(edit?: Boolean): HTMLElement {
   const closeBtn = document.createElement('button');
   closeBtn.className =
     'btn back-button border-0 bg-transparent text-primary position-absolute top-0 start-0 m-3 fs-2';
-  closeBtn.innerHTML = '<i class="fa-solid fa-arrow-left"></i>';
+  closeBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
 
   if (edit) {
     const editBtn = document.createElement('button');
@@ -74,6 +74,10 @@ export function renderCard(edit?: Boolean): HTMLElement {
   overlay.appendChild(card);
   card.appendChild(header);
   card.appendChild(body);
+
+  overlay.addEventListener('click', (event) => {
+        if (event.target === overlay) overlay.remove();
+  });
 
   // Return overlay, but let caller add content to the card
   return overlay;

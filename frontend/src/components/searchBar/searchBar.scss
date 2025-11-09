@@ -1,12 +1,9 @@
-.search-container input {
+.form-floating {
   min-width: 85%;
-  padding: 10px 40px 10px 12px;
-  border: 1px solid #ccc;
-  border-radius: 25px;
-  outline: none;
 }
 .search-container .search-button {
   cursor: pointer;
   border: none;
   background: none;
+  margin-left: 8px;
 }
