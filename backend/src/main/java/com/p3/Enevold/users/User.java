@@ -6,6 +6,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Date;
+import java.util.ArrayList;
+import com.p3.Enevold.utils.FileDocument;
 
 @Document("users")
 public class User {
@@ -69,14 +72,11 @@ public class User {
     public static class Staff {
         private String employeeNo;
         private Double hourlyRate;
-        private List<String> defaultCaseIds;
         // getters/setters
         public String getEmployeeNo() { return employeeNo; }
         public void setEmployeeNo(String employeeNo) { this.employeeNo = employeeNo; }
         public Double getHourlyRate() { return hourlyRate; }
         public void setHourlyRate(Double hourlyRate) { this.hourlyRate = hourlyRate; }
-        public List<String> getDefaultCaseIds() { return defaultCaseIds; }
-        public void setDefaultCaseIds(List<String> defaultCaseIds) { this.defaultCaseIds = defaultCaseIds; }
     }
     public static class Audit {
         private Instant createdAt;
@@ -94,6 +94,8 @@ public class User {
         public void setUpdatedBy(String updatedBy) { this.updatedBy = updatedBy; }
     }
 
+    private List<FileDocument> documents = new ArrayList<>();
+
     // root getters/setters
     public String getId() { return id; }
     public List<String> getRoles() { return roles; }
@@ -108,4 +110,6 @@ public class User {
     public void setStaff(Staff staff) { this.staff = staff; }
     public Audit getAudit() { return audit; }
     public void setAudit(Audit audit) { this.audit = audit; }
+    public List<FileDocument> getDocuments() { return documents; }
+    public void setDocuments(List<FileDocument> documents) { this.documents = documents; }
 }

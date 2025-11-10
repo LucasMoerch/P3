@@ -2,6 +2,7 @@ import { renderTable } from '../components/tableComponent/tableComponent';
 import { renderSearchComponent } from '../components/searchBar/searchBar';
 import { renderCard } from '../components/cardComponent/cardComponent';
 import http from '../api/http';
+import { renderTabs } from '../components/tabsComponent/tabsComponent';
 
 export type CaseDto = {
   id: string;
@@ -116,6 +117,8 @@ export function renderCasesPage(): HTMLElement {
         </div>
       `;
     }
+    card.appendChild(renderTabs({ entityType: 'cases', entityId: c.id }));
+
 
     return overlay;
   }

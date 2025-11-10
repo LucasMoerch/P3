@@ -1,10 +1,14 @@
 package com.p3.Enevold.cases;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.p3.Enevold.utils.FileDocument;
+
+import java.io.IOException;
 import java.time.Instant;
 import java.util.*;
 
@@ -12,52 +16,124 @@ import java.util.*;
 @RequestMapping("/cases")
 public class CaseController {
 
-    @Autowired
-    private CaseRepository repo;
+  @Autowired
+  private CaseRepository repo;
 
-    @PostMapping("/create")
-    public ResponseEntity<?> createCase(@RequestParam String title,
-                                        @RequestParam String description,
-                                        @RequestParam String status) {
-        try {
-            List<String> allowedStatuses = List.of("OPEN", "ON_HOLD", "CLOSED");
-            String normalizedStatus = status.toUpperCase();
+  @PostMapping("/create")
+  public ResponseEntity<?> createCase(@RequestParam String title,
+      @RequestParam String description,
+      @RequestParam String status) {
+    try {
+      List<String> allowedStatuses = List.of("OPEN", "ON_HOLD", "CLOSED");
+      String normalizedStatus = status.toUpperCase();
 
-            if (!allowedStatuses.contains(normalizedStatus)) {
-                return ResponseEntity.badRequest().body(Map.of(
-                        "error", "InvalidStatus",
-                        "message", "Status must be one of: OPEN, ON_HOLD, CLOSED"
-                ));
-            }
+      if (!allowedStatuses.contains(normalizedStatus)) {
+        return ResponseEntity.badRequest().body(Map.of(
+            "error", "InvalidStatus",
+            "message", "Status must be one of: OPEN, ON_HOLD, CLOSED"));
+      }
 
-            Case c = new Case();
+      Case c = new Case();
+      c.setClientId(new ObjectId("652bc56efba9ab8ef7ab9a91"));
+      c.setTitle(title);
+      c.setDescription(description);
+      c.setStatus(normalizedStatus);
+      c.setAssignedUserIds(new ArrayList<>());
+      c.setDocuments(new ArrayList<>());
 
-            // ✅ Ensure this exists:
-            c.setClientId(new ObjectId("652bc56efba9ab8ef7ab9a91")); // temporary dummy client
+      Date now = Date.from(Instant.now());
+      c.setUpdatedAt(now);
 
-            c.setTitle(title);
-            c.setDescription(description);
-            c.setStatus(normalizedStatus);
-            c.setAssignedUserIds(new ArrayList<>());
+      Case saved = repo.save(c);
+      return ResponseEntity.ok(saved);
 
-            Date now = Date.from(Instant.now());
-            c.setUpdatedAt(now);
+    } catch (Exception e) {
+      e.printStackTrace();
+      return ResponseEntity.badRequest().body(Map.of(
+          "error", e.getClass().getSimpleName(),
+          "message", e.getMessage()));
+    }
+  }
 
-            Case saved = repo.save(c);
-            return ResponseEntity.ok(saved);
+  // Upload a file/document to a specific case
+  @PostMapping("/{caseId}/uploadDocument")
+  public ResponseEntity<String> uploadDocument(@PathVariable String caseId,
+      @RequestParam("file") MultipartFile file,
+      @RequestParam(value = "createdBy", required = false) String createdBy) {
+    try {
+      Case theCase = repo.findById(caseId).orElse(null);
+      if (theCase == null) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Case not found");
+      }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().body(Map.of(
-                    "error", e.getClass().getSimpleName(),
-                    "message", e.getMessage()
-            ));
-        }
+      FileDocument document = new FileDocument();
+      document.setFileName(file.getOriginalFilename());
+      document.setContentType(file.getContentType());
+      document.setData(file.getBytes());
+      document.setUploadedAt(new Date());
+      document.setCreatedBy(createdBy != null ? createdBy : "Unknown");
+
+      if (theCase.getDocuments() == null) {
+        theCase.setDocuments(new ArrayList<>());
+      }
+      theCase.getDocuments().add(document);
+      theCase.setUpdatedAt(new Date());
+
+      repo.save(theCase);
+      return ResponseEntity.ok("File uploaded successfully: " + file.getOriginalFilename());
+    } catch (IOException e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body("Failed to upload file: " + e.getMessage());
+    }
+  }
+
+  // Get all documents for a specific case
+  @GetMapping("/{caseId}/documents")
+  public ResponseEntity<List<FileDocument>> getFileDocuments(@PathVariable String caseId) {
+    Case theCase = repo.findById(caseId).orElse(null);
+    if (theCase == null) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+    List<FileDocument> docs = theCase.getDocuments();
+    return ResponseEntity.ok(docs == null ? List.of() : docs);
+  }
+
+  // Download a specific document
+  @GetMapping("/{caseId}/documents/{documentIndex}/download")
+  public ResponseEntity<byte[]> downloadDocument(@PathVariable String caseId,
+      @PathVariable int documentIndex) {
+    Case theCase = repo.findById(caseId).orElse(null);
+    if (theCase == null || theCase.getDocuments() == null
+        || documentIndex < 0 || documentIndex >= theCase.getDocuments().size()) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
+    FileDocument document = theCase.getDocuments().get(documentIndex);
+    return ResponseEntity.ok()
+        .contentType(MediaType.parseMediaType(document.getContentType()))
+        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + document.getFileName() + "\"")
+        .body(document.getData());
+  }
 
-    @GetMapping
-    public ResponseEntity<List<Case>> getAllCases() {
-        return ResponseEntity.ok(repo.findAll());
+  // Delete a specific document
+  @DeleteMapping("/{caseId}/documents/{documentIndex}")
+  public ResponseEntity<String> deleteDocument(@PathVariable String caseId,
+      @PathVariable int documentIndex) {
+    Case theCase = repo.findById(caseId).orElse(null);
+    if (theCase == null || theCase.getDocuments() == null
+        || documentIndex < 0 || documentIndex >= theCase.getDocuments().size()) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Case or document not found");
     }
+
+    theCase.getDocuments().remove(documentIndex);
+    theCase.setUpdatedAt(new Date());
+    repo.save(theCase);
+
+    return ResponseEntity.ok("Document deleted successfully");
+  }
+
+  @GetMapping
+  public ResponseEntity<List<Case>> getAllCases() {
+    return ResponseEntity.ok(repo.findAll());
+  }
 }
