@@ -1,7 +1,7 @@
 import { renderCard } from '../cardComponent/cardComponent';
 
 export function renderAddNewCaseCard(): HTMLElement {
-  const overlay = renderCard();
+  const overlay = renderCard(true);
   const card = overlay.querySelector('.card') as HTMLElement;
   const header = card.querySelector('.header') as HTMLElement;
   const body = card.querySelector('.body') as HTMLElement;

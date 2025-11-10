@@ -4,7 +4,7 @@ export function renderTable(data: Array<Record<string, unknown>>): HTMLElement {
   tableContainer.classList.add('table-responsive');
 
   const table = document.createElement('table');
-  table.className = 'table table-striped table-hover align-middle mb-0';
+  table.className = 'table table-striped table-hover align-middle mb-0 mt-4';
 
   const thead = document.createElement('thead');
   const tbody = document.createElement('tbody');

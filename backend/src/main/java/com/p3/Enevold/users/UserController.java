@@ -6,11 +6,27 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.web.multipart.MultipartFile;
+import com.p3.Enevold.utils.FileDocument;
+import java.io.IOException;
+import java.util.List;
+import java.util.ArrayList;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.p3.Enevold.utils.FileDocument;
+
+import java.util.Date;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.beans.factory.annotation.Autowired;
+
 
 @RestController
 @RequestMapping("/users") // final path = /api/users
 public class UserController {
-    private final UserRepository repo;
+    @Autowired
+    UserRepository repo;
     private final JwtDecoder googleJwtDecoder;
     // Admin emails to grant admin role to from .env
     @Value("${app.admin-emails:}")
@@ -55,6 +71,7 @@ public class UserController {
             u.setProfile(profile);
             u.setStaff(null);
             u.setAudit(audit);
+            u.setDocuments(new ArrayList<>());
 
             return ResponseEntity.ok(repo.save(u));
         } catch (Exception e) {
@@ -119,6 +136,84 @@ public class UserController {
            return ResponseEntity.badRequest().body(java.util.Map.of("error", e.getClass().getSimpleName(), "message", e.getMessage()));
        }
 
+    }
+
+    // Upload a file/document to a specific user
+    @PostMapping("/{userId}/uploadDocument")
+    public ResponseEntity<String> uploadDocument(
+        @PathVariable String userId,
+        @RequestParam("file") MultipartFile file,
+        @RequestParam(value = "createdBy", required = false) String createdBy) {
+      try {
+        User u = repo.findById(userId).orElse(null);
+        if (u == null) {
+          return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+
+        FileDocument document = new FileDocument();
+        document.setFileName(file.getOriginalFilename());
+        document.setContentType(file.getContentType());
+        document.setData(file.getBytes());
+        document.setUploadedAt(new Date());
+        document.setCreatedBy(createdBy != null ? createdBy : "Unknown");
+
+        if (u.getDocuments() == null) {
+          u.setDocuments(new ArrayList<>());
+        }
+        u.getDocuments().add(document);
+        u.getAudit().setUpdatedAt(java.time.Instant.now());
+
+        repo.save(u);
+        return ResponseEntity.ok("File uploaded successfully: " + file.getOriginalFilename());
+      } catch (IOException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body("Failed to upload file: " + e.getMessage());
+      }
+    }
+
+    // Get all documents for a specific user
+    @GetMapping("/{userId}/documents")
+    public ResponseEntity<List<FileDocument>> getFileDocuments(@PathVariable String userId) {
+      User u = repo.findById(userId).orElse(null);
+      if (u == null) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+      }
+      List<FileDocument> docs = u.getDocuments();
+      return ResponseEntity.ok(docs == null ? List.of() : docs);
+    }
+
+    // Download a specific document
+    @GetMapping("/{userId}/documents/{documentIndex}/download")
+    public ResponseEntity<byte[]> downloadDocument(@PathVariable String userId,
+        @PathVariable int documentIndex) {
+      User u = repo.findById(userId).orElse(null);
+      if (u == null || u.getDocuments() == null
+          || documentIndex < 0 || documentIndex >= u.getDocuments().size()) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+      }
+
+      FileDocument document = u.getDocuments().get(documentIndex);
+      return ResponseEntity.ok()
+          .contentType(MediaType.parseMediaType(document.getContentType()))
+          .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + document.getFileName() + "\"")
+          .body(document.getData());
+    }
+
+    // Delete a specific document
+    @DeleteMapping("/{userId}/documents/{documentIndex}")
+    public ResponseEntity<String> deleteDocument(@PathVariable String userId,
+        @PathVariable int documentIndex) {
+      User u = repo.findById(userId).orElse(null);
+      if (u == null || u.getDocuments() == null
+          || documentIndex < 0 || documentIndex >= u.getDocuments().size()) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User or document not found");
+      }
+
+      u.getDocuments().remove(documentIndex);
+      u.getAudit().setUpdatedAt(java.time.Instant.now());
+      repo.save(u);
+
+      return ResponseEntity.ok("Document deleted successfully");
     }
 
     @GetMapping

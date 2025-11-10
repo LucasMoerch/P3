@@ -61,6 +61,9 @@ export function userId() {
 export function getMe() {
   return me;
 }
+export function getDisplayName() {
+  return me?.displayName ?? null;
+}
 
 // For logout
 export function clearAuth() {
