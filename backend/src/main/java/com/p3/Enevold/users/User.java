@@ -6,6 +6,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Date;
+import java.util.ArrayList;
+import com.p3.Enevold.utils.FileDocument;
 
 @Document("users")
 public class User {
@@ -42,6 +45,9 @@ public class User {
         private String displayName;
         private String phone;
         private String locale;
+        private String birthDate;
+        private String address;
+        private String cpr;
         // getters/setters
         public String getFirstName() { return firstName; }
         public void setFirstName(String firstName) { this.firstName = firstName; }
@@ -53,18 +59,24 @@ public class User {
         public void setPhone(String phone) { this.phone = phone; }
         public String getLocale() { return locale; }
         public void setLocale(String locale) { this.locale = locale; }
+
+        public String getBirthDate() {return birthDate; }
+        public void setBirthDate(String birthDate) { this.birthDate = birthDate; }
+
+        public String getAddress() {return address; }
+        public void setAddress(String address) { this.address = address; }
+
+        public String getCPR() {return cpr; }
+        public void setCPR(String cpr) { this.cpr = cpr; }
     }
     public static class Staff {
         private String employeeNo;
         private Double hourlyRate;
-        private List<String> defaultCaseIds;
         // getters/setters
         public String getEmployeeNo() { return employeeNo; }
         public void setEmployeeNo(String employeeNo) { this.employeeNo = employeeNo; }
         public Double getHourlyRate() { return hourlyRate; }
         public void setHourlyRate(Double hourlyRate) { this.hourlyRate = hourlyRate; }
-        public List<String> getDefaultCaseIds() { return defaultCaseIds; }
-        public void setDefaultCaseIds(List<String> defaultCaseIds) { this.defaultCaseIds = defaultCaseIds; }
     }
     public static class Audit {
         private Instant createdAt;
@@ -82,6 +94,8 @@ public class User {
         public void setUpdatedBy(String updatedBy) { this.updatedBy = updatedBy; }
     }
 
+    private List<FileDocument> documents = new ArrayList<>();
+
     // root getters/setters
     public String getId() { return id; }
     public List<String> getRoles() { return roles; }
@@ -96,4 +110,6 @@ public class User {
     public void setStaff(Staff staff) { this.staff = staff; }
     public Audit getAudit() { return audit; }
     public void setAudit(Audit audit) { this.audit = audit; }
+    public List<FileDocument> getDocuments() { return documents; }
+    public void setDocuments(List<FileDocument> documents) { this.documents = documents; }
 }

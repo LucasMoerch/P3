@@ -4,6 +4,7 @@ import { renderCard } from '../components/cardComponent/cardComponent';
 import { renderTabs } from '../components/tabsComponent/tabsComponent';
 import http from '../api/http';
 
+
 export type ClientDTO = {
   id: string;
   name: string;
@@ -11,8 +12,6 @@ export type ClientDTO = {
   contact?: string;
   email?: string;
   phone?: string;
-  createdAt?: string;
-  updatedAt?: string;
 };
 
 export function renderClientsPage(): HTMLElement {
@@ -32,7 +31,7 @@ export function renderClientsPage(): HTMLElement {
   // Fetch clients from backend
   async function loadClients() {
     try {
-      const clients = (await http.get('/fetchClients')) as ClientDTO[];
+      const clients = (await http.get('/clients')) as ClientDTO[];
 
       const clientData = (clients ?? []).map((c) => ({
         id: c.id,
@@ -97,15 +96,13 @@ export function renderClientsPage(): HTMLElement {
             <span class="label text-muted fw-medium">Email</span>
             <span class="value fw-semibold">${client.email || 'N/A'}</span>
           </div>
-          <div class="info-row d-flex justify-content-between py-3">
-            <span class="label text-muted fw-medium">Created At</span>
-            <span class="value fw-semibold">${client.createdAt ? new Date(client.createdAt).toLocaleString('da-DK') : 'N/A'}</span>
-          </div>
+
         </div>
       </div>
     `;
     card.appendChild(body);
-    card.appendChild(renderTabs());
+    card.appendChild(renderTabs({ entityType: 'clients', entityId: client.id }));
+
 
     return overlay;
   }

@@ -31,7 +31,6 @@ export type UserDTO = {
   staff?: {
     employeeNo?: string | null;
     hourlyRate?: number | null;
-    defaultCaseIds?: string[] | null;
   } | null;
 
   audit?: {
@@ -120,33 +119,20 @@ export function renderStaffPage(): HTMLElement {
           </div>
           <div class="info-row d-flex justify-content-between border-bottom py-3">
             <span class="label text-muted fw-medium">Address</span>
-            <span class="value fw-semibold text-end">${user.profile?.adress || 'N/A'}</span>
+            <span class="value fw-semibold text-end">${user.profile?.address || 'N/A'}</span>
           </div>
           <div class="info-row d-flex justify-content-between py-3">
             <span class="label text-muted fw-medium">CPR Number</span>
-            <span class="value fw-semibold">${user.profile?.CPR || 'N/A'}</span>
+            <span class="value fw-semibold">${user.profile?.cpr || 'N/A'}</span>
           </div>
         </div>
       </div>
       `;
 
-    const saveBtn = document.createElement('button');
-    saveBtn.className = 'btn btn-primary btn-lg';
-    saveBtn.innerText = 'Save';
-
-    const btnContainer = document.createElement('div');
-    btnContainer.className = 'd-flex justify-content-center mt-3';
-    btnContainer.appendChild(saveBtn);
-
-    saveBtn.addEventListener('click', () => {
-      overlay.remove();
-    });
-
     overlay.appendChild(card);
     card.appendChild(header);
     card.appendChild(body);
-    card.append(renderTabs());
-    card.appendChild(btnContainer);
+    card.append(renderTabs({ entityType: 'users', entityId: user.id }));
 
     return overlay;
   }
