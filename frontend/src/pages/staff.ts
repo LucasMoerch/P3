@@ -5,6 +5,8 @@ import { renderCard } from '../components/cardComponent/cardComponent';
 import { isAdmin } from '../auth/auth';
 import http from '../api/http';
 import { renderTabs } from '../components/tabsComponent/tabsComponent';
+import { renderNewButton } from '../components/newButton/newButton';
+import { renderAddNewStaffCard } from '../components/newCard/addNewStaffCard';
 
 export type UserRole = 'staff' | 'admin';
 export type UserStatus = 'invited' | 'active' | 'disabled';
@@ -53,7 +55,7 @@ export type UserDTO = {
  * @returns The UserDTO object returned by the server.
  */
 async function inviteUser(email: string, role: UserRole): Promise<UserDTO> {
-  const url = '/api/admin/invite';
+  const url = '/admin/invite';
   const data = { email, roles: [role] };
   const response = (await http.post(url, data)) as UserDTO;
   return response;
@@ -187,7 +189,6 @@ export function renderStaffPage(): HTMLElement {
   if (isAdmin()) {
     const handleInvite = setupInvitationHandler(realDataSection);
 
-    // These helpers are assumed to exist elsewhere in your codebase
     const newStaffButton = renderNewButton(() => {
       const newStaffCard = renderAddNewStaffCard(handleInvite);
       document.body.appendChild(newStaffCard);
