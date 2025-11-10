@@ -1,5 +1,13 @@
+.Search, .search-container {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  margin-right: 8px;
+}
+
 .search-container input {
-  width: 80%;
+  width: 95%;
   padding: 10px 40px 10px 12px;
   border: 1px solid #ccc;
   border-radius: 25px;

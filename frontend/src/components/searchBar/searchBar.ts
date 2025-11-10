@@ -35,12 +35,5 @@ export function renderSearchComponent(): HTMLElement {
   searchContainer.appendChild(searchButton);
   searchDiv.appendChild(searchContainer);
 
-  if (isAdmin()) {
-    console.log('You are Admin');
-    searchContainer.appendChild(renderNewButton());
-  } else {
-    console.log('You are not Admin');
-  }
-
   return searchDiv;
 }

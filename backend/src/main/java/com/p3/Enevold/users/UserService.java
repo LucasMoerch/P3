@@ -1,6 +1,5 @@
 package com.p3.Enevold.users;
 
-import com.p3.Enevold.users.User;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -19,36 +18,31 @@ public class UserService {
         this.mongoTemplate = mongoTemplate;
     }
 
-    // Performs an Upsert using the nested 'auth.email' field for the query.
-    public User inviteOrUpdateUser(String email, String role) {
+    public User inviteOrUpdateUser(String email, List<String> roles) {
 
         Query query = new Query(Criteria.where("auth.email").is(email));
+
         Update update = new Update()
 
-                // Set root fields
-                .set("roles", List.of(role))
-                .set("status", "invited")
+                .addToSet("roles").each(roles.toArray())
 
-                // Set nested Auth fields
-                .set("auth.provider", "google")
-                .set("auth.sub", null)
-                .set("auth.email", email)
-                .set("auth.emailVerified", false)
-                .set("auth.pictureUrl", null)
+                .setOnInsert("status", "invited")
 
-                // Set nested Profile fields
-                .set("profile", null)
-                .set("staff", null)
+                .setOnInsert("auth.provider", "google")
+                .setOnInsert("auth.sub", null)
+                .setOnInsert("auth.email", email)
+                .setOnInsert("auth.emailVerified", false)
+                .setOnInsert("auth.pictureUrl", null)
 
-                // Set Audit fields to manage creation
+                .setOnInsert("profile", null)
+                .setOnInsert("staff", null)
+
                 .setOnInsert("audit.createdAt", Instant.now())
-                .set("audit.updatedAt", Instant.now())
-                .setOnInsert("audit.createdBy", "SYSTEM/ADMIN");
+                .setOnInsert("audit.createdBy", "SYSTEM/ADMIN")
+                .set("audit.updatedAt", Instant.now());
 
-        // Execute the upsert operation
         mongoTemplate.upsert(query, update, User.class);
 
-        // Retrieve and return the resulting User document
         return mongoTemplate.findOne(query, User.class);
     }
 }

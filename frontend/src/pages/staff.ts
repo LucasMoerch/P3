@@ -47,9 +47,8 @@ export type UserDTO = {
  * @returns The UserDTO object returned by the server.
  */
 async function inviteUser(email: string, role: UserRole): Promise<UserDTO> {
-
   const url = '/api/admin/invite';
-  const data = { email, role };
+  const data = { email, roles: [role] };
 
   const response = (await http.post(url, data)) as UserDTO;
   return response;
@@ -109,7 +108,16 @@ export function renderStaffPage(): HTMLElement {
     const container = document.createElement('div');
     container.classList.add('container');
     container.appendChild(div);
-    container.appendChild(renderSearchComponent());
+
+    const searchAndButtonContainer = document.createElement('div');
+    searchAndButtonContainer.style.display = 'flex';
+    searchAndButtonContainer.style.justifyContent = 'flex-start';
+    searchAndButtonContainer.style.alignItems = 'center';
+    searchAndButtonContainer.style.marginBottom = '20px';
+
+    const searchEl = renderSearchComponent();
+
+    searchAndButtonContainer.appendChild(searchEl);
 
     // New section for real data from backend
     const realDataSection = document.createElement('div');
@@ -119,19 +127,20 @@ export function renderStaffPage(): HTMLElement {
 
     // Admin only functionality
     if (isAdmin()) {
-        console.log('You are Admin');
-
         const handleInvite = setupInvitationHandler(realDataSection);
-        //const newStaffButton = renderNewButton('New Staff');
-        const newStaffCard = renderAddNewStaffCard(handleInvite);
 
-        //container.appendChild(newStaffButton);
-        container.appendChild(newStaffCard);
+        const newStaffButton = renderNewButton(() => {
+            const newStaffCard = renderAddNewStaffCard(handleInvite);
+            document.body.appendChild(newStaffCard);
+        });
+
+        searchAndButtonContainer.appendChild(newStaffButton);
 
     } else {
         console.log('You are not Admin');
     }
 
+    container.appendChild(searchAndButtonContainer);
     container.appendChild(realDataSection);
 
     return container;

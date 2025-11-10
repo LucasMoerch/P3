@@ -1,12 +1,23 @@
 package com.p3.Enevold.admin;
 
+import java.util.List;
+
 // This DTO defines the expected JSON body for the invitation request
 public class InvitationRequest {
     private String email;
-    private String role; // The requested role, e.g., "staff" or "admin"
+    private List<String> roles;
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-    public String getRole() { return role; }
-    public void setRole(String role) { this.role = role; }
+    public String getEmail() {
+        return email;
+    }
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public List<String> getRoles() {
+        return roles;
+    }
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
+    }
 }
