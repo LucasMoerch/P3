@@ -54,9 +54,9 @@ export type UserDTO = {
  * @param role The role to assign ('staff' or 'admin').
  * @returns The UserDTO object returned by the server.
  */
-async function inviteUser(email: string, role: UserRole): Promise<UserDTO> {
+async function inviteUser(email: string, role: UserRole[]): Promise<UserDTO> {
   const url = '/admin/invite';
-  const data = { email, roles: [role] };
+  const data = { email, roles: role };
   const response = (await http.post(url, data)) as UserDTO;
   return response;
 }
@@ -69,7 +69,7 @@ function setupInvitationHandler(realDataSection: HTMLElement) {
         return false;
       }
 
-      const newUser = await inviteUser(email, role);
+      const newUser = await inviteUser(email, [role]); // Pass role as an array
       alert(
         `Invitation sent successfully to ${newUser.auth.email} with role(s): ${newUser.roles.join(
           ', ',
@@ -101,7 +101,7 @@ async function loadStaff(realDataSection: HTMLElement) {
     const staffData = (users ?? []).map((user) => ({
       id: user.id,
       name: user.profile?.displayName || user.auth.email, // Use email if display name is null
-      role: user.roles.join(', '),
+      role: user.roles,
       status: user.status,
     }));
 

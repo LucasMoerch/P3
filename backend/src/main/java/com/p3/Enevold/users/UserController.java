@@ -36,49 +36,6 @@ public class UserController {
         this.googleJwtDecoder = googleJwtDecoder;
     }
 
-    @PostMapping("/invite")
-    public ResponseEntity<?> invite(@RequestParam String email,
-                                    @RequestParam String firstName,
-                                    @RequestParam String lastName) {
-        try {
-            var lower = email.toLowerCase();
-
-            var u = new User();
-
-            var auth = new User.Auth();
-            auth.setProvider("google");
-            auth.setEmail(lower);
-            auth.setEmailVerified(false);
-            auth.setPictureUrl(null);
-
-            var profile = new User.Profile();
-            profile.setFirstName(firstName);
-            profile.setLastName(lastName);
-            profile.setDisplayName(firstName + " " + lastName);
-            profile.setLocale("da-DK");
-            profile.setPhone(null);
-
-            var audit = new User.Audit();
-            var now = java.time.Instant.now();
-            audit.setCreatedAt(now);
-            audit.setUpdatedAt(now);
-            audit.setCreatedBy(null);
-            audit.setUpdatedBy(null);
-
-            u.setRoles(java.util.List.of("staff"));
-            u.setStatus("invited");
-            u.setAuth(auth);
-            u.setProfile(profile);
-            u.setStaff(null);
-            u.setAudit(audit);
-            u.setDocuments(new ArrayList<>());
-
-            return ResponseEntity.ok(repo.save(u));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest()
-                    .body(java.util.Map.of("error", e.getClass().getSimpleName(), "message", String.valueOf(e.getMessage())));
-        }
-    }
     @PostMapping("/activate")
     public ResponseEntity<?> activate(@RequestParam("id_token") String idToken, jakarta.servlet.http.HttpSession session) {
        try {

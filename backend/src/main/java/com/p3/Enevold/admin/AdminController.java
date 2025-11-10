@@ -17,34 +17,19 @@ public class AdminController {
         this.userService = userService;
     }
 
-
-    //Invite a new user by email and role.
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/invite")
-    public ResponseEntity<User> inviteNewUser(@RequestBody InvitationRequest request) {
-
-        List<String> roles = request.getRoles()
-                .stream()
-                .map(String::toLowerCase)
-                .toList();
-
-        List<String> allowed = List.of("staff", "admin");
-        boolean invalid = roles.stream().anyMatch(r -> !allowed.contains(r));
-
-        if (invalid) {
-            return ResponseEntity.badRequest().body(null);
-        }
-
+    public ResponseEntity<?> inviteNewUser(@RequestBody InvitationRequest request) {
         try {
             User invitedUser = userService.inviteOrUpdateUser(
                     request.getEmail().toLowerCase(),
-                    roles
+                    request.getRoles()
             );
-
             return ResponseEntity.ok(invitedUser);
-
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.status(500).body("An unexpected error occurred.");
         }
     }
 }
