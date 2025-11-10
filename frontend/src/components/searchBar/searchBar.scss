@@ -7,3 +7,14 @@
   background: none;
   margin-left: 8px;
 }
+
+.form-floating > label {
+  background: none;
+  backdrop-filter: none;
+  box-shadow: none;
+  color: #777;
+}
+
+:root {
+  --bs-body-bg: #fff;
+}
