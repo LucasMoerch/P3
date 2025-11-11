@@ -98,8 +98,23 @@ async function loadStaff(realDataSection: HTMLElement) {
       status: user.status,
     }));
 
-    realDataSection.innerHTML = '<h2>Users from Database</h2>';
-    realDataSection.appendChild(renderTable(staffData));
+    
+    realDataSection.innerHTML = '';
+    const tableElement = renderTable(staffData);
+    realDataSection.appendChild(tableElement);
+
+
+    // Clickable rows like InspectClient / InspectCase
+    const rows = tableElement.querySelectorAll('tr');
+    rows.forEach((row, index) => {
+      if (index === 0) return; // skip header
+      row.addEventListener('click', () => {
+        const user = users[index - 1];
+        const popup = inspectUser(user);
+        document.body.appendChild(popup);
+        console.log('client clicked');
+      });
+    });
   } catch (err) {
     console.error('Failed to load staff:', err);
     realDataSection.innerHTML = '<h2>Users from Database</h2><p>Failed to load staff data.</p>';
