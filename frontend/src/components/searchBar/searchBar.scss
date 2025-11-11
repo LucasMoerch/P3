@@ -1,6 +1,14 @@
 .form-floating {
   min-width: 85%;
 }
+.Search,
+.search-container {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  margin-right: 8px;
+}
 .search-container .search-button {
   cursor: pointer;
   border: none;

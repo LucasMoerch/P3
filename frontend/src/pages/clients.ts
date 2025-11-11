@@ -4,7 +4,6 @@ import { renderCard } from '../components/cardComponent/cardComponent';
 import { renderTabs } from '../components/tabsComponent/tabsComponent';
 import http from '../api/http';
 
-
 export type ClientDTO = {
   id: string;
   name: string;
@@ -102,7 +101,6 @@ export function renderClientsPage(): HTMLElement {
     `;
     card.appendChild(body);
     card.appendChild(renderTabs({ entityType: 'clients', entityId: client.id }));
-
 
     return overlay;
   }

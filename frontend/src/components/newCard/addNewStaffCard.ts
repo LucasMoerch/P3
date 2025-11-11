@@ -1,7 +1,9 @@
 import { renderCard } from '../cardComponent/cardComponent';
 import { createFloatingInput, createFloatingTextarea } from '../floatingLabel/floatingLabel';
-
-export function renderAddNewStaffCard(): HTMLElement {
+import type { UserRole } from '../../pages/staff';
+export function renderAddNewStaffCard(
+  onInvite?: (email: string, role: UserRole[]) => Promise<boolean>,
+): HTMLElement {
   // Create overlay
   const overlay: HTMLElement = renderCard(true);
   const card: HTMLElement = overlay.querySelector('.card') as HTMLElement;
@@ -28,7 +30,7 @@ export function renderAddNewStaffCard(): HTMLElement {
 
   const saveBtn = document.createElement('button');
   saveBtn.className = 'btn btn-primary rounded-pill px-4';
-  saveBtn.innerText = 'Save';
+  saveBtn.innerText = 'Invite';
 
   const cancelBtn = document.createElement('button');
   cancelBtn.className = 'btn btn-outline-secondary rounded-pill px-4';
@@ -45,11 +47,27 @@ export function renderAddNewStaffCard(): HTMLElement {
   overlay.appendChild(card);
 
   cancelBtn.addEventListener('click', () => overlay.remove());
-  saveBtn.addEventListener('click', () => {
-    const name = (formContainer.querySelector('#itemName') as HTMLInputElement).value;
+
+  saveBtn.addEventListener('click', async () => {
+    const name = (formContainer.querySelector('#staffName') as HTMLInputElement).value;
+    const email = (formContainer.querySelector('#staffEmail') as HTMLInputElement).value;
+    const isAdmin = (formContainer.querySelector('#isAdmin') as HTMLInputElement).checked;
     const desc = (formContainer.querySelector('#itemDesc') as HTMLTextAreaElement).value;
-    console.log('Saving new item:', { name, desc });
-    overlay.remove();
+
+    const role: UserRole = isAdmin ? 'admin' : 'staff';
+
+    console.log('Submitting:', { name, email, desc, role });
+
+    if (!onInvite) {
+      console.warn('No invite callback provided.');
+      overlay.remove();
+      return;
+    }
+
+    const success = await onInvite(email, [role]);
+    if (success) {
+      overlay.remove();
+    }
   });
 
   return overlay;
