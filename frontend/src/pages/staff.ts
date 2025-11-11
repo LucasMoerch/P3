@@ -179,14 +179,15 @@ export function renderStaffPage(): HTMLElement {
 
   // Admin only functionality
   if (isAdmin()) {
-    const handleInvite = setupInvitationHandler(realDataSection);
+      const handleInvite = setupInvitationHandler(realDataSection);
 
-    const newStaffButton = renderNewButton(() => {
-      const newStaffCard = renderAddNewStaffCard(handleInvite);
-      document.body.appendChild(newStaffCard);
-    });
-
-    searchAndButtonContainer.appendChild(newStaffButton);
+      const existingNewButton = searchEl.querySelector('.button');
+      if (existingNewButton) {
+          existingNewButton.addEventListener('click', () => {
+              const newStaffCard = renderAddNewStaffCard(handleInvite);
+              document.body.appendChild(newStaffCard);
+          });
+      }
   } else {
     console.log('You are not Admin');
   }

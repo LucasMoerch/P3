@@ -20,6 +20,9 @@ export function renderNewButton(onClick?: () => void): HTMLElement {
     } else if (path.includes('case')) {
       document.body.appendChild(renderAddNewCaseCard());
     }
+    else if (path.includes('case')){
+        document.body.appendChild(renderAddNewStaffCard());
+    }
   });
 
   return addButton;
