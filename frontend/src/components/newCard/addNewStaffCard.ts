@@ -62,7 +62,7 @@ export function renderAddNewStaffCard(
     const name = (formContainer.querySelector('#staffName') as HTMLInputElement).value;
     const email = (formContainer.querySelector('#staffEmail') as HTMLInputElement).value;
     const isAdmin = (formContainer.querySelector('#isAdmin') as HTMLInputElement).checked;
-    const desc = (formContainer.querySelector('#itemDesc') as HTMLTextAreaElement).value;
+    const desc = (formContainer.querySelector('#staffDesc') as HTMLTextAreaElement).value;
 
     const role: UserRole = isAdmin ? 'admin' : 'staff';
 
