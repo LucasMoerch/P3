@@ -1,5 +1,4 @@
 import './newButton.scss';
-import { renderAddNewStaffCard } from '../newCard/addNewStaffCard';
 import { renderAddNewClientCard } from '../newCard/addNewClientCard';
 import { renderAddNewCaseCard } from '../newCard/addNewCaseCard';
 
@@ -19,9 +18,6 @@ export function renderNewButton(onClick?: () => void): HTMLElement {
       document.body.appendChild(renderAddNewClientCard());
     } else if (path.includes('case')) {
       document.body.appendChild(renderAddNewCaseCard());
-    }
-    else if (path.includes('case')){
-        document.body.appendChild(renderAddNewStaffCard());
     }
   });
 

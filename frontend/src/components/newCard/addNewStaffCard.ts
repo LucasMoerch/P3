@@ -5,7 +5,7 @@ export function renderAddNewStaffCard(
   onInvite?: (email: string, role: UserRole[]) => Promise<boolean>,
 ): HTMLElement {
   // Create overlay
-  const overlay: HTMLElement = renderCard(true);
+  const overlay: HTMLElement = renderCard();
   const card: HTMLElement = overlay.querySelector('.card') as HTMLElement;
   const header: HTMLElement = card.querySelector('.header') as HTMLElement;
   const body: HTMLElement = card.querySelector('.body') as HTMLElement;
@@ -19,12 +19,22 @@ export function renderAddNewStaffCard(
 
   //Use the new reusable floating label helpers
   const nameField = createFloatingInput('staffName', 'Name', 'text');
+  const emailField = createFloatingInput('staffEmail', 'Email', 'email');
   const descField = createFloatingTextarea('staffDesc', 'Description', 4);
 
-  formContainer.appendChild(nameField);
-  formContainer.appendChild(descField);
+  const adminCheckWrapper = document.createElement('div');
+  adminCheckWrapper.className = 'form-check mb-3';
+  adminCheckWrapper.innerHTML = `
+    <input type="checkbox" class="form-check-input" id="isAdmin" />
+    <label class="form-check-label" for="isAdmin">Admin access</label>
+    `;
 
-  // BUTTON ROW
+  formContainer.appendChild(nameField);
+  formContainer.appendChild(emailField);
+  formContainer.appendChild(descField);
+  formContainer.appendChild(adminCheckWrapper);
+
+    // BUTTON ROW
   const buttonRow = document.createElement('div');
   buttonRow.className = 'd-flex justify-content-end gap-2 p-3';
 

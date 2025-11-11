@@ -2,7 +2,7 @@ import { renderCard } from '../cardComponent/cardComponent';
 import { createFloatingInput, createFloatingTextarea } from '../floatingLabel/floatingLabel';
 
 export function renderAddNewClientCard(): HTMLElement {
-  const overlay = renderCard(true);
+  const overlay = renderCard();
   const card = overlay.querySelector('.card') as HTMLElement;
   const header = card.querySelector('.header') as HTMLElement;
   const body = card.querySelector('.body') as HTMLElement;
