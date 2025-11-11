@@ -42,7 +42,7 @@ public class SessionAuthenticationFilter extends OncePerRequestFilter {
                         // Map DB roles to Spring authorities "ROLE_ADMIN","ROLE_STAFF"
                         List<SimpleGrantedAuthority> authorities = (user.getRoles() == null ? List.<String>of() : user.getRoles())
                                 .stream()
-                                .filter(r -> !r.isBlank())
+                                .filter(r -> r != null && !r.isBlank())
                                 .map(String::toUpperCase)
                                 .map(r -> r.startsWith("ROLE_") ? r : "ROLE_" + r)
                                 .map(SimpleGrantedAuthority::new)

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
+import org.bson.Document;
 
 @Service
 public class UserService {
@@ -32,8 +33,8 @@ public class UserService {
                 .setOnInsert("auth.email", email)
                 .setOnInsert("auth.emailVerified", false)
                 .setOnInsert("auth.pictureUrl", null)
-                .setOnInsert("profile", null)
-                .setOnInsert("staff", null)
+                .setOnInsert("profile", new Document())
+                .setOnInsert("staff", new Document())
                 .setOnInsert("audit.createdAt", Instant.now())
                 .setOnInsert("audit.createdBy", "SYSTEM/ADMIN")
                 .set("audit.updatedAt", Instant.now());

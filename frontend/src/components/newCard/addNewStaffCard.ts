@@ -2,7 +2,7 @@ import { renderCard } from '../cardComponent/cardComponent';
 import type { UserRole } from '../../pages/staff';
 
 export function renderAddNewStaffCard(
-  onInvite?: (email: string, role: UserRole) => Promise<boolean>
+  onInvite?: (email: string, role: UserRole[]) => Promise<boolean>
 ): HTMLElement {
   // Create overlay
   const overlay: HTMLElement = renderCard(true);
@@ -78,7 +78,7 @@ export function renderAddNewStaffCard(
       return;
     }
 
-    const success = await onInvite(email, role);
+    const success = await onInvite(email, [role]);
     if (success) {
       overlay.remove();
     }

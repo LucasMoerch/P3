@@ -23,35 +23,35 @@ export type UserDTO = {
   };
 
   profile?:
-    | {
-        firstName?: string | null;
-        lastName?: string | null;
-        displayName?: string | null;
-        phone?: string | null;
-        locale?: string | null;
-      }
-    | null;
+  | {
+    firstName?: string | null;
+    lastName?: string | null;
+    displayName?: string | null;
+    phone?: string | null;
+    locale?: string | null;
+  }
+  | null;
 
   staff?:
-    | {
-        employeeNo?: string | null;
-        hourlyRate?: number | null;
-      }
-    | null;
+  | {
+    employeeNo?: string | null;
+    hourlyRate?: number | null;
+  }
+  | null;
 
   audit?:
-    | {
-        createdAt?: string | null; // ISO strings from API
-        updatedAt?: string | null;
-        createdBy?: string | null;
-        updatedBy?: string | null;
-      }
-    | null;
+  | {
+    createdAt?: string | null; // ISO strings from API
+    updatedAt?: string | null;
+    createdBy?: string | null;
+    updatedBy?: string | null;
+  }
+  | null;
 };
 
 /**
  * @param email The email of the user to invite.
- * @param role The role to assign ('staff' or 'admin').
+ * @param roles The role to assign ('staff' and/or 'admin').
  * @returns The UserDTO object returned by the server.
  */
 async function inviteUser(email: string, role: UserRole[]): Promise<UserDTO> {
@@ -62,14 +62,14 @@ async function inviteUser(email: string, role: UserRole[]): Promise<UserDTO> {
 }
 
 function setupInvitationHandler(realDataSection: HTMLElement) {
-  const handleInvite = async (email: string, role: UserRole) => {
+  const handleInvite = async (email: string, roles: UserRole[]) => {
     try {
-      if (!email || !role) {
+      if (!email || !roles) {
         alert('Please provide both email and role.');
         return false;
       }
 
-      const newUser = await inviteUser(email, [role]); // Pass role as an array
+      const newUser = await inviteUser(email, roles); // Pass role as an array
       alert(
         `Invitation sent successfully to ${newUser.auth.email} with role(s): ${newUser.roles.join(
           ', ',
