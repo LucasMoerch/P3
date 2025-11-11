@@ -78,7 +78,7 @@ export function renderHeaderAndNavbar(): HTMLElement {
     { label: 'Staff', page: 'staff', icon: '<i class="fa-solid fa-clipboard-user"></i>' },
     { label: 'Clients', page: 'clients', icon: '<i class="fa-solid fa-users"></i>' },
     { label: 'Cases', page: 'cases', icon: '<i class="fa-solid fa-suitcase"></i>' },
-    { label: 'My Profile', page: 'profile', icon: '<i class="fa-solid fa-user"></i>' },
+    { label: 'My Profile', page: 'myProfile', icon: '<i class="fa-solid fa-user"></i>' },
   ];
 
   menuItems.forEach((item) => {

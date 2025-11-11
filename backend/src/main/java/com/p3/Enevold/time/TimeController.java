@@ -1,5 +1,4 @@
 package com.p3.Enevold.time;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,13 +28,13 @@ public class TimeController {
         try {
             var time = new Time();
             time.setStartTime(startTime);
-            time.setCaseId(userId);
+            time.setUserId(userId);
             time.setUserName(currentUserName);
 
             return ResponseEntity.ok(repo.save(time));
         } catch (Exception e) {
             return ResponseEntity.badRequest()
-                    .body(java.util.Map.of(
+                    .body(Map.of(
                             "error", e.getClass().getSimpleName(),
                             "message", String.valueOf(e.getMessage())
                     ));
@@ -70,5 +69,13 @@ public class TimeController {
         var saved = repo.save(time);
         return ResponseEntity.ok(saved);
     }
+    record TimeEntryDto(String startTime, String stopTime) {}
 
+    @GetMapping("/users/{userId}/last-time")
+    public ResponseEntity<TimeEntryDto> getLastTime(@PathVariable String userId) {
+        return repo.findFirstByUserIdOrderByStartTimeDesc(userId)
+                .or(() -> repo.findById(userId)) 
+                .map(time -> ResponseEntity.ok(new TimeEntryDto(time.getStartTime(), time.getStopTime())))
+                .orElseGet(() -> ResponseEntity.noContent().build());
+    }
 }
