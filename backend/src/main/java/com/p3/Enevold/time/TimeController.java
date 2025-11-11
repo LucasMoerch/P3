@@ -74,7 +74,7 @@ public class TimeController {
     @GetMapping("/users/{userId}/last-time")
     public ResponseEntity<TimeEntryDto> getLastTime(@PathVariable String userId) {
         return repo.findFirstByUserIdOrderByStartTimeDesc(userId)
-                .or(() -> repo.findById(userId)) // fall back to legacy records where userId was stored as _id
+                .or(() -> repo.findById(userId)) 
                 .map(time -> ResponseEntity.ok(new TimeEntryDto(time.getStartTime(), time.getStopTime())))
                 .orElseGet(() -> ResponseEntity.noContent().build());
     }
