@@ -23,7 +23,15 @@ export default {
     port: 5173,
     host: '0.0.0.0',
     historyApiFallback: true,
-    proxy: [{ context: ['/api'], target: 'http://api:8080', changeOrigin: true, secure: false, cookieDomainRewrite: 'localhost' }],
+    proxy: [
+      {
+        context: ['/api'],
+        target: 'http://api:8080',
+        changeOrigin: true,
+        secure: false,
+        cookieDomainRewrite: 'localhost',
+      },
+    ],
   },
   module: {
     rules: [

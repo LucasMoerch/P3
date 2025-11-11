@@ -12,15 +12,12 @@ export function renderNewButton(onClick?: () => void): HTMLElement {
   addButton.appendChild(newClientIcon);
 
   addButton.addEventListener('click', () => {
-    const path = window.location.pathname.toLowerCase()
+    const path = window.location.pathname.toLowerCase();
     if (onClick) {
       onClick();
-    }
-    else if (path.includes('client')) {
+    } else if (path.includes('client')) {
       document.body.appendChild(renderAddNewClientCard());
-    }
-
-    else if (path.includes('case')) {
+    } else if (path.includes('case')) {
       document.body.appendChild(renderAddNewCaseCard());
     }
   });

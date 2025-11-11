@@ -22,31 +22,25 @@ export type UserDTO = {
     pictureUrl?: string | null; // optional on some users
   };
 
-  profile?:
-  | {
+  profile?: {
     firstName?: string | null;
     lastName?: string | null;
     displayName?: string | null;
     phone?: string | null;
     locale?: string | null;
-  }
-  | null;
+  } | null;
 
-  staff?:
-  | {
+  staff?: {
     employeeNo?: string | null;
     hourlyRate?: number | null;
-  }
-  | null;
+  } | null;
 
-  audit?:
-  | {
+  audit?: {
     createdAt?: string | null; // ISO strings from API
     updatedAt?: string | null;
     createdBy?: string | null;
     updatedBy?: string | null;
-  }
-  | null;
+  } | null;
 };
 
 /**
@@ -81,8 +75,7 @@ function setupInvitationHandler(realDataSection: HTMLElement) {
     } catch (err) {
       console.error('Invitation Failed:', err);
       const message =
-        (err as any).response?.data?.message ||
-        'Failed to send invitation. Check server logs.';
+        (err as any).response?.data?.message || 'Failed to send invitation. Check server logs.';
       alert(`Invitation failed: ${message}`);
       return false; // Keep the form/card open on failure
     }
@@ -109,8 +102,7 @@ async function loadStaff(realDataSection: HTMLElement) {
     realDataSection.appendChild(renderTable(staffData));
   } catch (err) {
     console.error('Failed to load staff:', err);
-    realDataSection.innerHTML =
-      '<h2>Users from Database</h2><p>Failed to load staff data.</p>';
+    realDataSection.innerHTML = '<h2>Users from Database</h2><p>Failed to load staff data.</p>';
   }
 }
 
