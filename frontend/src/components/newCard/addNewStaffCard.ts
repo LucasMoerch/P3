@@ -1,4 +1,5 @@
 import { renderCard } from '../cardComponent/cardComponent';
+import { createFloatingInput, createFloatingTextarea } from '../floatingLabel/floatingLabel';
 
 export function renderAddNewStaffCard(): HTMLElement {
   // Create overlay
@@ -13,17 +14,13 @@ export function renderAddNewStaffCard(): HTMLElement {
   // BODY CONTENT
   const formContainer = document.createElement('div');
   formContainer.className = 'container p-4 rounded';
-  formContainer.innerHTML = `
-    <div class="mb-3">
-      <label for="itemName" class="form-label">Staff Name</label>
-      <input type="text" id="itemName" class="form-control" placeholder="Enter name...">
-    </div>
 
-    <div class="mb-3">
-      <label for="itemDesc" class="form-label">Description</label>
-      <textarea id="itemDesc" class="form-control" rows="4" placeholder="Add a short description..."></textarea>
-    </div>
-  `;
+  //Use the new reusable floating label helpers
+  const nameField = createFloatingInput('staffName', 'Name', 'text');
+  const descField = createFloatingTextarea('staffDesc', 'Description', 4);
+
+  formContainer.appendChild(nameField);
+  formContainer.appendChild(descField);
 
   // BUTTON ROW
   const buttonRow = document.createElement('div');

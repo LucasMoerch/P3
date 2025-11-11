@@ -1,4 +1,5 @@
 import { renderCard } from '../cardComponent/cardComponent';
+import { createFloatingInput, createFloatingTextarea } from '../floatingLabel/floatingLabel';
 
 export function renderAddNewCaseCard(): HTMLElement {
   const overlay = renderCard(true);
@@ -10,17 +11,17 @@ export function renderAddNewCaseCard(): HTMLElement {
 
   const formContainer = document.createElement('div');
   formContainer.className = 'container p-4 rounded';
-  formContainer.innerHTML = `
+
+  const titleField = createFloatingInput('caseTitle', 'Case Title', 'text');
+  const descriptionField = createFloatingTextarea('caseDescription', 'Description', 4);
+
+  formContainer.appendChild(titleField);
+  formContainer.appendChild(descriptionField);
+
+  const dropDown = document.createElement('div');
+  dropDown.className = 'mb-3';
+  dropDown.innerHTML = `
     <div class="mb-3">
-      <label for="caseTitle" class="form-label">Case Title</label>
-      <input type="text" id="caseTitle" class="form-control" placeholder="Enter case title...">
-    </div>
-    <div class="mb-3">
-      <label for="caseDescription" class="form-label">Description</label>
-      <textarea id="caseDescription" class="form-control" rows="4" placeholder="Add a short description..."></textarea>
-    </div>
-    <div class="mb-3">
-      <label for="caseStatus" class="form-label">Status</label>
       <select id="caseStatus" class="form-select">
         <option selected disabled>Choose status...</option>
         <option value="OPEN">Open</option>
@@ -29,6 +30,8 @@ export function renderAddNewCaseCard(): HTMLElement {
       </select>
     </div>
   `;
+
+  formContainer.appendChild(dropDown);
 
   const buttonRow = document.createElement('div');
   buttonRow.className = 'd-flex justify-content-end gap-2 p-3';
