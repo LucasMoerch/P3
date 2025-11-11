@@ -1,6 +1,7 @@
 import { navigate } from '../main';
 import { renderLogoNavbar } from './logoComponent/logo';
 import { clearAuth } from '../auth/auth';
+import http from '../api/http';
 
 export function getPageTitle(path: string): string {
   switch (path) {
@@ -106,21 +107,18 @@ export function renderHeaderAndNavbar(): HTMLElement {
 
   logoutButton.addEventListener('click', async () => {
     try {
-      // Call backend logout endpoint
-      await fetch('/logout', {
-        method: 'POST',
-        credentials: 'include', // send session cookie
-      });
+      //  Call backend logout endpoint using axios wrapper
+      await http.post('/logout');
     } catch (err) {
       console.warn('Logout request failed, continuing anyway:', err);
     } finally {
-      // Always clear frontend auth state
+      //  Clear frontend auth state
       clearAuth();
       localStorage.removeItem('token');
       sessionStorage.clear();
 
-      // 🚪 Redirect to login page
-      window.location.href = '/login'; // use leading slash to ensure correct path
+      // Redirect and refresh the page to show clean login state
+      window.location.href = '/login';
     }
   });
   logoutContainer.appendChild(logoutButton);
