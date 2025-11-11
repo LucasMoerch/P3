@@ -28,14 +28,17 @@ public class SessionAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, jakarta.servlet.http.HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-
+        System.out.println("SessionAuthenticationFilter");
         // Dont overwrite if already authenticated
         if (SecurityContextHolder.getContext().getAuthentication() == null) {
             HttpSession session = request.getSession(false);
+            System.out.println("SessionAuthenticationFilter2");
             if (session != null) {
                 String uid = (String) session.getAttribute("uid");
+                System.out.println("SessionAuthenticationFilter3");
                 if (uid != null) {
                     var userOpt = repo.findById(uid);
+                    System.out.println("SessionAuthenticationFilter4");
                     if (userOpt.isPresent()) {
                         var user = userOpt.get();
 
@@ -49,6 +52,8 @@ public class SessionAuthenticationFilter extends OncePerRequestFilter {
                                 .toList();
 
 
+          System.out.println("SESSION FILTER: roles=" + user.getRoles());
+          System.out.println("SESSION FILTER: authorities=" + authorities);
                         // principal = user id (String)
                         var auth = new UsernamePasswordAuthenticationToken(uid, null, authorities);
                         auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

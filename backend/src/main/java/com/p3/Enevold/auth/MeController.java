@@ -4,8 +4,9 @@ import com.p3.Enevold.users.UserRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/me") // final url = /api/me
@@ -19,26 +20,31 @@ public class MeController {
 
   @GetMapping
   public ResponseEntity<?> me(HttpSession session) {
-    var uid = (String) session.getAttribute("uid");
-    if (uid == null)
-      return ResponseEntity.ok(Map.of("authenticated", false));
+      var uid = (String) session.getAttribute("uid");
+      if (uid == null)
+          return ResponseEntity.ok(Map.of("authenticated", false));
 
-    var user = repo.findById(uid).orElse(null);
-    if (user == null)
-      return ResponseEntity.ok(Map.of("authenticated", false));
+      var user = repo.findById(uid).orElse(null);
+      if (user == null)
+          return ResponseEntity.ok(Map.of("authenticated", false));
 
-    // Return only safe fields
-    var auth = user.getAuth();
-    var profile = user.getProfile();
+      System.out.println("ME CONTROLLER: session uid=" + uid);
+      System.out.println("ME CONTROLLER: user=" + user);
 
-    return ResponseEntity.ok(Map.of(
-        "authenticated", true,
-        "id", user.getId(),
-        "email", auth != null ? auth.getEmail() : null,
-        "displayName", profile != null ? profile.getDisplayName() : null,
-        "roles", user.getRoles(),
-        "status", user.getStatus(),
-        "pictureUrl", auth != null ? auth.getPictureUrl() : null));
+      // Return only safe fields
+      var auth = user.getAuth();
+      var profile = user.getProfile();
+
+      Map<String, Object> response = new HashMap<>();
+      response.put("authenticated", true);
+      response.put("id", user.getId());
+      response.put("email", auth != null ? auth.getEmail() : "");
+      response.put("displayName", profile != null ? profile.getDisplayName() : "");
+      response.put("roles", user.getRoles() != null ? user.getRoles() : List.of());
+      response.put("status", user.getStatus() != null ? user.getStatus() : "unknown");
+      response.put("pictureUrl", auth != null ? auth.getPictureUrl() : "");
+
+      return ResponseEntity.ok(response);
   }
 
   @PostMapping("/logout")

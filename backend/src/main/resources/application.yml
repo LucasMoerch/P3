@@ -2,6 +2,9 @@ server:
   port: ${PORT:8080}
   servlet:
     context-path: /api
+  session:
+    cookie:
+      path: /
 
 spring:
   application:
@@ -13,7 +16,6 @@ spring:
   jackson:
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false
-
 
 app:
   # admin emails
