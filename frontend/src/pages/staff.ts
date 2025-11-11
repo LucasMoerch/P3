@@ -98,8 +98,23 @@ async function loadStaff(realDataSection: HTMLElement) {
       status: user.status,
     }));
 
-    realDataSection.innerHTML = '<h2>Users from Database</h2>';
-    realDataSection.appendChild(renderTable(staffData));
+    
+    realDataSection.innerHTML = '';
+    const tableElement = renderTable(staffData);
+    realDataSection.appendChild(tableElement);
+
+
+    // Clickable rows like InspectClient / InspectCase
+    const rows = tableElement.querySelectorAll('tr');
+    rows.forEach((row, index) => {
+      if (index === 0) return; // skip header
+      row.addEventListener('click', () => {
+        const user = users[index - 1];
+        const popup = inspectUser(user);
+        document.body.appendChild(popup);
+        console.log('client clicked');
+      });
+    });
   } catch (err) {
     console.error('Failed to load staff:', err);
     realDataSection.innerHTML = '<h2>Users from Database</h2><p>Failed to load staff data.</p>';
@@ -179,14 +194,15 @@ export function renderStaffPage(): HTMLElement {
 
   // Admin only functionality
   if (isAdmin()) {
-    const handleInvite = setupInvitationHandler(realDataSection);
+      const handleInvite = setupInvitationHandler(realDataSection);
 
-    const newStaffButton = renderNewButton(() => {
-      const newStaffCard = renderAddNewStaffCard(handleInvite);
-      document.body.appendChild(newStaffCard);
-    });
-
-    searchAndButtonContainer.appendChild(newStaffButton);
+      const existingNewButton = searchEl.querySelector('.button');
+      if (existingNewButton) {
+          existingNewButton.addEventListener('click', () => {
+              const newStaffCard = renderAddNewStaffCard(handleInvite);
+              document.body.appendChild(newStaffCard);
+          });
+      }
   } else {
     console.log('You are not Admin');
   }

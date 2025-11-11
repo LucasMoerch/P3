@@ -75,6 +75,10 @@ export function renderCard(edit?: Boolean): HTMLElement {
   card.appendChild(header);
   card.appendChild(body);
 
+  overlay.addEventListener('click', (event) => {
+        if (event.target === overlay) overlay.remove();
+  });
+
   // Return overlay, but let caller add content to the card
   return overlay;
 }

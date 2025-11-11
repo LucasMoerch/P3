@@ -1,3 +1,6 @@
+.form-floating {
+  min-width: 85%;
+}
 .Search,
 .search-container {
   width: 100%;
@@ -6,16 +9,20 @@
   padding: 0;
   margin-right: 8px;
 }
-
-.search-container input {
-  min-width: 85%;
-  padding: 10px 40px 10px 12px;
-  border: 1px solid #ccc;
-  border-radius: 25px;
-  outline: none;
-}
 .search-container .search-button {
   cursor: pointer;
   border: none;
   background: none;
+  margin-left: 8px;
+}
+
+.form-floating > label {
+  background: none;
+  backdrop-filter: none;
+  box-shadow: none;
+  color: #777;
+}
+
+:root {
+  --bs-body-bg: #fff;
 }

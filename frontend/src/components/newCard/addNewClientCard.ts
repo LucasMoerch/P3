@@ -1,7 +1,8 @@
 import { renderCard } from '../cardComponent/cardComponent';
+import { createFloatingInput, createFloatingTextarea } from '../floatingLabel/floatingLabel';
 
 export function renderAddNewClientCard(): HTMLElement {
-  const overlay = renderCard(true);
+  const overlay = renderCard();
   const card = overlay.querySelector('.card') as HTMLElement;
   const header = card.querySelector('.header') as HTMLElement;
   const body = card.querySelector('.body') as HTMLElement;
@@ -10,20 +11,16 @@ export function renderAddNewClientCard(): HTMLElement {
 
   const formContainer = document.createElement('div');
   formContainer.className = 'container p-4 rounded';
-  formContainer.innerHTML = `
-    <div class="mb-3">
-      <label for="clientName" class="form-label">Client Name</label>
-      <input type="text" id="clientName" class="form-control" placeholder="Enter client name...">
-    </div>
-    <div class="mb-3">
-      <label for="clientEmail" class="form-label">Email</label>
-      <input type="email" id="clientEmail" class="form-control" placeholder="Enter client email...">
-    </div>
-    <div class="mb-3">
-      <label for="clientPhone" class="form-label">Phone</label>
-      <input type="tel" id="clientPhone" class="form-control" placeholder="Enter phone number...">
-    </div>
-  `;
+
+  //Use the new reusable floating label helpers
+  const nameField = createFloatingInput('clientName', 'Name', 'text');
+  const emailField = createFloatingInput('clientEmail', 'Email', 'email');
+  const phoneField = createFloatingInput('clientPhone', 'Phone', 'tel');
+
+
+  formContainer.appendChild(nameField);
+  formContainer.appendChild(emailField);
+  formContainer.appendChild(phoneField);
 
   const buttonRow = document.createElement('div');
   buttonRow.className = 'd-flex justify-content-end gap-2 p-3';

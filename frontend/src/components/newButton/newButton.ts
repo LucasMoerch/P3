@@ -1,5 +1,4 @@
 import './newButton.scss';
-import { renderAddNewStaffCard } from '../newCard/addNewStaffCard';
 import { renderAddNewClientCard } from '../newCard/addNewClientCard';
 import { renderAddNewCaseCard } from '../newCard/addNewCaseCard';
 
