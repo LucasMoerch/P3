@@ -8,8 +8,8 @@ export type ClientDTO = {
   id: string;
   name: string;
   address?: string;
-  contact?: string;
-  email?: string;
+  contactPhone?: string;
+  contactEmail?: string;
   phone?: string;
 };
 
@@ -36,7 +36,8 @@ export function renderClientsPage(): HTMLElement {
         id: c.id,
         name: c.name,
         address: c.address || '-',
-        contact: c.contact || c.phone || 'N/A',
+        contactPhone: c.contactPhone || 'N/A',
+        contactEmail: c.contactEmail || 'N/A',
       }));
 
       realDataSection.innerHTML = '';
@@ -89,11 +90,11 @@ export function renderClientsPage(): HTMLElement {
           </div>
           <div class="info-row d-flex justify-content-between border-bottom py-3">
             <span class="label text-muted fw-medium">Contact</span>
-            <span class="value fw-semibold" data-field="contact">${client.contact || 'N/A'}</span>
+            <span class="value fw-semibold" data-field="contact">${client.contactPhone || 'N/A'}</span>
           </div>
           <div class="info-row d-flex justify-content-between border-bottom py-3">
             <span class="label text-muted fw-medium">Email</span>
-            <span class="value fw-semibold" data-field="email">${client.email || 'N/A'}</span>
+            <span class="value fw-semibold" data-field="email">${client.contactEmail || 'N/A'}</span>
           </div>
 
         </div>

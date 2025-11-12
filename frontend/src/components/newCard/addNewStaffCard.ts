@@ -1,6 +1,7 @@
 import { renderCard } from '../cardComponent/cardComponent';
 import { createFloatingInput, createFloatingTextarea } from '../floatingLabel/floatingLabel';
 import type { UserRole } from '../../pages/staff';
+
 export function renderAddNewStaffCard(
   onInvite?: (email: string, role: UserRole[]) => Promise<boolean>,
 ): HTMLElement {

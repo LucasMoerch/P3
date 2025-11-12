@@ -20,9 +20,14 @@ public class ClientController {
   @Autowired
   ClientRepository clientRepository;
 
-  @PostMapping("/addClient")
-  public void addClient(@RequestBody Client client) {
-    clientRepository.save(client);
+  @PostMapping({"/create"})
+  public ResponseEntity<Client> addClient(@RequestBody Client client) {
+    // Ensure server manages id/createdAt
+    client.setId(null);
+
+    Client saved = clientRepository.save(client);
+
+    return ResponseEntity.ok(saved);
   }
 
   @GetMapping("/getClients/{id}")
