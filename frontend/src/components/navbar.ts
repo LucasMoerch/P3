@@ -1,5 +1,7 @@
 import { navigate } from '../main';
 import { renderLogoNavbar } from './logoComponent/logo';
+import { clearAuth } from '../auth/auth';
+import http from '../api/http';
 
 export function getPageTitle(path: string): string {
   switch (path) {
@@ -45,7 +47,7 @@ export function renderHeaderAndNavbar(): HTMLElement {
 
   // Sidebar
   const sidebar = document.createElement('div');
-  sidebar.className = 'offcanvas offcanvas-start bg-dark text-white shadow-lg';
+  sidebar.className = 'offcanvas offcanvas-start bg-dark text-white shadow-lg d-flex flex-column';
   sidebar.id = 'sidebar';
   sidebar.tabIndex = -1;
   sidebar.style.setProperty('--bs-offcanvas-width', 'fit-content');
@@ -67,10 +69,10 @@ export function renderHeaderAndNavbar(): HTMLElement {
 
   // Sidebar body
   const sidebarBody = document.createElement('div');
-  sidebarBody.className = 'offcanvas-body';
+  sidebarBody.className = 'offcanvas-body d-flex flex-column';
 
   const ul = document.createElement('ul');
-  ul.className = 'list-unstyled';
+  ul.className = 'list-unstyled flex-grow-1';
 
   // Menu items
   const menuItems: { label: string; page: string; icon: string }[] = [
@@ -94,6 +96,33 @@ export function renderHeaderAndNavbar(): HTMLElement {
   });
 
   sidebarBody.appendChild(ul);
+
+  // 🔻 Logout button container at bottom
+  const logoutContainer = document.createElement('div');
+  logoutContainer.className = 'mt-auto p-3 border-top border-secondary';
+
+  const logoutButton = document.createElement('button');
+  logoutButton.className = 'btn btn-outline-danger w-100';
+  logoutButton.innerHTML = '<i class="fa-solid fa-right-from-bracket"></i> Logout';
+
+  logoutButton.addEventListener('click', async () => {
+    try {
+      //  Call backend logout endpoint using axios wrapper
+      await http.post('/logout');
+    } catch (err) {
+      console.warn('Logout request failed, continuing anyway:', err);
+    } finally {
+      //  Clear frontend auth state
+      clearAuth();
+      localStorage.removeItem('token');
+      sessionStorage.clear();
+
+      // Redirect and refresh the page to show clean login state
+      window.location.href = '/login';
+    }
+  });
+  logoutContainer.appendChild(logoutButton);
+  sidebarBody.appendChild(logoutContainer);
   sidebar.appendChild(sidebarBody);
 
   // Attach click handlers
