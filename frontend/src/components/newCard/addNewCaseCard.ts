@@ -54,9 +54,7 @@ export function renderAddNewCaseCard(): HTMLElement {
 
   saveBtn.addEventListener('click', async () => {
     const title = (formContainer.querySelector('#caseTitle') as HTMLInputElement).value.trim();
-    const description = (
-      formContainer.querySelector('#caseDescription') as HTMLTextAreaElement
-    ).value.trim();
+    const description = (formContainer.querySelector('#caseDescription') as HTMLTextAreaElement).value.trim();
     const status = (formContainer.querySelector('#caseStatus') as HTMLSelectElement).value;
 
     if (!title || !description || !status) {
@@ -64,19 +62,25 @@ export function renderAddNewCaseCard(): HTMLElement {
       return;
     }
 
-    const params = new URLSearchParams({ title, description, status });
-
     saveBtn.disabled = true;
     try {
-      const created = await http.post('/cases/create', { title, description, status });
-      console.log('Case created:', created);
+      // send query params via config.params and no body for parity with the original fetch
+      const data = await http.post(
+        '/cases/create',
+        null,
+        { params: { title, description, status } }
+      );
+
+      console.log('Case created successfully:', data);
+      alert(`Case created successfully.`);
       overlay.remove();
     } catch (err: any) {
+      // Axios throws for non-2xx; unwrap message from server when present
       const msg =
         err?.response?.data?.message ||
         err?.message ||
-        'Failed to save client';
-      console.error(err);
+        'Failed to create case.';
+      console.error('Error creating case:', err);
       alert(msg);
     } finally {
       saveBtn.disabled = false;
