@@ -5,8 +5,46 @@ import { renderCard } from '../cardComponent/cardComponent';
 import { renderCalendar } from '../calendarComponent/calendar';
 import { CaseDto } from '../../pages/cases';
 import { userId as getUserId, getDisplayName } from '../../auth/auth';
+export type TimeEntryDto = {
+  startTime: string;
+  stopTime?: string | null;
+};
+// ----------------------------------------Async API functions------------------------------------------------
+async function checkForUnresolvedTime(buttonRow: HTMLDivElement, startTimeBtn: HTMLButtonElement, stopTimeBtn: HTMLButtonElement) {
+  try {
+    const currentUserId = getUserId();
+    console.log ('Current User ID:', currentUserId);
+    if (!currentUserId) {
+      console.error('User ID is not available.');
+      return;
+    }
 
-//api functions
+    const last = (await http.get(`/times/users/${currentUserId}/last-time`)) as TimeEntryDto
+    console.log('Last time entry fetched:', last.startTime, last.stopTime);
+    if (!last) {
+      console.log('No last time entry found for user.');
+      return;
+    }
+
+    const entry = {
+      startTime: last.startTime ?? '00:00:00',
+      // stopTime can be undefined if the time entry wasn't completed
+      stopTime: last.stopTime ?? undefined,
+    };
+    if (entry.stopTime === undefined) {
+      startTimeBtn.remove();
+      buttonRow.appendChild(stopTimeBtn);
+      displayTime('startTime', entry.startTime);
+      return entry.startTime;
+    }else {
+      console.log('Last time entry is already completed.');
+      return;
+    }
+
+  } catch (err) {
+    console.error('Failed to load cases:', err);
+  }
+}
 
 async function loadCases() {
   try {
@@ -79,7 +117,7 @@ async function updateTimeData(
   }
 }
 
-// Regular functions
+// ----------------------------------------Regular functions------------------------------------------------
 function getTimeNow(): string {
   const startTime: Date = new Date(); // stores the current time the moment the start button is clicked
   const timeNow: string =
@@ -149,6 +187,7 @@ function getCaseIdFromSelect(): string {
   return selectedCaseId;
 }
 
+// ----------------------------------------Export function--------------------------------------------
 export function renderTimeTracker(): HTMLElement {
   const div = document.createElement('div');
   div.className = 'time-tracker-container p-4 rounded';
@@ -160,6 +199,7 @@ export function renderTimeTracker(): HTMLElement {
   openCardButton.addEventListener('click', (): void => {
     const cardEl = renderTimeTrackingCard();
     document.body.appendChild(cardEl);
+  
   });
 
   div.appendChild(openCardButton);
@@ -199,14 +239,17 @@ export function renderTimeTracker(): HTMLElement {
     const buttonRow: HTMLDivElement = document.createElement('div');
     buttonRow.className =
       'container d-flex justify-content-between align-items-center gap-3 px-4 pb-4 pt-3 position-sticky bottom-0';
+    buttonRow.id = 'buttonRow';
 
     const startTimeBtn = document.createElement('button');
     startTimeBtn.className = 'btn btn-success shadow col-4 rounded-pill ms-4';
     startTimeBtn.innerText = 'Start Time';
+    startTimeBtn.id = 'startTimeBtn';
 
     const stopTimeBtn = document.createElement('button');
     stopTimeBtn.className = 'btn btn-danger shadow col-4 rounded-pill ms-4';
     stopTimeBtn.innerText = 'Stop Time';
+    stopTimeBtn.id = 'stopTimeBtn';
 
     const completeBtn: HTMLButtonElement = document.createElement('button');
     completeBtn.className = 'btn btn-primary shadow col-4 rounded-pill me-4';
@@ -255,10 +298,22 @@ export function renderTimeTracker(): HTMLElement {
 
     body.appendChild(bottomSection);
     buttonRow.appendChild(startTimeBtn);
-
+    //load the cases for the dropdown
     loadCases();
-    let originalStartTime: string;
-    // Event listeners
+
+
+      let originalStartTime: string;
+
+    // Async check for unresolved time entry. after function is completed the originalStartTime is set
+    checkForUnresolvedTime(buttonRow, startTimeBtn, stopTimeBtn)
+       .then((t) => {
+        if (t) {
+          originalStartTime = t;
+       }
+       })
+       .catch((err) => console.error(err));
+
+  // --------------------------------------------------------Event listeners------------------------------------------------
     startTimeBtn.addEventListener('click', async (): Promise<void> => {
       //get Start time
       const startTimeNow: string = getTimeNow();
@@ -290,6 +345,7 @@ export function renderTimeTracker(): HTMLElement {
       const stopTimeNow: string = getTimeNow();
       buttonRow.appendChild(completeBtn);
       displayTime('stopTime', stopTimeNow);
+      console.log('original time', originalStartTime);
     });
 
     completeBtn.addEventListener('click', (): void => {

@@ -119,7 +119,6 @@ export function renderCasesPage(): HTMLElement {
     }
     card.appendChild(renderTabs({ entityType: 'cases', entityId: c.id }));
 
-
     return overlay;
   }
 
