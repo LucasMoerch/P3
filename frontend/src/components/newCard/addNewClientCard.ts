@@ -3,7 +3,7 @@ import { createFloatingInput } from '../floatingLabel/floatingLabel';
 import http from '../../api/http';
 
 export function renderAddNewClientCard(): HTMLElement {
-  const overlay = renderCard({ edit: true, endpoint: 'clients/create' });
+  const overlay = renderCard({ edit: false, endpoint: 'clients/create' });
   const card = overlay.querySelector('.card') as HTMLElement;
   const header = card.querySelector('.header') as HTMLElement;
   const body = card.querySelector('.body') as HTMLElement;

@@ -208,7 +208,7 @@ export function renderTimeTracker(): HTMLElement {
 
   function renderTimeTrackingCard(): HTMLElement {
     // Create overlay
-    const overlay = renderCard({ edit: true, endpoint: 'times' });
+    const overlay = renderCard({ edit: false, endpoint: 'times' });
     const card: HTMLElement = overlay.querySelector('.card') as HTMLElement;
     const header: HTMLElement = card.querySelector('.header') as HTMLElement;
     const body: HTMLElement = card.querySelector('.body') as HTMLElement;

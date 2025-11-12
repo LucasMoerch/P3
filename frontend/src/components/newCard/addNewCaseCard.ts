@@ -3,7 +3,7 @@ import { createFloatingInput, createFloatingTextarea } from '../floatingLabel/fl
 import http from '../../api/http';
 
 export function renderAddNewCaseCard(): HTMLElement {
-  const overlay = renderCard({ edit: true, endpoint: 'cases/create' });
+  const overlay = renderCard({ edit: false, endpoint: 'cases/create' });
   const card = overlay.querySelector('.card') as HTMLElement;
   const header = card.querySelector('.header') as HTMLElement;
   const body = card.querySelector('.body') as HTMLElement;

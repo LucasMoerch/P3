@@ -6,7 +6,7 @@ export function renderAddNewStaffCard(
   onInvite?: (email: string, role: UserRole[]) => Promise<boolean>,
 ): HTMLElement {
   // Create overlay
-  const overlay = renderCard({ edit: true, endpoint: 'users/create' });
+  const overlay = renderCard({ edit: false, endpoint: 'users/create' });
   const card: HTMLElement = overlay.querySelector('.card') as HTMLElement;
   const header: HTMLElement = card.querySelector('.header') as HTMLElement;
   const body: HTMLElement = card.querySelector('.body') as HTMLElement;
