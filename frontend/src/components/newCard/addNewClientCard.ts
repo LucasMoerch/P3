@@ -1,5 +1,5 @@
 import { renderCard } from '../cardComponent/cardComponent';
-import { createFloatingInput, createFloatingTextarea } from '../floatingLabel/floatingLabel';
+import { createFloatingInput } from '../floatingLabel/floatingLabel';
 import http from '../../api/http';
 
 export function renderAddNewClientCard(): HTMLElement {

@@ -17,6 +17,7 @@ import org.springframework.http.MediaType;
 @RestController
 @RequestMapping("/clients")
 public class ClientController {
+
   @Autowired
   ClientRepository clientRepository;
 
