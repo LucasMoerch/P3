@@ -81,7 +81,11 @@ export function renderCasesPage(): HTMLElement {
           <div class="card-body fs-5">
             <div class="info-row d-flex justify-content-between border-bottom py-3">
               <span class="label text-muted fw-medium">Case ID</span>
-              <span class="value fw-semibold" data-field="id">${c.id}</span>
+              <span class="value fw-semibold" data-field="id" data-editable="false">${c.id}</span>
+            </div>
+            <div class="info-row d-flex justify-content-between border-bottom py-3">
+              <span class="label text-muted fw-medium">Title</span>
+              <span class="value fw-semibold" data-field="title">${c.title}</span>
             </div>
 
             <div class="info-row d-flex justify-content-between border-bottom py-3">
@@ -106,12 +110,12 @@ export function renderCasesPage(): HTMLElement {
 
             <div class="info-row d-flex justify-content-between border-bottom py-3">
               <span class="label text-muted fw-medium">Created</span>
-              <span class="value fw-semibold" data-field="createdAt">${new Date(c.createdAt).toLocaleString('da-DK')}</span>
+              <span class="value fw-semibold" data-field="createdAt" data-editable="false">${new Date(c.createdAt).toLocaleString('da-DK')}</span>
             </div>
 
             <div class="info-row d-flex justify-content-between py-3">
               <span class="label text-muted fw-medium">Last Updated</span>
-              <span class="value fw-semibold" data-field="updatedAt">${new Date(c.updatedAt).toLocaleString('da-DK')}</span>
+              <span class="value fw-semibold" data-field="updatedAt" data-editable="false">${new Date(c.updatedAt).toLocaleString('da-DK')}</span>
             </div>
           </div>
         </div>

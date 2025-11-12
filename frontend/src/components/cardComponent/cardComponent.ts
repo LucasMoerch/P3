@@ -36,15 +36,20 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
         const valueSpan: HTMLElement | null = row.querySelector('.value');
         if (!valueSpan) return;
 
+        const field = valueSpan.dataset.field;
+        if (!field || valueSpan.dataset.editable === 'false') return;
+
         //Here it creates an input box, so the user can edit the value.
         if (!valueSpan.querySelector('input')) {
           const currentValue = valueSpan.textContent?.trim() || '';
-          const field = valueSpan.dataset.field || '';
           const input = document.createElement('input');
           input.type = 'text';
           input.value = currentValue; //Makes sure to insert the current value, after you click edit.
           input.className = 'form-control text-end fw-semibold';
           input.dataset.field = field;
+          if (valueSpan.dataset.transform) {
+            input.dataset.transform = valueSpan.dataset.transform;
+          }
           valueSpan.textContent = '';
           valueSpan.appendChild(input);
         }
@@ -67,7 +72,23 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
         inputs.forEach((input) => {
           const field = input.dataset.field;
           if (!field) return;
-          (updated as any)[field] = input.value;
+          let value: string | string[] = input.value;
+          switch (input.dataset.transform) {
+            case 'uppercase':
+              value = value.toUpperCase();
+              break;
+            case 'commaList':
+              value = value
+                .split(',')
+                .map((part) => part.trim())
+                .filter((part) => part.length > 0);
+              break;
+            default:
+              break;
+          }
+
+          (updated as any)[field] = value;
+
         });
 
         // prevent id changes if present
