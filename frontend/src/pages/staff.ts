@@ -122,7 +122,7 @@ async function loadStaff(realDataSection: HTMLElement) {
 }
 
 function inspectUser(user: any): HTMLElement {
-  const overlay: HTMLElement = renderCard(true);
+  const overlay: HTMLElement = renderCard({ edit: true, endpoint: 'users', data: user });
   const card: HTMLElement = overlay.querySelector('.card') as HTMLElement;
   const header: HTMLElement = card.querySelector('.header') as HTMLElement;
   const body: HTMLElement = card.querySelector('.body') as HTMLElement;

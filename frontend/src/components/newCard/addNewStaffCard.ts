@@ -5,11 +5,7 @@ export function renderAddNewStaffCard(
   onInvite?: (email: string, role: UserRole[]) => Promise<boolean>,
 ): HTMLElement {
   // Create overlay
-<<<<<<< HEAD
   const overlay = renderCard({ edit: true, endpoint: 'users/create' });
-=======
-  const overlay: HTMLElement = renderCard();
->>>>>>> develop
   const card: HTMLElement = overlay.querySelector('.card') as HTMLElement;
   const header: HTMLElement = card.querySelector('.header') as HTMLElement;
   const body: HTMLElement = card.querySelector('.body') as HTMLElement;
@@ -38,7 +34,7 @@ export function renderAddNewStaffCard(
   formContainer.appendChild(descField);
   formContainer.appendChild(adminCheckWrapper);
 
-    // BUTTON ROW
+  // BUTTON ROW
   const buttonRow = document.createElement('div');
   buttonRow.className = 'd-flex justify-content-end gap-2 p-3';
 
