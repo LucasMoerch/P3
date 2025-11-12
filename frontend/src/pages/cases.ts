@@ -67,7 +67,7 @@ export function renderCasesPage(): HTMLElement {
 
   // InspectCase - matches the style/behavior of inspectUser
   function inspectCase(c: CaseDto): HTMLElement {
-    const overlay = renderCard({ edit: true, endpoint: 'cases', data: c });
+    const overlay: HTMLElement = renderCard({ edit: true, endpoint: 'cases', data: c });
     const card: HTMLElement = overlay.querySelector('.card') as HTMLElement;
     const header: HTMLElement = card.querySelector('.header') as HTMLElement;
     const body: HTMLElement = card.querySelector('.body') as HTMLElement;

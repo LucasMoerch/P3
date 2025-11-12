@@ -18,7 +18,6 @@ export function renderAddNewClientCard(): HTMLElement {
   const emailField = createFloatingInput('clientEmail', 'Email', 'email');
   const phoneField = createFloatingInput('clientPhone', 'Phone', 'tel');
 
-
   formContainer.appendChild(nameField);
   formContainer.appendChild(emailField);
   formContainer.appendChild(phoneField);
@@ -48,21 +47,21 @@ export function renderAddNewClientCard(): HTMLElement {
 
     saveBtn.disabled = true;
     try {
-      const created = await http.post('/clients/create', { name, contactEmail: email, contactPhone: phone });
+      const created = await http.post('/clients/create', {
+        name,
+        contactEmail: email,
+        contactPhone: phone,
+      });
       console.log('Client created:', created);
       overlay.remove();
     } catch (err: any) {
-      const msg =
-        err?.response?.data?.message ||
-        err?.message ||
-        'Failed to save client';
+      const msg = err?.response?.data?.message || err?.message || 'Failed to save client';
       console.error(err);
       alert(msg);
     } finally {
       saveBtn.disabled = false;
     }
   });
-
 
   return overlay;
 }

@@ -98,11 +98,9 @@ async function loadStaff(realDataSection: HTMLElement) {
       status: user.status,
     }));
 
-
     realDataSection.innerHTML = '';
     const tableElement = renderTable(staffData);
     realDataSection.appendChild(tableElement);
-
 
     // Clickable rows like InspectClient / InspectCase
     const rows = tableElement.querySelectorAll('tr');
@@ -155,8 +153,9 @@ function inspectUser(user: any): HTMLElement {
         </div>
         <div class="info-row d-flex justify-content-between py-3">
           <span class="label text-muted fw-medium">Roles</span>
-          <span class="value fw-semibold" data-field="roles" data-transform="commaList">${Array.isArray(user.roles) ? user.roles.join(', ') : user.roles || 'N/A'
-    }</span>
+          <span class="value fw-semibold" data-field="roles" data-transform="commaList">${
+            Array.isArray(user.roles) ? user.roles.join(', ') : user.roles || 'N/A'
+          }</span>
         </div>
       </div>
     </div>
@@ -234,7 +233,6 @@ export function renderStaffPage(): HTMLElement {
     }
   }
   loadStaff();
-
 
   // Admin only functionality
   if (isAdmin()) {

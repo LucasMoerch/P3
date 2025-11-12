@@ -10,16 +10,20 @@ export type TimeEntryDto = {
   stopTime?: string | null;
 };
 // ----------------------------------------Async API functions------------------------------------------------
-async function checkForUnresolvedTime(buttonRow: HTMLDivElement, startTimeBtn: HTMLButtonElement, stopTimeBtn: HTMLButtonElement) {
+async function checkForUnresolvedTime(
+  buttonRow: HTMLDivElement,
+  startTimeBtn: HTMLButtonElement,
+  stopTimeBtn: HTMLButtonElement,
+) {
   try {
     const currentUserId = getUserId();
-    console.log ('Current User ID:', currentUserId);
+    console.log('Current User ID:', currentUserId);
     if (!currentUserId) {
       console.error('User ID is not available.');
       return;
     }
 
-    const last = (await http.get(`/times/users/${currentUserId}/last-time`)) as TimeEntryDto
+    const last = (await http.get(`/times/users/${currentUserId}/last-time`)) as TimeEntryDto;
     console.log('Last time entry fetched:', last.startTime, last.stopTime);
     if (!last) {
       console.log('No last time entry found for user.');
@@ -36,11 +40,10 @@ async function checkForUnresolvedTime(buttonRow: HTMLDivElement, startTimeBtn: H
       buttonRow.appendChild(stopTimeBtn);
       displayTime('startTime', entry.startTime);
       return entry.startTime;
-    }else {
+    } else {
       console.log('Last time entry is already completed.');
       return;
     }
-
   } catch (err) {
     console.error('Failed to load cases:', err);
   }
@@ -199,7 +202,6 @@ export function renderTimeTracker(): HTMLElement {
   openCardButton.addEventListener('click', (): void => {
     const cardEl = renderTimeTrackingCard();
     document.body.appendChild(cardEl);
-  
   });
 
   div.appendChild(openCardButton);
@@ -301,19 +303,18 @@ export function renderTimeTracker(): HTMLElement {
     //load the cases for the dropdown
     loadCases();
 
-
-      let originalStartTime: string;
+    let originalStartTime: string;
 
     // Async check for unresolved time entry. after function is completed the originalStartTime is set
     checkForUnresolvedTime(buttonRow, startTimeBtn, stopTimeBtn)
-       .then((t) => {
+      .then((t) => {
         if (t) {
           originalStartTime = t;
-       }
-       })
-       .catch((err) => console.error(err));
+        }
+      })
+      .catch((err) => console.error(err));
 
-  // --------------------------------------------------------Event listeners------------------------------------------------
+    // --------------------------------------------------------Event listeners------------------------------------------------
     startTimeBtn.addEventListener('click', async (): Promise<void> => {
       //get Start time
       const startTimeNow: string = getTimeNow();

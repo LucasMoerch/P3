@@ -69,6 +69,7 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
         const updated: Record<string, unknown> = options.data ? { ...options.data } : {};
         const inputs = card.querySelectorAll<HTMLInputElement>('.info-row .value input');
 
+        // This part takes care of nested fields like profile.displayName to send { profile: { displayName: 'new value' } }
         const setNestedValue = (target: Record<string, unknown>, path: string, value: unknown) => {
           const segments = path.split('.');
           let current: Record<string, unknown> = target;
