@@ -10,7 +10,6 @@ export type ClientDTO = {
   address?: string;
   contactPhone?: string;
   contactEmail?: string;
-  phone?: string;
 };
 
 export function renderClientsPage(): HTMLElement {
@@ -85,16 +84,20 @@ export function renderClientsPage(): HTMLElement {
             <span class="value fw-semibold" data-field="id">${client.id}</span>
           </div>
           <div class="info-row d-flex justify-content-between border-bottom py-3">
+            <span class="label text-muted fw-medium">Name</span>
+            <span class="value fw-semibold" data-field="name">${client.name}</span>
+          </div>
+          <div class="info-row d-flex justify-content-between border-bottom py-3">
             <span class="label text-muted fw-medium">Address</span>
             <span class="value fw-semibold text-end" data-field="address">${client.address || 'N/A'}</span>
           </div>
           <div class="info-row d-flex justify-content-between border-bottom py-3">
             <span class="label text-muted fw-medium">Contact</span>
-            <span class="value fw-semibold" data-field="contact">${client.contactPhone || 'N/A'}</span>
+            <span class="value fw-semibold" data-field="contactPhone">${client.contactPhone || 'N/A'}</span>
           </div>
           <div class="info-row d-flex justify-content-between border-bottom py-3">
             <span class="label text-muted fw-medium">Email</span>
-            <span class="value fw-semibold" data-field="email">${client.contactEmail || 'N/A'}</span>
+            <span class="value fw-semibold" data-field="contactEmail">${client.contactEmail || 'N/A'}</span>
           </div>
 
         </div>
