@@ -135,19 +135,19 @@ function inspectUser(user: any): HTMLElement {
       <div class="card-body fs-5">
         <div class="info-row d-flex justify-content-between border-bottom py-3">
           <span class="label text-muted fw-medium">Display Name</span>
-          <span class="value fw-semibold" data-field="displayName">${user.profile?.displayName || 'N/A'}</span>
+          <span class="value fw-semibold" data-field="profile.displayName">${user.profile?.displayName || 'N/A'}</span>
         </div>
         <div class="info-row d-flex justify-content-between border-bottom py-3">
           <span class="label text-muted fw-medium">Mobile Number</span>
-          <span class="value fw-semibold" data-field="phone">${user.profile?.phone || 'N/A'}</span>
+          <span class="value fw-semibold" data-field="profile.phone">${user.profile?.phone || 'N/A'}</span>
         </div>
         <div class="info-row d-flex justify-content-between border-bottom py-3">
           <span class="label text-muted fw-medium">E-mail</span>
-          <span class="value fw-semibold" data-field="email">${user.auth?.email || 'N/A'}</span>
+          <span class="value fw-semibold" data-field="auth.email" data-editable="false">${user.auth?.email || 'N/A'}</span>
         </div>
         <div class="info-row d-flex justify-content-between border-bottom py-3">
           <span class="label text-muted fw-medium">Address</span>
-          <span class="value fw-semibold text-end" data-field="address">${user.profile?.address || 'N/A'}</span>
+          <span class="value fw-semibold text-end" data-field="profile.address">${user.profile?.address || 'N/A'}</span>
         </div>
         <div class="info-row d-flex justify-content-between py-3">
           <span class="label text-muted fw-medium">CPR Number</span>
@@ -155,7 +155,8 @@ function inspectUser(user: any): HTMLElement {
         </div>
         <div class="info-row d-flex justify-content-between py-3">
           <span class="label text-muted fw-medium">Roles</span>
-          <span class="value fw-semibold" data-field="roles">${user.roles || 'N/A'}</span>
+          <span class="value fw-semibold" data-field="roles" data-transform="commaList">${Array.isArray(user.roles) ? user.roles.join(', ') : user.roles || 'N/A'
+    }</span>
         </div>
       </div>
     </div>

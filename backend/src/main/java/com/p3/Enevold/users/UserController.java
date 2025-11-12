@@ -95,9 +95,9 @@ public class UserController {
 
     }
 
-    // Edit case details
+    // Edit user details
     @PutMapping("/{id}")
-      public ResponseEntity<Case> putCase(@PathVariable String id, @RequestBody Case body) {
+      public ResponseEntity<User> putUser(@PathVariable String id, @RequestBody User body) {
       var existing = repo.findById(id).orElse(null);
       if (existing == null) return ResponseEntity.notFound().build();
 

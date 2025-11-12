@@ -66,8 +66,32 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
       card.appendChild(btnContainer);
 
       saveBtn.addEventListener('click', async () => {
-        const updated = { ...options.data };
+        const updated: Record<string, unknown> = options.data ? { ...options.data } : {};
         const inputs = card.querySelectorAll<HTMLInputElement>('.info-row .value input');
+
+        const setNestedValue = (target: Record<string, unknown>, path: string, value: unknown) => {
+          const segments = path.split('.');
+          let current: Record<string, unknown> = target;
+
+          for (let i = 0; i < segments.length - 1; i += 1) {
+            const segment = segments[i];
+            if (
+              current[segment] === undefined ||
+              current[segment] === null ||
+              typeof current[segment] !== 'object'
+            ) {
+              current[segment] = {};
+            }
+            current = current[segment] as Record<string, unknown>;
+          }
+
+          current[segments[segments.length - 1]] = value;
+        };
+
+        const updates: Array<{ input: HTMLInputElement; value: string | string[] }> = [];
+
+        const toDisplayValue = (val: string | string[]): string =>
+          Array.isArray(val) ? val.join(', ') : val;
 
         inputs.forEach((input) => {
           const field = input.dataset.field;
@@ -87,12 +111,14 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
               break;
           }
 
-          (updated as any)[field] = value;
-
+          setNestedValue(updated, field, value);
+          updates.push({ input, value });
         });
 
         // prevent id changes if present
-        if ('id' in options.data!) (updated as any).id = (options.data as any).id;
+        if ('id' in (options.data ?? {})) {
+          updated.id = (options.data as any).id;
+        }
 
         try {
           saveBtn.disabled = true;
@@ -102,9 +128,10 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
           await http.put(`/${options.endpoint}/${options.data?.id}`, updated);
 
           // Replace inputs back to text
-          inputs.forEach((input) => {
+          updates.forEach(({ input, value }) => {
             const parent = input.parentElement;
-            if (parent) parent.textContent = input.value;
+            if (!parent) return;
+            parent.textContent = toDisplayValue(value);
           });
 
           overlay.remove();
