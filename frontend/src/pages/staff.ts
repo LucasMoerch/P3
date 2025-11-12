@@ -98,11 +98,9 @@ async function loadStaff(realDataSection: HTMLElement) {
       status: user.status,
     }));
 
-    
     realDataSection.innerHTML = '';
     const tableElement = renderTable(staffData);
     realDataSection.appendChild(tableElement);
-
 
     // Clickable rows like InspectClient / InspectCase
     const rows = tableElement.querySelectorAll('tr');
@@ -122,7 +120,7 @@ async function loadStaff(realDataSection: HTMLElement) {
 }
 
 function inspectUser(user: any): HTMLElement {
-  const overlay: HTMLElement = renderCard(true);
+  const overlay: HTMLElement = renderCard({ edit: true, endpoint: 'users', data: user });
   const card: HTMLElement = overlay.querySelector('.card') as HTMLElement;
   const header: HTMLElement = card.querySelector('.header') as HTMLElement;
   const body: HTMLElement = card.querySelector('.body') as HTMLElement;
@@ -134,24 +132,30 @@ function inspectUser(user: any): HTMLElement {
     <div class="card profile-card w-100 shadow-sm border-0">
       <div class="card-body fs-5">
         <div class="info-row d-flex justify-content-between border-bottom py-3">
-          <span class="label text-muted fw-medium">Birthdate</span>
-          <span class="value fw-semibold">${user.profile?.birthDate || 'N/A'}</span>
+          <span class="label text-muted fw-medium">Display Name</span>
+          <span class="value fw-semibold" data-field="profile.displayName">${user.profile?.displayName || 'N/A'}</span>
         </div>
         <div class="info-row d-flex justify-content-between border-bottom py-3">
           <span class="label text-muted fw-medium">Mobile Number</span>
-          <span class="value fw-semibold">${user.profile?.phone || 'N/A'}</span>
+          <span class="value fw-semibold" data-field="profile.phone">${user.profile?.phone || 'N/A'}</span>
         </div>
         <div class="info-row d-flex justify-content-between border-bottom py-3">
           <span class="label text-muted fw-medium">E-mail</span>
-          <span class="value fw-semibold">${user.auth?.email || 'N/A'}</span>
+          <span class="value fw-semibold" data-field="auth.email" data-editable="false">${user.auth?.email || 'N/A'}</span>
         </div>
         <div class="info-row d-flex justify-content-between border-bottom py-3">
           <span class="label text-muted fw-medium">Address</span>
-          <span class="value fw-semibold text-end">${user.profile?.address || 'N/A'}</span>
+          <span class="value fw-semibold text-end" data-field="profile.address">${user.profile?.address || 'N/A'}</span>
         </div>
         <div class="info-row d-flex justify-content-between py-3">
           <span class="label text-muted fw-medium">CPR Number</span>
-          <span class="value fw-semibold">${user.profile?.cpr || 'N/A'}</span>
+          <span class="value fw-semibold" data-field="cpr">${user.profile?.cpr || 'N/A'}</span>
+        </div>
+        <div class="info-row d-flex justify-content-between py-3">
+          <span class="label text-muted fw-medium">Roles</span>
+          <span class="value fw-semibold" data-field="roles" data-transform="commaList">${
+            Array.isArray(user.roles) ? user.roles.join(', ') : user.roles || 'N/A'
+          }</span>
         </div>
       </div>
     </div>
@@ -189,20 +193,58 @@ export function renderStaffPage(): HTMLElement {
 
   // New section for real data from backend
   const realDataSection = document.createElement('div');
-  realDataSection.innerHTML = `<h2>Users from Database</h2><p>Loading...</p>`;
-  loadStaff(realDataSection);
+  realDataSection.innerHTML = `<p>Loading...</p>`;
+  container.appendChild(realDataSection);
+
+  // fetch users from backend using axios, which auto-parses JSON.
+  //Takes the display name and role from the database. Map takes the specific piece of data that is needed.
+  async function loadStaff() {
+    try {
+      const users = (await http.get('/users')) as UserDTO[];
+      const staffData = (users ?? []).map((user) => ({
+        id: user.id,
+        name: user.profile?.displayName,
+        role: user.roles.join(', '),
+      }));
+      // remove "loading..."
+      realDataSection.innerHTML = '';
+
+      //render table
+      const tableElement = renderTable(staffData);
+      realDataSection.appendChild(tableElement);
+
+      //Taking each row and adding a eventListener
+      const rows = tableElement.querySelectorAll('tr');
+      rows.forEach((row, index) => {
+        // Skip header row
+        if (index === 0) return;
+
+        row.addEventListener('click', (): void => {
+          const user = users[index - 1]; // match index with user
+          const popup = inspectUser(user);
+          document.body.appendChild(popup);
+          console.log('user clicked');
+        });
+      });
+      //Error message, if anything goes wrong
+    } catch (err) {
+      console.error('Failed to load staff:', err);
+      realDataSection.innerHTML = '<h2>Users from Database</h2><p>Failed to load staff data.</p>';
+    }
+  }
+  loadStaff();
 
   // Admin only functionality
   if (isAdmin()) {
-      const handleInvite = setupInvitationHandler(realDataSection);
+    const handleInvite = setupInvitationHandler(realDataSection);
 
-      const existingNewButton = searchEl.querySelector('.button');
-      if (existingNewButton) {
-          existingNewButton.addEventListener('click', () => {
-              const newStaffCard = renderAddNewStaffCard(handleInvite);
-              document.body.appendChild(newStaffCard);
-          });
-      }
+    const existingNewButton = searchEl.querySelector('.button');
+    if (existingNewButton) {
+      existingNewButton.addEventListener('click', () => {
+        const newStaffCard = renderAddNewStaffCard(handleInvite);
+        document.body.appendChild(newStaffCard);
+      });
+    }
   } else {
     console.log('You are not Admin');
   }

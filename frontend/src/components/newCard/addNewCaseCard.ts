@@ -1,8 +1,9 @@
 import { renderCard } from '../cardComponent/cardComponent';
 import { createFloatingInput, createFloatingTextarea } from '../floatingLabel/floatingLabel';
+import http from '../../api/http';
 
 export function renderAddNewCaseCard(): HTMLElement {
-  const overlay = renderCard();
+  const overlay = renderCard({ edit: true, endpoint: 'cases/create' });
   const card = overlay.querySelector('.card') as HTMLElement;
   const header = card.querySelector('.header') as HTMLElement;
   const body = card.querySelector('.body') as HTMLElement;
@@ -63,23 +64,21 @@ export function renderAddNewCaseCard(): HTMLElement {
       return;
     }
 
-    const params = new URLSearchParams({ title, description, status });
-
+    saveBtn.disabled = true;
     try {
-      const response = await fetch(`/api/cases/create?${params.toString()}`, { method: 'POST' });
+      const data = await http.post('/cases/create', null, {
+        params: { title, description, status },
+      });
 
-      if (!response.ok) {
-        const text = await response.text();
-        throw new Error(`Server responded with ${response.status}: ${text}`);
-      }
-
-      const data = await response.json();
       console.log('Case created successfully:', data);
-      alert(`Case "${data.title}" created successfully.`);
+      alert(`Case created successfully.`);
       overlay.remove();
-    } catch (err) {
+    } catch (err: any) {
+      const msg = err?.response?.data?.message || err?.message || 'Failed to create case.';
       console.error('Error creating case:', err);
-      alert('Failed to create case. Check console for details.');
+      alert(msg);
+    } finally {
+      saveBtn.disabled = false;
     }
   });
 

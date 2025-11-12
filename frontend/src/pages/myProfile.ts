@@ -1,5 +1,5 @@
 import { renderHealthCheck } from '../components/healthCheck';
-import {getMe } from '../auth/auth';
+import { getMe } from '../auth/auth';
 
 export function renderMyProfilePage(): HTMLElement {
   const div = document.createElement('div');
@@ -11,7 +11,7 @@ export function renderMyProfilePage(): HTMLElement {
 
   const me = getMe();
 
-    body.innerHTML = `
+  body.innerHTML = `
       <div class="card profile-card w-100 shadow-sm border-0">
         <div class="card-body fs-5">
         <div class="info-row d-flex justify-content-between border-bottom py-3">
@@ -42,35 +42,35 @@ export function renderMyProfilePage(): HTMLElement {
       </div>
     `;
 
-    const editButton = document.createElement('button');
-    editButton.className = 'btn btn-primary btn-lg mt-3';
-    editButton.textContent = 'Edit';
+  const editButton = document.createElement('button');
+  editButton.className = 'btn btn-primary btn-lg mt-3';
+  editButton.textContent = 'Edit';
 
-    editButton.addEventListener('click', () => {
-        //the infoRows line collects all elements with the class .info-row, so make sure to name it this.
-        const infoRows = body.querySelectorAll('.info-row');
-        //Loops to make sure we get every .info-row class and gets the displayed value.
-        infoRows.forEach((row) => {
-            const valueSpan = row.querySelector('.value');
-            if (!valueSpan) return;
+  editButton.addEventListener('click', () => {
+    //the infoRows line collects all elements with the class .info-row, so make sure to name it this.
+    const infoRows = body.querySelectorAll('.info-row');
+    //Loops to make sure we get every .info-row class and gets the displayed value.
+    infoRows.forEach((row) => {
+      const valueSpan = row.querySelector('.value');
+      if (!valueSpan) return;
 
-            //Here it creates an input box, so the user can edit the value.
-            if (!valueSpan.querySelector('input')) {
-                const currentValue = valueSpan.textContent?.trim() || '';
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.value = currentValue; //Makes sure to insert the current value, after you click edit.
-                input.className = 'form-control text-end fw-semibold';
-                valueSpan.textContent = '';
-                valueSpan.appendChild(input);
-            }
-        })
-    })
+      //Here it creates an input box, so the user can edit the value.
+      if (!valueSpan.querySelector('input')) {
+        const currentValue = valueSpan.textContent?.trim() || '';
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.value = currentValue; //Makes sure to insert the current value, after you click edit.
+        input.className = 'form-control text-end fw-semibold';
+        valueSpan.textContent = '';
+        valueSpan.appendChild(input);
+      }
+    });
+  });
 
-    const container = document.createElement('container');
-    container.appendChild(div);
-    container.appendChild(body);
-    container.appendChild(editButton);
+  const container = document.createElement('container');
+  container.appendChild(div);
+  container.appendChild(body);
+  container.appendChild(editButton);
 
- return container;
+  return container;
 }

@@ -10,16 +10,20 @@ export type TimeEntryDto = {
   stopTime?: string | null;
 };
 // ----------------------------------------Async API functions------------------------------------------------
-async function checkForUnresolvedTime(buttonRow: HTMLDivElement, startTimeBtn: HTMLButtonElement, stopTimeBtn: HTMLButtonElement) {
+async function checkForUnresolvedTime(
+  buttonRow: HTMLDivElement,
+  startTimeBtn: HTMLButtonElement,
+  stopTimeBtn: HTMLButtonElement,
+) {
   try {
     const currentUserId = getUserId();
-    console.log ('Current User ID:', currentUserId);
+    console.log('Current User ID:', currentUserId);
     if (!currentUserId) {
       console.error('User ID is not available.');
       return;
     }
 
-    const last = (await http.get(`/times/users/${currentUserId}/last-time`)) as TimeEntryDto
+    const last = (await http.get(`/times/users/${currentUserId}/last-time`)) as TimeEntryDto;
     console.log('Last time entry fetched:', last.startTime, last.stopTime);
     if (!last) {
       console.log('No last time entry found for user.');
@@ -36,11 +40,10 @@ async function checkForUnresolvedTime(buttonRow: HTMLDivElement, startTimeBtn: H
       buttonRow.appendChild(stopTimeBtn);
       displayTime('startTime', entry.startTime);
       return entry.startTime;
-    }else {
+    } else {
       console.log('Last time entry is already completed.');
       return;
     }
-
   } catch (err) {
     console.error('Failed to load cases:', err);
   }
@@ -199,14 +202,13 @@ export function renderTimeTracker(): HTMLElement {
   openCardButton.addEventListener('click', (): void => {
     const cardEl = renderTimeTrackingCard();
     document.body.appendChild(cardEl);
-  
   });
 
   div.appendChild(openCardButton);
 
   function renderTimeTrackingCard(): HTMLElement {
     // Create overlay
-    const overlay: HTMLElement = renderCard(true);
+    const overlay = renderCard({ edit: true, endpoint: 'times' });
     const card: HTMLElement = overlay.querySelector('.card') as HTMLElement;
     const header: HTMLElement = card.querySelector('.header') as HTMLElement;
     const body: HTMLElement = card.querySelector('.body') as HTMLElement;
@@ -230,8 +232,8 @@ export function renderTimeTracker(): HTMLElement {
     const description: HTMLDivElement = document.createElement('div');
     description.className = 'container col-12 p-4';
     description.innerHTML = `
-    
-    <textarea class="form-control shadow border-0 shadow-sm rounded-3" id="description" 
+
+    <textarea class="form-control shadow border-0 shadow-sm rounded-3" id="description"
     rows="6" placeholder="Add a short description..."
     ></textarea>
     `;
@@ -261,22 +263,22 @@ export function renderTimeTracker(): HTMLElement {
     <div class="container col-5 rounded text-center shadow-sm light-bg py-2">
       <label for="startTime" class="form-label">Start Time</label> <br>
       <div class="container col-12 rounded text-center bg-transparent py-1">
-      <input 
-        type="time" 
-        step="1" 
-        class="form-control mx-auto px-2 shadow-sm lighter-bg clockText text-center" 
-        id="startTime" 
+      <input
+        type="time"
+        step="1"
+        class="form-control mx-auto px-2 shadow-sm lighter-bg clockText text-center"
+        id="startTime"
         value="00:00:00">
       </div>
     </div>
     <div class="container col-5 rounded text-center shadow-sm light-bg py-2">
       <label for="stopTime" class="form-label">Stop Time</label> <br>
       <div class="container col-12 rounded text-center bg-transparent py-1">
-      <input 
-        type="time" 
-        step="1" 
-        class="form-control mx-auto px-2 shadow-sm lighter-bg clockText text-center " 
-        id="stopTime" 
+      <input
+        type="time"
+        step="1"
+        class="form-control mx-auto px-2 shadow-sm lighter-bg clockText text-center "
+        id="stopTime"
         value="00:00:00">
       </div>
     </div>`;
@@ -301,19 +303,18 @@ export function renderTimeTracker(): HTMLElement {
     //load the cases for the dropdown
     loadCases();
 
-
-      let originalStartTime: string;
+    let originalStartTime: string;
 
     // Async check for unresolved time entry. after function is completed the originalStartTime is set
     checkForUnresolvedTime(buttonRow, startTimeBtn, stopTimeBtn)
-       .then((t) => {
+      .then((t) => {
         if (t) {
           originalStartTime = t;
-       }
-       })
-       .catch((err) => console.error(err));
+        }
+      })
+      .catch((err) => console.error(err));
 
-  // --------------------------------------------------------Event listeners------------------------------------------------
+    // --------------------------------------------------------Event listeners------------------------------------------------
     startTimeBtn.addEventListener('click', async (): Promise<void> => {
       //get Start time
       const startTimeNow: string = getTimeNow();

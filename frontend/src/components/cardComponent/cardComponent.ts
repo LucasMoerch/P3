@@ -1,6 +1,13 @@
 import './cardComponent.scss';
+import http from '../../api/http';
 
-export function renderCard(edit?: Boolean): HTMLElement {
+type RenderCardOptions = {
+  edit?: boolean;
+  endpoint?: string;
+  data?: Record<string, any>;
+};
+
+export function renderCard(options: RenderCardOptions = {}): HTMLElement {
   const overlay = document.createElement('div');
   overlay.className = 'overlay pt-md-5';
   overlay.setAttribute('role', 'dialog');
@@ -14,7 +21,7 @@ export function renderCard(edit?: Boolean): HTMLElement {
     'btn back-button border-0 bg-transparent text-primary position-absolute top-0 start-0 m-3 fs-2';
   closeBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
 
-  if (edit) {
+  if (options.edit) {
     const editBtn = document.createElement('button');
     editBtn.className =
       'btn edit-button border-0 bg-transparent text-primary position-absolute top-0 end-0 m-3 fs-2';
@@ -26,8 +33,11 @@ export function renderCard(edit?: Boolean): HTMLElement {
       const infoRows = card.querySelectorAll('.info-row');
       //Loops to make sure we get every .info-row class and gets the displayed value.
       infoRows.forEach((row) => {
-        const valueSpan = row.querySelector('.value');
+        const valueSpan: HTMLElement | null = row.querySelector('.value');
         if (!valueSpan) return;
+
+        const field = valueSpan.dataset.field;
+        if (!field || valueSpan.dataset.editable === 'false') return;
 
         //Here it creates an input box, so the user can edit the value.
         if (!valueSpan.querySelector('input')) {
@@ -36,6 +46,10 @@ export function renderCard(edit?: Boolean): HTMLElement {
           input.type = 'text';
           input.value = currentValue; //Makes sure to insert the current value, after you click edit.
           input.className = 'form-control text-end fw-semibold';
+          input.dataset.field = field;
+          if (valueSpan.dataset.transform) {
+            input.dataset.transform = valueSpan.dataset.transform;
+          }
           valueSpan.textContent = '';
           valueSpan.appendChild(input);
         }
@@ -51,8 +65,83 @@ export function renderCard(edit?: Boolean): HTMLElement {
       btnContainer.appendChild(saveBtn);
       card.appendChild(btnContainer);
 
-      saveBtn.addEventListener('click', () => {
-        overlay.remove();
+      saveBtn.addEventListener('click', async () => {
+        const updated: Record<string, unknown> = options.data ? { ...options.data } : {};
+        const inputs = card.querySelectorAll<HTMLInputElement>('.info-row .value input');
+
+        // This part takes care of nested fields like profile.displayName to send { profile: { displayName: 'new value' } }
+        const setNestedValue = (target: Record<string, unknown>, path: string, value: unknown) => {
+          const segments = path.split('.');
+          let current: Record<string, unknown> = target;
+
+          for (let i = 0; i < segments.length - 1; i += 1) {
+            const segment = segments[i];
+            if (
+              current[segment] === undefined ||
+              current[segment] === null ||
+              typeof current[segment] !== 'object'
+            ) {
+              current[segment] = {};
+            }
+            current = current[segment] as Record<string, unknown>;
+          }
+
+          current[segments[segments.length - 1]] = value;
+        };
+
+        const updates: Array<{ input: HTMLInputElement; value: string | string[] }> = [];
+
+        const toDisplayValue = (val: string | string[]): string =>
+          Array.isArray(val) ? val.join(', ') : val;
+
+        inputs.forEach((input) => {
+          const field = input.dataset.field;
+          if (!field) return;
+          let value: string | string[] = input.value;
+          switch (input.dataset.transform) {
+            case 'uppercase':
+              value = value.toUpperCase();
+              break;
+            case 'commaList':
+              value = value
+                .split(',')
+                .map((part) => part.trim())
+                .filter((part) => part.length > 0);
+              break;
+            default:
+              break;
+          }
+
+          setNestedValue(updated, field, value);
+          updates.push({ input, value });
+        });
+
+        // prevent id changes if present
+        if ('id' in (options.data ?? {})) {
+          updated.id = (options.data as any).id;
+        }
+
+        try {
+          saveBtn.disabled = true;
+          const prev = saveBtn.innerText;
+          saveBtn.innerText = 'Saving...';
+
+          await http.put(`/${options.endpoint}/${options.data?.id}`, updated);
+
+          // Replace inputs back to text
+          updates.forEach(({ input, value }) => {
+            const parent = input.parentElement;
+            if (!parent) return;
+            parent.textContent = toDisplayValue(value);
+          });
+
+          overlay.remove();
+          saveBtn.innerText = prev;
+        } catch (e) {
+          console.error(e);
+          alert('Failed to save changes.');
+          saveBtn.disabled = false;
+        }
       });
 
       editBtn.disabled = true; // Disable while editing, so you cant press it again.
@@ -76,7 +165,7 @@ export function renderCard(edit?: Boolean): HTMLElement {
   card.appendChild(body);
 
   overlay.addEventListener('click', (event) => {
-        if (event.target === overlay) overlay.remove();
+    if (event.target === overlay) overlay.remove();
   });
 
   // Return overlay, but let caller add content to the card

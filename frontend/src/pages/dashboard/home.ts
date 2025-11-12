@@ -62,7 +62,7 @@ export function renderHomePage(): HTMLElement {
   });
 
   function creating_case(): HTMLElement {
-    const overlay: HTMLElement = renderCard();
+    const overlay = renderCard({ edit: true, endpoint: 'cases' });
     const card: HTMLElement = overlay.querySelector('.card') as HTMLElement;
     const header: HTMLElement = card.querySelector('.header') as HTMLElement;
     const body: HTMLElement = card.querySelector('.body') as HTMLElement;

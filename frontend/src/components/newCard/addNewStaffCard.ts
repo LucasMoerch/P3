@@ -1,11 +1,12 @@
 import { renderCard } from '../cardComponent/cardComponent';
 import { createFloatingInput, createFloatingTextarea } from '../floatingLabel/floatingLabel';
 import type { UserRole } from '../../pages/staff';
+
 export function renderAddNewStaffCard(
   onInvite?: (email: string, role: UserRole[]) => Promise<boolean>,
 ): HTMLElement {
   // Create overlay
-  const overlay: HTMLElement = renderCard();
+  const overlay = renderCard({ edit: true, endpoint: 'users/create' });
   const card: HTMLElement = overlay.querySelector('.card') as HTMLElement;
   const header: HTMLElement = card.querySelector('.header') as HTMLElement;
   const body: HTMLElement = card.querySelector('.body') as HTMLElement;
@@ -34,7 +35,7 @@ export function renderAddNewStaffCard(
   formContainer.appendChild(descField);
   formContainer.appendChild(adminCheckWrapper);
 
-    // BUTTON ROW
+  // BUTTON ROW
   const buttonRow = document.createElement('div');
   buttonRow.className = 'd-flex justify-content-end gap-2 p-3';
 

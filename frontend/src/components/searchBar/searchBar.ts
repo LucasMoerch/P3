@@ -45,9 +45,9 @@ export function renderSearchComponent(): HTMLElement {
   searchContainer.className = 'search-container d-flex justify-content-between';
 
   // Append input and button to the container
-    searchContainer.appendChild(formFloating);
-    searchContainer.appendChild(searchButton);
-    searchDiv.appendChild(searchContainer);
+  searchContainer.appendChild(formFloating);
+  searchContainer.appendChild(searchButton);
+  searchDiv.appendChild(searchContainer);
 
   if (isAdmin()) {
     searchContainer.appendChild(renderNewButton());

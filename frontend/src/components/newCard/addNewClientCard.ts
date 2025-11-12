@@ -1,8 +1,9 @@
 import { renderCard } from '../cardComponent/cardComponent';
-import { createFloatingInput, createFloatingTextarea } from '../floatingLabel/floatingLabel';
+import { createFloatingInput } from '../floatingLabel/floatingLabel';
+import http from '../../api/http';
 
 export function renderAddNewClientCard(): HTMLElement {
-  const overlay = renderCard();
+  const overlay = renderCard({ edit: true, endpoint: 'clients/create' });
   const card = overlay.querySelector('.card') as HTMLElement;
   const header = card.querySelector('.header') as HTMLElement;
   const body = card.querySelector('.body') as HTMLElement;
@@ -16,7 +17,6 @@ export function renderAddNewClientCard(): HTMLElement {
   const nameField = createFloatingInput('clientName', 'Name', 'text');
   const emailField = createFloatingInput('clientEmail', 'Email', 'email');
   const phoneField = createFloatingInput('clientPhone', 'Phone', 'tel');
-
 
   formContainer.appendChild(nameField);
   formContainer.appendChild(emailField);
@@ -39,12 +39,28 @@ export function renderAddNewClientCard(): HTMLElement {
   body.appendChild(buttonRow);
 
   cancelBtn.addEventListener('click', () => overlay.remove());
-  saveBtn.addEventListener('click', () => {
-    const name = (formContainer.querySelector('#clientName') as HTMLInputElement).value;
-    const email = (formContainer.querySelector('#clientEmail') as HTMLInputElement).value;
-    const phone = (formContainer.querySelector('#clientPhone') as HTMLInputElement).value;
-    console.log('Saving new client:', { name, email, phone });
-    overlay.remove();
+
+  saveBtn.addEventListener('click', async () => {
+    const name = (formContainer.querySelector('#clientName') as HTMLInputElement).value.trim();
+    const email = (formContainer.querySelector('#clientEmail') as HTMLInputElement).value.trim();
+    const phone = (formContainer.querySelector('#clientPhone') as HTMLInputElement).value.trim();
+
+    saveBtn.disabled = true;
+    try {
+      const created = await http.post('/clients/create', {
+        name,
+        contactEmail: email,
+        contactPhone: phone,
+      });
+      console.log('Client created:', created);
+      overlay.remove();
+    } catch (err: any) {
+      const msg = err?.response?.data?.message || err?.message || 'Failed to save client';
+      console.error(err);
+      alert(msg);
+    } finally {
+      saveBtn.disabled = false;
+    }
   });
 
   return overlay;
