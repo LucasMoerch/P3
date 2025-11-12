@@ -63,7 +63,7 @@ export function renderClientsPage(): HTMLElement {
 
   // Inspect Client popup — same layout as InspectUser
   function inspectClient(client: ClientDTO): HTMLElement {
-    const overlay: HTMLElement = renderCard(true);
+    const overlay = renderCard({ edit: true, endpoint: 'clients', data: client });
     const card: HTMLElement = overlay.querySelector('.card') as HTMLElement;
     const headerEl: HTMLElement = card.querySelector('.header') as HTMLElement;
     const body: HTMLElement = card.querySelector('.body') as HTMLElement;
@@ -82,19 +82,19 @@ export function renderClientsPage(): HTMLElement {
         <div class="card-body fs-5">
           <div class="info-row d-flex justify-content-between border-bottom py-3">
             <span class="label text-muted fw-medium">Client ID</span>
-            <span class="value fw-semibold">${client.id}</span>
+            <span class="value fw-semibold" data-field="id">${client.id}</span>
           </div>
           <div class="info-row d-flex justify-content-between border-bottom py-3">
             <span class="label text-muted fw-medium">Address</span>
-            <span class="value fw-semibold text-end">${client.address || 'N/A'}</span>
+            <span class="value fw-semibold text-end" data-field="address">${client.address || 'N/A'}</span>
           </div>
           <div class="info-row d-flex justify-content-between border-bottom py-3">
             <span class="label text-muted fw-medium">Contact</span>
-            <span class="value fw-semibold">${client.contact || 'N/A'}</span>
+            <span class="value fw-semibold" data-field="contact">${client.contact || 'N/A'}</span>
           </div>
           <div class="info-row d-flex justify-content-between border-bottom py-3">
             <span class="label text-muted fw-medium">Email</span>
-            <span class="value fw-semibold">${client.email || 'N/A'}</span>
+            <span class="value fw-semibold" data-field="email">${client.email || 'N/A'}</span>
           </div>
 
         </div>

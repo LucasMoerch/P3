@@ -94,7 +94,7 @@ export function renderStaffPage(): HTMLElement {
   loadStaff();
 
   function inspectUser(user: any): HTMLElement {
-    const overlay: HTMLElement = renderCard(true);
+    const overlay = renderCard({ edit: true, endpoint: 'users', data: user });
     const card: HTMLElement = overlay.querySelector('.card') as HTMLElement;
     const header: HTMLElement = card.querySelector('.header') as HTMLElement;
     const body: HTMLElement = card.querySelector('.body') as HTMLElement;

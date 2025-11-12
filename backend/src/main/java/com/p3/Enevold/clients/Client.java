@@ -76,4 +76,8 @@ public class Client {
     this.documents = documents;
   }
 
+  public void setCreatedAt(Date createdAt) {
+    this.createdAt = createdAt;
+  }
+
 }

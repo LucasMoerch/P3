@@ -2,7 +2,7 @@ import { renderCard } from '../cardComponent/cardComponent';
 
 export function renderAddNewStaffCard(): HTMLElement {
   // Create overlay
-  const overlay: HTMLElement = renderCard(true);
+  const overlay = renderCard({ edit: true, endpoint: 'users/create' });
   const card: HTMLElement = overlay.querySelector('.card') as HTMLElement;
   const header: HTMLElement = card.querySelector('.header') as HTMLElement;
   const body: HTMLElement = card.querySelector('.body') as HTMLElement;

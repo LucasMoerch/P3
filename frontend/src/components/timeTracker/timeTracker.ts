@@ -166,7 +166,7 @@ export function renderTimeTracker(): HTMLElement {
 
   function renderTimeTrackingCard(): HTMLElement {
     // Create overlay
-    const overlay: HTMLElement = renderCard(true);
+    const overlay = renderCard({ edit: true, endpoint: 'times' });
     const card: HTMLElement = overlay.querySelector('.card') as HTMLElement;
     const header: HTMLElement = card.querySelector('.header') as HTMLElement;
     const body: HTMLElement = card.querySelector('.body') as HTMLElement;
@@ -190,8 +190,8 @@ export function renderTimeTracker(): HTMLElement {
     const description: HTMLDivElement = document.createElement('div');
     description.className = 'container col-12 p-4';
     description.innerHTML = `
-    
-    <textarea class="form-control shadow border-0 shadow-sm rounded-3" id="description" 
+
+    <textarea class="form-control shadow border-0 shadow-sm rounded-3" id="description"
     rows="6" placeholder="Add a short description..."
     ></textarea>
     `;
@@ -218,22 +218,22 @@ export function renderTimeTracker(): HTMLElement {
     <div class="container col-5 rounded text-center shadow-sm light-bg py-2">
       <label for="startTime" class="form-label">Start Time</label> <br>
       <div class="container col-12 rounded text-center bg-transparent py-1">
-      <input 
-        type="time" 
-        step="1" 
-        class="form-control mx-auto px-2 shadow-sm lighter-bg clockText text-center" 
-        id="startTime" 
+      <input
+        type="time"
+        step="1"
+        class="form-control mx-auto px-2 shadow-sm lighter-bg clockText text-center"
+        id="startTime"
         value="00:00:00">
       </div>
     </div>
     <div class="container col-5 rounded text-center shadow-sm light-bg py-2">
       <label for="stopTime" class="form-label">Stop Time</label> <br>
       <div class="container col-12 rounded text-center bg-transparent py-1">
-      <input 
-        type="time" 
-        step="1" 
-        class="form-control mx-auto px-2 shadow-sm lighter-bg clockText text-center " 
-        id="stopTime" 
+      <input
+        type="time"
+        step="1"
+        class="form-control mx-auto px-2 shadow-sm lighter-bg clockText text-center "
+        id="stopTime"
         value="00:00:00">
       </div>
     </div>`;
