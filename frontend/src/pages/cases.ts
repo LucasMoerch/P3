@@ -90,7 +90,7 @@ export function renderCasesPage(): HTMLElement {
 
             <div class="info-row d-flex justify-content-between border-bottom py-3">
               <span class="label text-muted fw-medium">Client ID</span>
-              <span class="value fw-semibold" data-field="clientId" data-editable="false">${c.clientId}</span>
+              <span class="value fw-semibold" data-field="clientId">${c.clientId}</span>
             </div>
 
             <div class="info-row d-flex justify-content-between border-bottom py-3">
@@ -105,7 +105,7 @@ export function renderCasesPage(): HTMLElement {
 
             <div class="info-row d-flex justify-content-between border-bottom py-3">
               <span class="label text-muted fw-medium">Assigned Users</span>
-              <span class="value fw-semibold" data-field="assignedUsers" data-editable="false">${c.assignedUserIds.length ? c.assignedUserIds.join(', ') : 'None'}</span>
+              <span class="value fw-semibold" data-field="assignedUsers">${c.assignedUserIds.length ? c.assignedUserIds.join(', ') : 'None'}</span>
             </div>
 
             <div class="info-row d-flex justify-content-between border-bottom py-3">
@@ -115,7 +115,7 @@ export function renderCasesPage(): HTMLElement {
 
             <div class="info-row d-flex justify-content-between py-3">
               <span class="label text-muted fw-medium">Last Updated</span>
-              <span class="value fw-semibold" data-field="updatedAt" data-editable="false">${new Date(c.updatedAt).toLocaleString('da-DK')}</span>
+              <span class="value fw-semibold" data-field="updatedAt">${new Date(c.updatedAt).toLocaleString('da-DK')}</span>
             </div>
           </div>
         </div>

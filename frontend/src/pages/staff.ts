@@ -134,24 +134,28 @@ function inspectUser(user: any): HTMLElement {
     <div class="card profile-card w-100 shadow-sm border-0">
       <div class="card-body fs-5">
         <div class="info-row d-flex justify-content-between border-bottom py-3">
-          <span class="label text-muted fw-medium">Birthdate</span>
-          <span class="value fw-semibold">${user.profile?.birthDate || 'N/A'}</span>
+          <span class="label text-muted fw-medium">Display Name</span>
+          <span class="value fw-semibold" data-field="displayName">${user.profile?.displayName || 'N/A'}</span>
         </div>
         <div class="info-row d-flex justify-content-between border-bottom py-3">
           <span class="label text-muted fw-medium">Mobile Number</span>
-          <span class="value fw-semibold">${user.profile?.phone || 'N/A'}</span>
+          <span class="value fw-semibold" data-field="phone">${user.profile?.phone || 'N/A'}</span>
         </div>
         <div class="info-row d-flex justify-content-between border-bottom py-3">
           <span class="label text-muted fw-medium">E-mail</span>
-          <span class="value fw-semibold">${user.auth?.email || 'N/A'}</span>
+          <span class="value fw-semibold" data-field="email">${user.auth?.email || 'N/A'}</span>
         </div>
         <div class="info-row d-flex justify-content-between border-bottom py-3">
           <span class="label text-muted fw-medium">Address</span>
-          <span class="value fw-semibold text-end">${user.profile?.address || 'N/A'}</span>
+          <span class="value fw-semibold text-end" data-field="address">${user.profile?.address || 'N/A'}</span>
         </div>
         <div class="info-row d-flex justify-content-between py-3">
           <span class="label text-muted fw-medium">CPR Number</span>
-          <span class="value fw-semibold">${user.profile?.cpr || 'N/A'}</span>
+          <span class="value fw-semibold" data-field="cpr">${user.profile?.cpr || 'N/A'}</span>
+        </div>
+        <div class="info-row d-flex justify-content-between py-3">
+          <span class="label text-muted fw-medium">Roles</span>
+          <span class="value fw-semibold" data-field="roles">${user.roles || 'N/A'}</span>
         </div>
       </div>
     </div>
@@ -230,49 +234,6 @@ export function renderStaffPage(): HTMLElement {
   }
   loadStaff();
 
-  function inspectUser(user: any): HTMLElement {
-    const overlay = renderCard({ edit: true, endpoint: 'users', data: user });
-    const card: HTMLElement = overlay.querySelector('.card') as HTMLElement;
-    const header: HTMLElement = card.querySelector('.header') as HTMLElement;
-    const body: HTMLElement = card.querySelector('.body') as HTMLElement;
-
-    header.innerText = user.profile?.displayName || 'No Name';
-
-    // This is the body where the information is displayed like mail, mobile number etc.
-    body.innerHTML = `
-      <div class="card profile-card w-100 shadow-sm border-0">
-        <div class="card-body fs-5">
-          <div class="info-row d-flex justify-content-between border-bottom py-3">
-            <span class="label text-muted fw-medium">Birthdate</span>
-            <span class="value fw-semibold">${user.profile?.birthDate || 'N/A'}</span>
-          </div>
-          <div class="info-row d-flex justify-content-between border-bottom py-3">
-            <span class="label text-muted fw-medium">Mobile Number</span>
-            <span class="value fw-semibold">${user.profile?.phone || 'N/A'}</span>
-          </div>
-          <div class="info-row d-flex justify-content-between border-bottom py-3">
-            <span class="label text-muted fw-medium">E-mail</span>
-            <span class="value fw-semibold">${user.auth?.email || 'N/A'}</span>
-          </div>
-          <div class="info-row d-flex justify-content-between border-bottom py-3">
-            <span class="label text-muted fw-medium">Address</span>
-            <span class="value fw-semibold text-end">${user.profile?.address || 'N/A'}</span>
-          </div>
-          <div class="info-row d-flex justify-content-between py-3">
-            <span class="label text-muted fw-medium">CPR Number</span>
-            <span class="value fw-semibold">${user.profile?.cpr || 'N/A'}</span>
-          </div>
-        </div>
-      </div>
-      `;
-
-    overlay.appendChild(card);
-    card.appendChild(header);
-    card.appendChild(body);
-    card.append(renderTabs({ entityType: 'users', entityId: user.id }));
-
-    return overlay;
-  }
 
   // Admin only functionality
   if (isAdmin()) {

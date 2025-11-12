@@ -95,6 +95,17 @@ public class UserController {
 
     }
 
+    // Edit case details
+    @PutMapping("/{id}")
+      public ResponseEntity<Case> putCase(@PathVariable String id, @RequestBody Case body) {
+      var existing = repo.findById(id).orElse(null);
+      if (existing == null) return ResponseEntity.notFound().build();
+
+
+      var saved = repo.save(body);
+      return ResponseEntity.ok(saved);
+    }
+
     // Upload a file/document to a specific user
     @PostMapping("/{userId}/uploadDocument")
     public ResponseEntity<String> uploadDocument(
