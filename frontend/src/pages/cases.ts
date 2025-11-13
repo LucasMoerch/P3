@@ -15,6 +15,66 @@ export type CaseDto = {
   updatedAt: string;
 };
 
+export function inspectCase(c: CaseDto): HTMLElement {
+    const overlay: HTMLElement = renderCard({ edit: true, endpoint: 'cases', data: c });
+    const card: HTMLElement = overlay.querySelector('.card') as HTMLElement;
+    const header: HTMLElement = card.querySelector('.header') as HTMLElement;
+    const body: HTMLElement = card.querySelector('.body') as HTMLElement;
+
+    header.innerText = c.title;
+
+    // Body markup
+    if (body) {
+        body.innerHTML = `
+        <div class="card profile-card w-100 shadow-sm border-0">
+          <div class="card-body fs-5">
+            <div class="info-row d-flex justify-content-between border-bottom py-3">
+              <span class="label text-muted fw-medium">Case ID</span>
+              <span class="value fw-semibold" data-field="id" data-editable="false">${c.id}</span>
+            </div>
+            <div class="info-row d-flex justify-content-between border-bottom py-3">
+              <span class="label text-muted fw-medium">Title</span>
+              <span class="value fw-semibold" data-field="title">${c.title}</span>
+            </div>
+
+            <div class="info-row d-flex justify-content-between border-bottom py-3">
+              <span class="label text-muted fw-medium">Client ID</span>
+              <span class="value fw-semibold" data-field="clientId">${c.clientId}</span>
+            </div>
+
+            <div class="info-row d-flex justify-content-between border-bottom py-3">
+              <span class="label text-muted fw-medium">Description</span>
+              <span class="value fw-semibold text-end" data-field="description">${c.description || '-'}</span>
+            </div>
+
+            <div class="info-row d-flex justify-content-between border-bottom py-3">
+              <span class="label text-muted fw-medium">Status</span>
+              <span class="value fw-semibold" data-field="status">${c.status}</span>
+            </div>
+
+            <div class="info-row d-flex justify-content-between border-bottom py-3">
+              <span class="label text-muted fw-medium">Assigned Users</span>
+              <span class="value fw-semibold" data-field="assignedUsers">${c.assignedUserIds.length ? c.assignedUserIds.join(', ') : 'None'}</span>
+            </div>
+
+            <div class="info-row d-flex justify-content-between border-bottom py-3">
+              <span class="label text-muted fw-medium">Created</span>
+              <span class="value fw-semibold" data-field="createdAt" data-editable="false">${new Date(c.createdAt).toLocaleString('da-DK')}</span>
+            </div>
+
+            <div class="info-row d-flex justify-content-between py-3">
+              <span class="label text-muted fw-medium">Last Updated</span>
+              <span class="value fw-semibold" data-field="updatedAt">${new Date(c.updatedAt).toLocaleString('da-DK')}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    card.appendChild(renderTabs({ entityType: 'cases', entityId: c.id }));
+
+    return overlay;
+}
+
 export function renderCasesPage(): HTMLElement {
   const div = document.createElement('div');
   div.innerHTML = `<h1>Cases Overview</h1>`;
@@ -66,65 +126,6 @@ export function renderCasesPage(): HTMLElement {
   }
 
   // InspectCase - matches the style/behavior of inspectUser
-  function inspectCase(c: CaseDto): HTMLElement {
-    const overlay: HTMLElement = renderCard({ edit: true, endpoint: 'cases', data: c });
-    const card: HTMLElement = overlay.querySelector('.card') as HTMLElement;
-    const header: HTMLElement = card.querySelector('.header') as HTMLElement;
-    const body: HTMLElement = card.querySelector('.body') as HTMLElement;
-
-    header.innerText = c.title;
-
-    // Body markup
-    if (body) {
-      body.innerHTML = `
-        <div class="card profile-card w-100 shadow-sm border-0">
-          <div class="card-body fs-5">
-            <div class="info-row d-flex justify-content-between border-bottom py-3">
-              <span class="label text-muted fw-medium">Case ID</span>
-              <span class="value fw-semibold" data-field="id" data-editable="false">${c.id}</span>
-            </div>
-            <div class="info-row d-flex justify-content-between border-bottom py-3">
-              <span class="label text-muted fw-medium">Title</span>
-              <span class="value fw-semibold" data-field="title">${c.title}</span>
-            </div>
-
-            <div class="info-row d-flex justify-content-between border-bottom py-3">
-              <span class="label text-muted fw-medium">Client ID</span>
-              <span class="value fw-semibold" data-field="clientId">${c.clientId}</span>
-            </div>
-
-            <div class="info-row d-flex justify-content-between border-bottom py-3">
-              <span class="label text-muted fw-medium">Description</span>
-              <span class="value fw-semibold text-end" data-field="description">${c.description || '-'}</span>
-            </div>
-
-            <div class="info-row d-flex justify-content-between border-bottom py-3">
-              <span class="label text-muted fw-medium">Status</span>
-              <span class="value fw-semibold" data-field="status">${c.status}</span>
-            </div>
-
-            <div class="info-row d-flex justify-content-between border-bottom py-3">
-              <span class="label text-muted fw-medium">Assigned Users</span>
-              <span class="value fw-semibold" data-field="assignedUsers">${c.assignedUserIds.length ? c.assignedUserIds.join(', ') : 'None'}</span>
-            </div>
-
-            <div class="info-row d-flex justify-content-between border-bottom py-3">
-              <span class="label text-muted fw-medium">Created</span>
-              <span class="value fw-semibold" data-field="createdAt" data-editable="false">${new Date(c.createdAt).toLocaleString('da-DK')}</span>
-            </div>
-
-            <div class="info-row d-flex justify-content-between py-3">
-              <span class="label text-muted fw-medium">Last Updated</span>
-              <span class="value fw-semibold" data-field="updatedAt">${new Date(c.updatedAt).toLocaleString('da-DK')}</span>
-            </div>
-          </div>
-        </div>
-      `;
-    }
-    card.appendChild(renderTabs({ entityType: 'cases', entityId: c.id }));
-
-    return overlay;
-  }
 
   // initial load + auto refresh
   loadCases();
