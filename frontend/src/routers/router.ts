@@ -1,4 +1,4 @@
-import { renderHomePage } from '../pages/dashboard/home';
+import { renderHomePage } from '../pages/home';
 import { renderLoginPage } from '../pages/loginPage/login';
 import { renderCasesPage } from '../pages/cases';
 import { renderClientsPage } from '../pages/clients';
