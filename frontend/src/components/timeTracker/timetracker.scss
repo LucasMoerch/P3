@@ -38,12 +38,10 @@
   letter-spacing: 2px;
   user-select: none;
 }
-.light-bg {
-  background-color: #f3f1ec;
-}
-.lighter-bg {
-  background-color: #fbfaf8;
-}
+
 .clockText {
   font-size: 14px;
+}
+.totalTime-field {
+  pointer-events: none;
 }

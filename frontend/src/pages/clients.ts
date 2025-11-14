@@ -34,7 +34,6 @@ export function renderClientsPage(): HTMLElement {
       const clients = (await http.get('/clients')) as ClientDTO[];
 
       const clientData = (clients ?? []).map((c) => ({
-        id: c.id,
         name: c.name,
         address: c.address || '-',
         contact: c.contact || c.phone || 'N/A',

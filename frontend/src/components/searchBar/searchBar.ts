@@ -10,7 +10,7 @@ export function renderSearchComponent(): HTMLElement {
   const input = document.createElement('input');
   input.type = 'text';
   input.placeholder = 'Search...';
-  input.className = 'Search-input';
+  input.className = 'Search-input light-bg text-dark shadow-sm ';
 
   // Create search button
   const searchButton = document.createElement('button');
