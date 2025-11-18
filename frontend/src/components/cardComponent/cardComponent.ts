@@ -28,8 +28,8 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
   // preload users/clients for cases
   let preloaded: { users?: UserDTO[]; clients?: any[] } = {};
 
+  // If from cases endpoint, load users and clients
   const hasCasesEndpoint = options.endpoint === 'cases';
-
   if (hasCasesEndpoint) {
     loadUsersAndClients()
       .then((r) => {
@@ -53,7 +53,7 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
           }
         });
 
-        // populate clientId friendly name if present
+        // populate clientId name if present
         const clientSpans = card.querySelectorAll<HTMLElement>(
           '.info-row .value[data-field="clientId"]',
         );
@@ -104,7 +104,7 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
         // If already converted, skip
         if (valueSpan.querySelector('[data-edit-widget]')) return;
 
-        // SPECIAL: assignedUsers -> create checkbox dropdown custom UI
+        // If assignedUsers, use custom checkbox dropdown
         if (field === 'assignedUsers') {
           const users = preloaded.users || [];
           const assignedFromAttr = valueSpan.dataset.assignedIds
@@ -132,7 +132,7 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
           return;
         }
 
-        // SPECIAL: clientId -> single select populated from clients
+        // If clientId field use single-select dropdown
         if (field === 'clientId') {
           const clients = preloaded.clients || [];
           const select = document.createElement('select');
@@ -168,7 +168,7 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
           return;
         }
 
-        // Generic single dropdown -> simple <select> built from data-options
+        // Select dropdown that uses data-options
         const select = document.createElement('select');
         select.className = 'form-select text-end fw-semibold';
         select.dataset.field = field;
@@ -206,7 +206,7 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
       btnContainer.appendChild(saveBtn);
       card.appendChild(btnContainer);
 
-      // small helpers used only in save scope
+      // small helpers used only in save scope to ensure proper typing
       const setNestedValue = (target: Record<string, unknown>, path: string, value: unknown) => {
         const segments = path.split('.');
         let current: Record<string, unknown> = target;
@@ -257,7 +257,7 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
 
         const updates: Array<{ parent: HTMLElement; field: string; value: string | string[] }> = [];
 
-        // Handle generic <select> fields
+        // Handle normal select fields
         selects.forEach((sel) => {
           const field = sel.dataset.field;
           if (!field) return;
@@ -287,7 +287,7 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
           updates.push({ parent: sel.parentElement as HTMLElement, field, value });
         });
 
-        // Handle dropdown spans (including assignedUsers widget)
+        // Handle dropdown spans
         dropdownSpans.forEach((span) => {
           const field = span.dataset.field;
           if (!field) return;
@@ -320,7 +320,7 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
 
           await http.put(`/${options.endpoint}/${options.data?.id}`, updated);
 
-          // reflect friendly text using utils.friendlyForValue
+          // create friendly text using friendlyForValue function
           updates.forEach(({ parent, value }) => {
             parent.textContent = friendlyForValue(value, idToName) || 'None';
           });
