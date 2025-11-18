@@ -45,7 +45,7 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
           if (assignedIds.length && preloaded.users?.length) {
             const names = assignedIds.map((id) => {
               const u = preloaded.users!.find((x) => x.id === id);
-              return u ? (u.profile?.displayName || u.auth.email) : id;
+              return u ? u.profile?.displayName || u.auth.email : id;
             });
             span.textContent = names.join(', ');
           } else {
@@ -63,7 +63,7 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
             normalizeIdArray(options.data?.clientId ?? span.textContent?.trim() ?? '')[0] ?? '';
           const client = preloaded.clients?.find((c: any) => c.id === clientId);
           span.textContent = client
-            ? client.name ?? client.displayName ?? clientId
+            ? (client.name ?? client.displayName ?? clientId)
             : clientId || 'None';
         });
       })
@@ -115,8 +115,10 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
             options.data?.assignedUserIds ?? assignedFromAttr ?? [],
           );
 
-          const { container, getSelectedIds, setSelectedIds } =
-            createCheckboxDropdown(users, assignedIds);
+          const { container, getSelectedIds, setSelectedIds } = createCheckboxDropdown(
+            users,
+            assignedIds,
+          );
 
           container.dataset.editWidget = 'assignedUsers';
           container.dataset.field = field;
@@ -205,11 +207,7 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
       card.appendChild(btnContainer);
 
       // small helpers used only in save scope
-      const setNestedValue = (
-        target: Record<string, unknown>,
-        path: string,
-        value: unknown,
-      ) => {
+      const setNestedValue = (target: Record<string, unknown>, path: string, value: unknown) => {
         const segments = path.split('.');
         let current: Record<string, unknown> = target;
         for (let i = 0; i < segments.length - 1; i += 1) {
@@ -232,10 +230,7 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
         (preloaded.users || []).forEach((u) => {
           const uid = String((u as any).id ?? (u as any)._id ?? '');
           const uname =
-            u.profile?.displayName ??
-            (u as any).auth?.email ??
-            (u as any).auth?.email ??
-            uid;
+            u.profile?.displayName ?? (u as any).auth?.email ?? (u as any).auth?.email ?? uid;
           if (uid) idToName.set(uid, uname);
         });
 

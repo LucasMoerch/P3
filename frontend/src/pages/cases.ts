@@ -64,7 +64,7 @@ export function inspectCase(c: CaseDto): HTMLElement {
                 data-field="assignedUsers"
                 data-assigned-ids='${JSON.stringify(c.assignedUserIds ?? [])}'
               >
-                ${(c.assignedUserIds && c.assignedUserIds.length) ? c.assignedUserIds.join(', ') : 'None'}
+                ${c.assignedUserIds && c.assignedUserIds.length ? c.assignedUserIds.join(', ') : 'None'}
               </span>
             </div>
 

@@ -26,7 +26,8 @@ export function normalizeIdArray(input: unknown): string[] {
   // If single object, extract id-like field
   if (typeof input === 'object' && input !== null) {
     // @ts-ignore
-    const candidate = input.id ?? input._id ?? input.value ?? input.clientId ?? input.userId ?? null;
+    const candidate =
+      input.id ?? input._id ?? input.value ?? input.clientId ?? input.userId ?? null;
     if (candidate) return [String(candidate)];
     // If no id-like field, return empty array
     return [];

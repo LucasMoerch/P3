@@ -10,9 +10,7 @@ export function createCheckboxDropdown(
   setSelectedIds: (ids: string[]) => void;
 } {
   // Lookup users by id
-  const usersById = new Map<string, UserDTO>(
-    allUsers.map((u) => [u.id, u]),
-  );
+  const usersById = new Map<string, UserDTO>(allUsers.map((u) => [u.id, u]));
 
   // Track selected ids in a Set
   const selected = new Set<string>(initialSelectedIds);
