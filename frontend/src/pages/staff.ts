@@ -92,7 +92,6 @@ async function loadStaff(realDataSection: HTMLElement) {
     const users = (await http.get('/users')) as UserDTO[];
 
     const staffData = (users ?? []).map((user) => ({
-      id: user.id,
       name: user.profile?.displayName || user.auth.email, // Use email if display name is null
       role: user.roles,
       status: user.status,
@@ -179,7 +178,7 @@ export function renderStaffPage(): HTMLElement {
   div.innerHTML = `<h1>Staff page</h1>`;
 
   const container = document.createElement('div');
-  container.classList.add('container');
+  container.classList.add('container', 'staff-page');
   container.appendChild(div);
 
   const searchAndButtonContainer = document.createElement('div');
@@ -188,10 +187,18 @@ export function renderStaffPage(): HTMLElement {
   searchAndButtonContainer.style.alignItems = 'center';
   searchAndButtonContainer.style.marginBottom = '20px';
 
-  const searchEl = renderSearchComponent();
+  const searchEl = renderSearchComponent((query) => {
+      const rows = realDataSection.querySelectorAll('tr');
+
+      rows.forEach((row, index) => {
+          if (index === 0) return; // skip header
+          const nameCell = row.querySelector('td:first-child'); // Searches first column
+          row.style.display = nameCell?.textContent?.toLowerCase().includes(query) ? '' : 'none';
+      });
+  });
   searchAndButtonContainer.appendChild(searchEl);
 
-  // New section for real data from backend
+    // New section for real data from backend
   const realDataSection = document.createElement('div');
   realDataSection.innerHTML = `<p>Loading...</p>`;
   container.appendChild(realDataSection);
@@ -202,7 +209,6 @@ export function renderStaffPage(): HTMLElement {
     try {
       const users = (await http.get('/users')) as UserDTO[];
       const staffData = (users ?? []).map((user) => ({
-        id: user.id,
         name: user.profile?.displayName,
         role: user.roles.join(', '),
       }));
@@ -251,6 +257,7 @@ export function renderStaffPage(): HTMLElement {
 
   container.appendChild(searchAndButtonContainer);
   container.appendChild(realDataSection);
+  (container as any).reload = loadStaff;
 
   return container;
 }
