@@ -98,8 +98,6 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
         const field = valueSpan.dataset.field;
         if (!field || valueSpan.dataset.editable === 'false') return;
 
-        // Only dropdown fields become editable
-        if (!valueSpan.classList.contains('dropdown')) return;
 
         // If already converted, skip
         if (valueSpan.querySelector('[data-edit-widget]')) return;
@@ -168,32 +166,51 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
           return;
         }
 
-        // Select dropdown that uses data-options
-        const select = document.createElement('select');
-        select.className = 'form-select text-end fw-semibold';
-        select.dataset.field = field;
+        if (valueSpan.classList.contains('dropdown')) {
 
-        const optionsAttr = valueSpan.dataset.options || '';
-        const opts = optionsAttr
-          .split(',')
-          .map((o) => o.trim())
-          .filter(Boolean);
 
-        const currentText = valueSpan.textContent?.trim() || '';
-        if (currentText && !opts.includes(currentText)) opts.unshift(currentText);
+          // Select dropdown that uses data-options
+          const select = document.createElement('select');
+          select.className = 'form-select text-end fw-semibold';
+          select.dataset.field = field;
 
-        opts.forEach((opt) => {
-          const optionEl = document.createElement('option');
-          optionEl.value = opt;
-          optionEl.textContent = opt;
-          if (opt === currentText) optionEl.selected = true;
-          select.appendChild(optionEl);
-        });
+          const optionsAttr = valueSpan.dataset.options || '';
+          const opts = optionsAttr
+            .split(',')
+            .map((o) => o.trim())
+            .filter(Boolean);
 
-        if (valueSpan.dataset.transform) select.dataset.transform = valueSpan.dataset.transform;
+          const currentText = valueSpan.textContent?.trim() || '';
+          if (currentText && !opts.includes(currentText)) opts.unshift(currentText);
 
-        valueSpan.textContent = '';
-        valueSpan.appendChild(select);
+          opts.forEach((opt) => {
+            const optionEl = document.createElement('option');
+            optionEl.value = opt;
+            optionEl.textContent = opt;
+            if (opt === currentText) optionEl.selected = true;
+            select.appendChild(optionEl);
+          });
+
+          if (valueSpan.dataset.transform) select.dataset.transform = valueSpan.dataset.transform;
+
+          valueSpan.textContent = '';
+          valueSpan.appendChild(select);
+        } else {
+          //Here it creates an input box, so the user can edit the value.
+          if (!valueSpan.querySelector('input')) {
+            const currentValue = valueSpan.textContent?.trim() || '';
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = currentValue; //Makes sure to insert the current value, after you click edit.
+            input.className = 'form-control text-end fw-semibold';
+            input.dataset.field = field;
+            if (valueSpan.dataset.transform) {
+              input.dataset.transform = valueSpan.dataset.transform;
+            }
+            valueSpan.textContent = '';
+            valueSpan.appendChild(input);
+          }
+        }
       });
 
       // Save button
