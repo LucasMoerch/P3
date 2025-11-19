@@ -2,7 +2,7 @@ import { navigate } from '../main';
 import { renderLogoNavbar } from './logoComponent/logo';
 import { clearAuth } from '../auth/auth';
 import http from '../api/http';
-import {renderLogoutButton} from "./logoutButtonComponent/logoutButton"
+import { renderLogoutButton } from './logoutButtonComponent/logoutButton';
 
 export function getPageTitle(path: string): string {
   switch (path) {
@@ -97,13 +97,13 @@ export function renderHeaderAndNavbar(): HTMLElement {
   });
 
   sidebarBody.appendChild(ul);
-    const logoutContainer = document.createElement('div');
-    logoutContainer.className = 'mt-auto p-3 border-top border-secondary';
+  const logoutContainer = document.createElement('div');
+  logoutContainer.className = 'mt-auto p-3 border-top border-secondary';
 
-// Use your new LogoutButton component
-    logoutContainer.appendChild(renderLogoutButton());
+  // Use your new LogoutButton component
+  logoutContainer.appendChild(renderLogoutButton());
 
-    sidebarBody.appendChild(logoutContainer);
+  sidebarBody.appendChild(logoutContainer);
   sidebar.appendChild(sidebarBody);
 
   // Attach click handlers

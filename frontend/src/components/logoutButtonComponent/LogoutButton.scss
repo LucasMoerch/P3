@@ -1,13 +1,15 @@
 // components/LogoutButton/LogoutButton.scss
 
 .logout-btn {
-  background-color: #dc3545 !important;  // red
+  background-color: #dc3545 !important; // red
   color: white !important;
   border: none;
   padding: 10px 14px;
   border-radius: 6px;
   font-weight: 600;
-  transition: background-color 0.15s ease, opacity 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    opacity 0.15s ease;
 
   i {
     color: white !important;
@@ -24,7 +26,7 @@
   }
 
   &.loading::after {
-    content: "";
+    content: '';
     position: absolute;
     top: 50%;
     right: 12px;
@@ -39,6 +41,10 @@
 }
 
 @keyframes spin {
-  from { transform: translateY(-50%) rotate(0deg); }
-  to   { transform: translateY(-50%) rotate(360deg); }
+  from {
+    transform: translateY(-50%) rotate(0deg);
+  }
+  to {
+    transform: translateY(-50%) rotate(360deg);
+  }
 }

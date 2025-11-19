@@ -29,7 +29,7 @@ export function renderLogoutButton(): HTMLButtonElement {
     }
 
     // wait ~250ms so animation is visible
-    await new Promise(resolve => setTimeout(resolve, 20));
+    await new Promise((resolve) => setTimeout(resolve, 20));
 
     clearAuth();
     localStorage.removeItem('token');
