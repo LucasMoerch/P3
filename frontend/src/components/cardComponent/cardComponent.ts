@@ -25,17 +25,13 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
     'btn back-button border-0 bg-transparent text-primary position-absolute top-0 start-0 m-3 fs-2';
   closeBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
 
-  // preload users/clients for cases
   let preloaded: { users?: UserDTO[]; clients?: any[] } = {};
-
-  // If from cases endpoint, load users and clients
   const hasCasesEndpoint = options.endpoint === 'cases';
   if (hasCasesEndpoint) {
     loadUsersAndClients()
       .then((r) => {
         preloaded = r;
 
-        // populate assignedUsers display names in existing card content (if present)
         const assignedSpans = card.querySelectorAll<HTMLElement>(
           '.info-row .value.dropdown[data-field="assignedUsers"]',
         );
@@ -53,7 +49,6 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
           }
         });
 
-        // populate clientId name if present
         const clientSpans = card.querySelectorAll<HTMLElement>(
           '.info-row .value[data-field="clientId"]',
         );
@@ -80,7 +75,6 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
     card.appendChild(editBtn);
 
     editBtn.addEventListener('click', async () => {
-      // ensure preloaded data exists for special fields
       if (hasCasesEndpoint && (!preloaded.users || !preloaded.clients)) {
         try {
           preloaded = await loadUsersAndClients();
@@ -97,12 +91,8 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
 
         const field = valueSpan.dataset.field;
         if (!field || valueSpan.dataset.editable === 'false') return;
-
-
-        // If already converted, skip
         if (valueSpan.querySelector('[data-edit-widget]')) return;
 
-        // If assignedUsers, use custom checkbox dropdown
         if (field === 'assignedUsers') {
           const users = preloaded.users || [];
           const assignedFromAttr = valueSpan.dataset.assignedIds
@@ -126,11 +116,9 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
 
           (valueSpan as any).__getSelectedIds = getSelectedIds;
           (valueSpan as any).__setSelectedIds = setSelectedIds;
-
           return;
         }
 
-        // If clientId field use single-select dropdown
         if (field === 'clientId') {
           const clients = preloaded.clients || [];
           const select = document.createElement('select');
@@ -167,9 +155,6 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
         }
 
         if (valueSpan.classList.contains('dropdown')) {
-
-
-          // Select dropdown that uses data-options
           const select = document.createElement('select');
           select.className = 'form-select text-end fw-semibold';
           select.dataset.field = field;
@@ -195,25 +180,24 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
 
           valueSpan.textContent = '';
           valueSpan.appendChild(select);
-        } else {
-          //Here it creates an input box, so the user can edit the value.
-          if (!valueSpan.querySelector('input')) {
-            const currentValue = valueSpan.textContent?.trim() || '';
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.value = currentValue; //Makes sure to insert the current value, after you click edit.
-            input.className = 'form-control text-end fw-semibold';
-            input.dataset.field = field;
-            if (valueSpan.dataset.transform) {
-              input.dataset.transform = valueSpan.dataset.transform;
-            }
-            valueSpan.textContent = '';
-            valueSpan.appendChild(input);
+          return;
+        }
+
+        if (!valueSpan.querySelector('input')) {
+          const currentValue = valueSpan.textContent?.trim() || '';
+          const input = document.createElement('input');
+          input.type = 'text';
+          input.value = currentValue;
+          input.className = 'form-control text-end fw-semibold';
+          input.dataset.field = field;
+          if (valueSpan.dataset.transform) {
+            input.dataset.transform = valueSpan.dataset.transform;
           }
+          valueSpan.textContent = '';
+          valueSpan.appendChild(input);
         }
       });
 
-      // Save button
       const saveBtn = document.createElement('button');
       saveBtn.className = 'btn btn-primary btn-lg';
       saveBtn.innerText = 'Save';
@@ -223,7 +207,6 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
       btnContainer.appendChild(saveBtn);
       card.appendChild(btnContainer);
 
-      // small helpers used only in save scope to ensure proper typing
       const setNestedValue = (target: Record<string, unknown>, path: string, value: unknown) => {
         const segments = path.split('.');
         let current: Record<string, unknown> = target;
@@ -243,20 +226,17 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
 
       const buildIdToName = () => {
         const idToName = new Map<string, string>();
-
         (preloaded.users || []).forEach((u) => {
           const uid = String((u as any).id ?? (u as any)._id ?? '');
           const uname =
             u.profile?.displayName ?? (u as any).auth?.email ?? (u as any).auth?.email ?? uid;
           if (uid) idToName.set(uid, uname);
         });
-
         (preloaded.clients || []).forEach((c: any) => {
           const cid = String(c.id ?? c._id ?? '');
           const cname = c.name ?? c.displayName ?? c.company ?? c.email ?? cid;
           if (cid) idToName.set(cid, cname);
         });
-
         return idToName;
       };
 
@@ -269,12 +249,14 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
         const dropdownSpans = Array.from(
           card.querySelectorAll<HTMLElement>('.info-row .value.dropdown'),
         );
+        const inputs = Array.from(
+          card.querySelectorAll<HTMLInputElement>('.info-row .value input'),
+        );
 
         const idToName = buildIdToName();
 
-        const updates: Array<{ parent: HTMLElement; field: string; value: string | string[] }> = [];
+        const updates: Array<{ parent: HTMLElement; value: string | string[] }> = [];
 
-        // Handle normal select fields
         selects.forEach((sel) => {
           const field = sel.dataset.field;
           if (!field) return;
@@ -301,10 +283,9 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
           }
 
           setNestedValue(updated, field, value);
-          updates.push({ parent: sel.parentElement as HTMLElement, field, value });
+          updates.push({ parent: sel.parentElement as HTMLElement, value });
         });
 
-        // Handle dropdown spans
         dropdownSpans.forEach((span) => {
           const field = span.dataset.field;
           if (!field) return;
@@ -314,20 +295,41 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
           if (field === 'assignedUsers' && typeof getter === 'function') {
             const value = normalizeIdArray(getter());
             setNestedValue(updated, 'assignedUserIds', value);
-            updates.push({ parent: span, field: 'assignedUserIds', value });
+            updates.push({ parent: span, value });
             return;
           }
 
           if (typeof getter === 'function') {
             const value = getter() as string[];
             setNestedValue(updated, field, value);
-            updates.push({ parent: span, field, value });
+            updates.push({ parent: span, value });
           }
         });
 
-        // keep id unchanged
+        inputs.forEach((input) => {
+          const field = input.dataset.field;
+          if (!field) return;
+          let value: string | string[] = input.value;
+          switch (input.dataset.transform) {
+            case 'uppercase':
+              value = (value as string).toUpperCase();
+              break;
+            case 'commaList':
+              value = (value as string)
+                .split(',')
+                .map((part) => part.trim())
+                .filter((part) => part.length > 0);
+              break;
+            default:
+              break;
+          }
+          setNestedValue(updated, field, value);
+          const parent = input.parentElement as HTMLElement;
+          if (parent) updates.push({ parent, value });
+        });
+
         if ('id' in (options.data ?? {})) {
-          updated.id = (options.data as any).id;
+          (updated as any).id = (options.data as any).id;
         }
 
         try {
@@ -337,9 +339,8 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
 
           await http.put(`/${options.endpoint}/${options.data?.id}`, updated);
 
-          // create friendly text using friendlyForValue function
           updates.forEach(({ parent, value }) => {
-            parent.textContent = friendlyForValue(value, idToName) || 'None';
+            parent.textContent = friendlyForValue(value, idToName) || (Array.isArray(value) ? value.join(', ') : (value ?? 'None') as string) || 'None';
           });
 
           overlay.remove();
@@ -355,7 +356,6 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
     });
   }
 
-  // Append card inside overlay
   const header = document.createElement('div');
   header.className = 'header mt-4 text-center fw-semibold fs-3 ';
   header.innerText = 'placeholder';
@@ -375,6 +375,5 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
     if (event.target === overlay) overlay.remove();
   });
 
-  // Return overlay, but let caller add content to the card
   return overlay;
 }
