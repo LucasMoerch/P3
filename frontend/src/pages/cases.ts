@@ -9,23 +9,23 @@ export type CaseDto = {
   clientId: string;
   title: string;
   description?: string;
-  status: 'OPEN' | 'CLOSED';
+  status: 'OPEN' | 'ON_HOLD' | 'CLOSED';
   assignedUserIds: string[];
   createdAt: string;
   updatedAt: string;
 };
 
 export function inspectCase(c: CaseDto): HTMLElement {
-    const overlay: HTMLElement = renderCard({ edit: true, endpoint: 'cases', data: c });
-    const card: HTMLElement = overlay.querySelector('.card') as HTMLElement;
-    const header: HTMLElement = card.querySelector('.header') as HTMLElement;
-    const body: HTMLElement = card.querySelector('.body') as HTMLElement;
+  const overlay: HTMLElement = renderCard({ edit: true, endpoint: 'cases', data: c });
+  const card: HTMLElement = overlay.querySelector('.card') as HTMLElement;
+  const header: HTMLElement = card.querySelector('.header') as HTMLElement;
+  const body: HTMLElement = card.querySelector('.body') as HTMLElement;
 
-    header.innerText = c.title;
+  header.innerText = c.title;
 
-    // Body markup
-    if (body) {
-        body.innerHTML = `
+  // Body markup
+  if (body) {
+    body.innerHTML = `
         <div class="card profile-card w-100 shadow-sm border-0">
           <div class="card-body fs-5">
             <div class="info-row d-flex justify-content-between border-bottom py-3">
@@ -39,8 +39,13 @@ export function inspectCase(c: CaseDto): HTMLElement {
 
             <div class="info-row d-flex justify-content-between border-bottom py-3">
               <span class="label text-muted fw-medium">Client ID</span>
-              <span class="value fw-semibold" data-field="clientId">${c.clientId}</span>
-            </div>
+              <span
+                class="value dropdown fw-semibold"
+                data-field="clientId"
+                data-client-id="${c.clientId ?? ''}"
+              >
+                ${c.clientId ? c.clientId : 'None'}
+              </span>            </div>
 
             <div class="info-row d-flex justify-content-between border-bottom py-3">
               <span class="label text-muted fw-medium">Description</span>
@@ -49,12 +54,18 @@ export function inspectCase(c: CaseDto): HTMLElement {
 
             <div class="info-row d-flex justify-content-between border-bottom py-3">
               <span class="label text-muted fw-medium">Status</span>
-              <span class="value fw-semibold" data-field="status">${c.status}</span>
+              <span class="value dropdown fw-semibold" data-field="status" data-options="OPEN,ON_HOLD,CLOSED">${c.status}</span>
             </div>
 
             <div class="info-row d-flex justify-content-between border-bottom py-3">
               <span class="label text-muted fw-medium">Assigned Users</span>
-              <span class="value fw-semibold" data-field="assignedUsers">${c.assignedUserIds.length ? c.assignedUserIds.join(', ') : 'None'}</span>
+              <span
+                class="value dropdown fw-semibold"
+                data-field="assignedUsers"
+                data-assigned-ids='${JSON.stringify(c.assignedUserIds ?? [])}'
+              >
+                ${c.assignedUserIds && c.assignedUserIds.length ? c.assignedUserIds.join(', ') : 'None'}
+              </span>
             </div>
 
             <div class="info-row d-flex justify-content-between border-bottom py-3">
@@ -69,10 +80,10 @@ export function inspectCase(c: CaseDto): HTMLElement {
           </div>
         </div>
       `;
-    }
-    card.appendChild(renderTabs({ entityType: 'cases', entityId: c.id }));
+  }
+  card.appendChild(renderTabs({ entityType: 'cases', entityId: c.id }));
 
-    return overlay;
+  return overlay;
 }
 
 export function renderCasesPage(): HTMLElement {

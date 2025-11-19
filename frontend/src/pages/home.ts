@@ -1,7 +1,7 @@
 import './pageStyles/home.scss';
 import http from '../api/http';
-import type { CaseDto } from "./cases";
-import { renderAddNewCaseCard} from "../components/newCard/addNewCaseCard";
+import type { CaseDto } from './cases';
+import { renderAddNewCaseCard } from '../components/newCard/addNewCaseCard';
 import { inspectCase } from './cases';
 
 export function renderHomePage(): HTMLElement {
@@ -81,32 +81,31 @@ export function renderHomePage(): HTMLElement {
 
   container.appendChild(headerRow);
 
-
   //Creates the box to hold active tasks
   const active_cases_container = document.createElement('div');
   active_cases_container.className = `d-flex flex-wrap justify-content-between align-items-start w-100 mt-3`;
   container.appendChild(active_cases_container);
 
-    async function loadCases() {
-        try {
-            const cases = (await http.get('/cases')) as CaseDto[];
-            console.log('Fetched cases:', cases);
+  async function loadCases() {
+    try {
+      const cases = (await http.get('/cases')) as CaseDto[];
+      console.log('Fetched cases:', cases);
 
-            // Only show active/open cases
-            const activeCases = cases.filter((c) => c.status === 'OPEN');
-            active_cases_container.innerHTML = ''; // Clear old content
+      // Only show active/open cases
+      const activeCases = cases.filter((c) => c.status === 'OPEN');
+      active_cases_container.innerHTML = ''; // Clear old content
 
-            activeCases.forEach((c) => {
-                const caseBtn = document.createElement('button');
-                caseBtn.className = `
+      activeCases.forEach((c) => {
+        const caseBtn = document.createElement('button');
+        caseBtn.className = `
                 card border-0 shadow-sm bg-white text-dark rounded p-3
                 d-flex flex-column justify-content-start gap-1 mb-3
                 `;
-            caseBtn.style.width = '48%';
-            caseBtn.style.height = '130px';
-            caseBtn.style.cursor = 'pointer';
+        caseBtn.style.width = '48%';
+        caseBtn.style.height = '130px';
+        caseBtn.style.cursor = 'pointer';
 
-            caseBtn.innerHTML = `
+        caseBtn.innerHTML = `
               <div class="d-flex align-items-center justify-content-between mb-2">
                 <span class="fs-5 fw-semibold">${c.title}</span>
                 <i class="fa-solid fa-folder-open fs-5"></i>
@@ -115,21 +114,21 @@ export function renderHomePage(): HTMLElement {
               <p class="fs-6 text-muted mb-0">Created: ${new Date(c.createdAt).toLocaleDateString('da-DK')}</p>
               `;
 
-            // When clicked, open the case popup
-            caseBtn.addEventListener('click', () => {
-            const popup = inspectCase(c);
-            document.body.appendChild(popup);
-            console.log('Opened case:', c.id);
-            });
+        // When clicked, open the case popup
+        caseBtn.addEventListener('click', () => {
+          const popup = inspectCase(c);
+          document.body.appendChild(popup);
+          console.log('Opened case:', c.id);
+        });
 
-            active_cases_container.appendChild(caseBtn);
-            });
-        } catch (err) {
-            console.error('Failed to fetch cases:', err);
-        }
+        active_cases_container.appendChild(caseBtn);
+      });
+    } catch (err) {
+      console.error('Failed to fetch cases:', err);
     }
+  }
 
-    loadCases();
+  loadCases();
 
   return container;
 }
