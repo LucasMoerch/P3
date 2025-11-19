@@ -22,15 +22,29 @@ export function renderLoginPage(): HTMLElement {
   card.className = 'card p-5 login-card d-flex flex-column justify-content-center ';
 
   const gContainer = document.createElement('div');
+  gContainer.className = 'google-login-container d-flex flex-column align-items-center';
   gContainer.innerHTML = `
     <div id="g_id_onload"
          data-client_id="${GOOGLE_CLIENT_ID}"
          data-callback="onGoogleCredential"
          data-auto_prompt="false">
     </div>
-    <div id="gBtn" class="g_id_signin" data-type="standard" data-size="large" data-theme="outline"></div>
+    <div id="gBtn"
+         class="g_id_signin"
+         data-type="standard"
+         data-size="large"
+         data-theme="outline"></div>
   `;
 
+  const gButton = document.createElement('button');
+  gButton.type = 'button';
+  gButton.className = 'btn btn-primary mt-3 shadow-lg border';
+  gButton.textContent = 'Log ind med Google';
+  gButton.addEventListener('click', () => {
+    const googleButton = gContainer.querySelector<HTMLDivElement>('.g_id_signin div[role=button]');
+    googleButton?.click();
+  });
+  gContainer.appendChild(gButton);
   // load GIS script once
   function ensureGisLoaded() {
     if (document.querySelector('script[src*="gsi/client"]')) return;

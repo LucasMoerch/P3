@@ -33,10 +33,9 @@ export function renderCasesPage(): HTMLElement {
       const cases = (await http.get('/cases')) as CaseDto[];
 
       const caseData = (cases ?? []).map((c) => ({
-        title: c.title || 'Untitled',
-        description: c.description || '-',
+        adress: c.title || 'Untitled',
         status: c.status || 'UNKNOWN',
-        createdAt: new Date(c.createdAt).toLocaleDateString('da-DK'),
+        Date_Created: new Date(c.createdAt).toLocaleDateString('da-DK'),
       }));
 
       // clear loading...
@@ -45,12 +44,37 @@ export function renderCasesPage(): HTMLElement {
       // render table and append
       const tableElement = renderTable(caseData);
       realDataSection.appendChild(tableElement);
+      
+
 
       // make rows clickable like InspectUser
       const rows = tableElement.querySelectorAll('tr');
       rows.forEach((row, index) => {
         // Skip header row
         if (index === 0) return;
+
+
+
+        //Add color coding to status column
+        // Status column is the second cell
+        const statusCell = row.querySelectorAll('td')[1] as HTMLTableCellElement | undefined;
+  
+
+        switch (statusCell?.textContent) {
+          case 'CLOSED':
+            statusCell.classList.add('text-danger');
+            break;
+          case 'OPEN':
+            statusCell.classList.add('text-success');
+            break;
+          case 'ON_HOLD':
+            statusCell.classList.add('text-warning');
+            statusCell.innerText = 'ON HOLD';
+            break;
+          
+          default:
+            break;
+        }
 
         row.addEventListener('click', (): void => {
           const selectedCase = cases[index - 1]; // match index with case
@@ -63,7 +87,11 @@ export function renderCasesPage(): HTMLElement {
       console.error('Failed to load cases:', err);
       realDataSection.innerHTML = '<p>Failed to load case data.</p>';
     }
+
   }
+  
+  
+    
 
   // InspectCase - matches the style/behavior of inspectUser
   function inspectCase(c: CaseDto): HTMLElement {

@@ -64,7 +64,9 @@ public class TimeController {
         time.setTotalTime(totalTime);
         time.setDescription(description);
         time.setDate(date);
-        time.setCaseId(caseId);
+        if (caseId != null){
+            time.setCaseId("Other");
+        }
 
         var saved = repo.save(time);
         return ResponseEntity.ok(saved);

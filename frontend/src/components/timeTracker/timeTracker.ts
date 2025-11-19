@@ -226,7 +226,7 @@ export function renderTimeTracker(): HTMLElement {
 
   function renderTimeTrackingCard(): HTMLElement {
     // Create overlay
-    const overlay: HTMLElement = renderCard(true);
+    const overlay: HTMLElement = renderCard();
     const card: HTMLElement = overlay.querySelector('.card') as HTMLElement;
     const header: HTMLElement = card.querySelector('.header') as HTMLElement;
     const body: HTMLElement = card.querySelector('.body') as HTMLElement;
@@ -237,6 +237,43 @@ export function renderTimeTracker(): HTMLElement {
 
     //To replace the placeholder
     header.innerText = 'Time Registration';
+
+    const popup: HTMLDivElement = document.createElement('div');
+    popup.className = 'completion-popup';
+    popup.innerHTML = `
+      <div class="popup-inner light-bg rounded shadow p-4 text-center">
+        <h5 class="mb-2">Complete time entry?</h5>
+        <p class="text-muted small mb-3">Review the details below before submitting.</p>
+        <div class="popup-summary text-start border rounded-3 p-3 mb-3 lighter-bg"></div>
+        <div class="d-flex justify-content-end gap-2">
+          <button type="button" class="btn btn-outline-dark popup-cancel rounded-pill">Keep editing</button>
+          <button type="button" class="btn btn-primary popup-confirm rounded-pill">Submit</button>
+        </div>
+      </div>
+    `;
+    const popupSummary = popup.querySelector('.popup-summary') as HTMLDivElement;
+    const popupConfirmBtn = popup.querySelector('.popup-confirm') as HTMLButtonElement;
+    const popupCancelBtn = popup.querySelector('.popup-cancel') as HTMLButtonElement;
+    const openCompletionPopup = () => {
+      if (popup) {
+        popup.classList.add('show');
+      }
+    };
+    const closeCompletionPopup = () => {
+      popup.classList.remove('show');
+    };
+
+    //global variable to hold data until confirmed
+    let pendingCompletionData:
+      | {
+          startTime: string;
+          stopTime: string;
+          totalTime: string;
+          description: string;
+          date: string;
+          caseId: string;
+        }
+      | null = null;
 
     const dropDownRow: HTMLDivElement = document.createElement('div');
     dropDownRow.innerHTML = `
@@ -269,7 +306,7 @@ export function renderTimeTracker(): HTMLElement {
     stopTimeBtn.innerText = 'Stop Time';
 
     const completeBtn: HTMLButtonElement = document.createElement('button');
-    completeBtn.className = 'btn btn-primary shadow col-4 rounded-pill me-4';
+    completeBtn.className = 'btn btn-primary shadow col-4 rounded-pill ms-4';
     completeBtn.innerText = 'Complete';
 
     const startStopTimeRow: HTMLDivElement = document.createElement('div');
@@ -314,9 +351,12 @@ export function renderTimeTracker(): HTMLElement {
         value="00:00:00">
      </div>
     </div>`;
-    const calender: HTMLElement = renderCalendar();
+    const calender: HTMLElement = renderCalendar(
+    );
 
     // Build card
+
+    overlay.appendChild(popup);
     body.appendChild(dropDownRow);
     overlay.appendChild(card);
     card.appendChild(header);
@@ -400,37 +440,68 @@ export function renderTimeTracker(): HTMLElement {
       displayTime('stopTime', stopTimeNow);
       updateTotalTimeField(startTimeInputEl, stopTimeInputEl, totalTimeInputEl);
       console.log('original time', originalStartTime);
+      stopTimeBtn.remove();
     });
 
 
     completeBtn.addEventListener('click', (): void => {
-      //gets the start time
-      const startTimeInput: string = (document.getElementById('startTime') as HTMLInputElement)
-        .value;
-      //gets the stop time
+      const startTimeInput: string = (document.getElementById('startTime') as HTMLInputElement).value;
       const stopTimeInput: string = (document.getElementById('stopTime') as HTMLInputElement).value;
-      //Gets the text from the description
-      const description: string = (document.getElementById('description') as HTMLInputElement)
-        .value;
-
-      const calenderField: string = (document.getElementById('dateInput') as HTMLInputElement)
-        .value;
-
+      const descriptionInput: string = (document.getElementById('description') as HTMLInputElement).value;
+      const calenderField: string = (document.getElementById('dateInput') as HTMLInputElement).value;
       const caseId: string = getCaseIdFromSelect();
+      const formattedDate = getDateNow(calenderField);
+      const totalTime = calculateTotalTime(startTimeInput, stopTimeInput);
 
-      console.log('Selected case ID:', caseId);
-
-      //updates the values after pressing complete
-      updateTimeData(
-        startTimeInput,
-        stopTimeInput,
-        calculateTotalTime(startTimeInput, stopTimeInput),
-        description,
-        getDateNow(calenderField),
+      pendingCompletionData = {
+        startTime: startTimeInput,
+        stopTime: stopTimeInput,
+        totalTime: totalTime,
+        description: descriptionInput,
+        date: formattedDate,
         caseId,
+      };
+
+      popupSummary.innerHTML = `
+        <div class="mb-3">
+          <div><strong>Case:</strong> ${caseId || 'Not selected'}</div>
+          <div><strong>Date:</strong> ${formattedDate}</div>
+          <div><strong>Start:</strong> ${startTimeInput}</div>
+          <div><strong>Stop:</strong> ${stopTimeInput}</div>
+          <div><strong>Total:</strong> ${totalTime}</div>
+        </div>
+        <div>
+          <strong>Description:</strong>
+          <p class="mb-0 hide-long-text">${descriptionInput ? descriptionInput : 'No description added.'}</p>
+        </div>
+      `;
+
+      openCompletionPopup();
+    });
+
+    popupCancelBtn.addEventListener('click', () => {
+      pendingCompletionData = null;
+      closeCompletionPopup();
+    });
+
+    popupConfirmBtn.addEventListener('click', () => {
+      if (!pendingCompletionData) {
+        closeCompletionPopup();
+        return;
+      }
+
+      updateTimeData(
+        pendingCompletionData.startTime,
+        pendingCompletionData.stopTime,
+        pendingCompletionData.totalTime,
+        pendingCompletionData.description,
+        pendingCompletionData.date,
+        pendingCompletionData.caseId,
         originalStartTime,
       );
 
+      pendingCompletionData = null;
+      closeCompletionPopup();
       document.body.removeChild(overlay);
     });
     return overlay;
