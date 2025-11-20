@@ -70,9 +70,7 @@ public class TimeController {
         var saved = repo.save(time);
         return ResponseEntity.ok(saved);
     }
-    record TimeEntryDto(String startTime, String stopTime) {}
 
-<<<<<<< HEAD
     // Keep the DTO and the endpoint INSIDE the class
     record TimeEntryDto(String startTime, String stopTime) {}
 
@@ -85,13 +83,3 @@ public class TimeController {
                 .orElseGet(() -> ResponseEntity.noContent().build());
     }
 }
-=======
-    @GetMapping("/users/{userId}/last-time")
-    public ResponseEntity<TimeEntryDto> getLastTime(@PathVariable String userId) {
-        return repo.findFirstByUserIdOrderByStartTimeDesc(userId)
-                .or(() -> repo.findById(userId))
-                .map(time -> ResponseEntity.ok(new TimeEntryDto(time.getStartTime(), time.getStopTime())))
-                .orElseGet(() -> ResponseEntity.noContent().build());
-    }
-}
->>>>>>> develop
