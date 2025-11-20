@@ -13,9 +13,9 @@ export function renderSearchComponent(): HTMLElement {
   //Input field
   const input = document.createElement('input');
   input.type = 'text';
-  input.className = 'form-control bg-white text-dark shadow-none';
+  input.placeholder = 'Search...';
+  input.className = 'Search-input light-bg text-dark shadow-sm ';
   input.id = 'floatingSearch';
-  input.placeholder = ''; // Bootstrap floating labels still need a placeholder
 
   //Label (for floating effect)
   const label = document.createElement('label');
