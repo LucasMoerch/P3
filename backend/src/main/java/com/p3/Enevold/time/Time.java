@@ -5,18 +5,22 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document("times")
 public class Time {
-
+    @Id
+    private String id;
     private String caseId;
-    @Id private String userId;
+    private String userId;
     private String userName;
     private String date; // date of the work session
     private String startTime; // time of start
     private String stopTime;  // stop time
     private String totalTime; // total time worked
     private String description; // description of work done
-    
+
 
     // Getters and setters
+
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
 
     public String getUserId() { return userId; }
     public void setUserId(String userId) { this.userId = userId; }
@@ -42,5 +46,3 @@ public class Time {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 }
-
-

@@ -63,9 +63,7 @@ public class TimeController {
         time.setTotalTime(totalTime);
         time.setDescription(description);
         time.setDate(date);
-        if (caseId != null){
-            time.setCaseId("Other");
-        }
+        time.setCaseId(caseId);
 
         var saved = repo.save(time);
         return ResponseEntity.ok(saved);
@@ -77,9 +75,29 @@ public class TimeController {
     @GetMapping("/users/{userId}/last-time")
     public ResponseEntity<TimeEntryDto> getLastTime(@PathVariable String userId) {
         return repo.findFirstByUserIdOrderByStartTimeDesc(userId)
-                // ⚠️ only keep this fallback if the entity ID == userId
+                //  only keep this fallback if the entity ID == userId
                 .or(() -> repo.findById(userId))
                 .map(time -> ResponseEntity.ok(new TimeEntryDto(time.getStartTime(), time.getStopTime())))
                 .orElseGet(() -> ResponseEntity.noContent().build());
+    }
+
+    // all time regs for a given case
+    @GetMapping("/cases/{caseId}")
+    public ResponseEntity<List<Time>> getTimesByCase(@PathVariable String caseId) {
+        List<Time> times = repo.findByCaseId(caseId);
+        if (times.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(times);
+    }
+
+    // all time regs for a given user
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<List<Time>> getTimesByUser(@PathVariable String userId) {
+        List<Time> times = repo.findByUserId(userId);
+        if (times.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(times);
     }
 }

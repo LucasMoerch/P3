@@ -340,7 +340,10 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
           await http.put(`/${options.endpoint}/${options.data?.id}`, updated);
 
           updates.forEach(({ parent, value }) => {
-            parent.textContent = friendlyForValue(value, idToName) || (Array.isArray(value) ? value.join(', ') : (value ?? 'None') as string) || 'None';
+            parent.textContent =
+              friendlyForValue(value, idToName) ||
+              (Array.isArray(value) ? value.join(', ') : ((value ?? 'None') as string)) ||
+              'None';
           });
 
           overlay.remove();
