@@ -16,7 +16,7 @@ export function renderHomePage(): HTMLElement {
 
   const hours_worked = document.createElement('button');
   hours_worked.className = `
-      card border-0 shadow-sm bg-white text-dark rounded p-3
+      card border-0 shadow-sm lighter-bg text-dark rounded p-3
       d-flex flex-column justify-content-start gap-1 w-100
       `;
   hours_worked.style.height = '130px';
@@ -40,7 +40,7 @@ export function renderHomePage(): HTMLElement {
 
   const create_new = document.createElement('button');
   create_new.className = `
-      card border-0 shadow-sm bg-white text-dark rounded
+      card border-0 shadow-sm lighter-bg text-dark rounded
       d-flex flex-column justify-content-center align-items-center
       w-100 p-3
       `;
