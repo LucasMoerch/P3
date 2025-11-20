@@ -48,7 +48,7 @@ function renderTimeList(entries: TimeEntry[]) {
         (t) => `
         <li class="list-group-item d-flex justify-content-between">
           <div>
-            <strong>${t.date}</strong> ${t.startTime} - ${t.stopTime} (${t.totalTime})<br/>
+            <strong>${t.date}</strong> ${t.startTime} - ${t.stopTime} (${t.totalTime}) - <small>${t.caseId}</small><br/>
             <small>${t.userName}</small><br/>
             <span>${t.description ?? ''}</span>
           </div>

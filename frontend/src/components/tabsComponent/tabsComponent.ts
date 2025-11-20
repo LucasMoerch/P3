@@ -25,7 +25,7 @@ export function renderTabs(config: TabsConfig) {
       </li>
       <li class="nav-item">
         <a class="nav-link" data-tab="times">
-          <i class="fa-solid fa-note-sticky"></i>Times
+          <i class="fa-solid fa-stopwatch"></i>Time Registrations
         </a>
       </li>
     </ul>
