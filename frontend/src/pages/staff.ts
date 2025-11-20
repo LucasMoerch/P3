@@ -189,7 +189,6 @@ export function renderStaffPage(): HTMLElement {
 
   const searchEl = renderSearchComponent((query) => {
       const rows = realDataSection.querySelectorAll('tr');
-
       rows.forEach((row, index) => {
           if (index === 0) return; // skip header
           const nameCell = row.querySelector('td:first-child'); // Searches first column
@@ -209,7 +208,7 @@ export function renderStaffPage(): HTMLElement {
     try {
       const users = (await http.get('/users')) as UserDTO[];
       const staffData = (users ?? []).map((user) => ({
-        name: user.profile?.displayName,
+        name: user.profile?.displayName || user.auth.email,
         role: user.roles.join(', '),
       }));
       // remove "loading..."

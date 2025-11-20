@@ -1,13 +1,13 @@
 import { renderCard } from '../cardComponent/cardComponent';
 import { createFloatingInput, createFloatingTextarea } from '../floatingLabel/floatingLabel';
 import type { UserRole } from '../../pages/staff';
-import './addNewStaffCard.scss';
+import {showCancelConfirmation} from "../cancelPopUp/cancelPopUp";
 
 export function renderAddNewStaffCard(
   onInvite?: (email: string, role: UserRole[]) => Promise<boolean>,
 ): HTMLElement {
   // Create overlay
-  const overlay = renderCard({ edit: false, endpoint: 'users/create' });
+  const overlay = renderCard({ edit: false, endpoint: 'users/create', hasChanges: () => isTyped});
   const card: HTMLElement = overlay.querySelector('.card') as HTMLElement;
   const header: HTMLElement = card.querySelector('.header') as HTMLElement;
   const body: HTMLElement = card.querySelector('.body') as HTMLElement;
@@ -58,51 +58,32 @@ export function renderAddNewStaffCard(
   card.appendChild(body);
   overlay.appendChild(card);
 
+  //Only show the cancel if the user has typed something
+  let isTyped = false;
+
+  const markTypedInput = (el: HTMLInputElement | HTMLTextAreaElement) => {
+      if (el.value.trim() !== "") isTyped = true;
+  };
+
+  const nameInput = (formContainer.querySelector('#staffName') as HTMLInputElement);
+  const emailInput = (formContainer.querySelector('#staffEmail') as HTMLInputElement);
+  const isAdminInput = (formContainer.querySelector('#isAdmin') as HTMLInputElement);
+  const descInput = (formContainer.querySelector('#staffDesc') as HTMLTextAreaElement);
+
+  nameInput.addEventListener('input', () => markTypedInput(nameInput));
+  emailInput.addEventListener('input', () => markTypedInput(emailInput));
+  isAdminInput.addEventListener('input', () => markTypedInput(isAdminInput));
+  descInput.addEventListener('input', () => markTypedInput(descInput));
+
   cancelBtn.addEventListener('click', () => {
-    showCancelConfirmation();
+      if (isTyped) {
+          showCancelConfirmation(overlay);
+      } else {
+          overlay.remove();
+      }
   });
 
-  function showCancelConfirmation() {
-    const wrapper = document.createElement("div");
-
-    wrapper.innerHTML = `
-    <div class="cancel-confirm-overlay">
-      <div class="card cancel-confirm-card">
-        <p>Are you sure you want to cancel?</p>
-        <div class="cancel-confirm-buttons">
-          <button id="confirmYes" class="btn btn-danger px-3">Yes</button>
-          <button id="confirmNo" class="btn btn-secondary px-3">No</button>
-        </div>
-      </div>
-    </div>
-    `;
-
-    document.body.appendChild(wrapper);
-
-    const yesBtn = wrapper.querySelector("#confirmYes") as HTMLButtonElement;
-    const noBtn = wrapper.querySelector("#confirmNo") as HTMLButtonElement;
-
-    const cleanup = () => wrapper.remove();
-
-    yesBtn.onclick = () => {
-        cleanup();
-        overlay.remove();
-    };
-
-    noBtn.onclick = cleanup;
-
-    // clicking outside closes
-    wrapper.addEventListener("click", (ev) => {
-        if (ev.target === wrapper) cleanup();
-    });
-  }
-
   saveBtn.addEventListener('click', async () => {
-    const nameInput = (formContainer.querySelector('#staffName') as HTMLInputElement);
-    const emailInput = (formContainer.querySelector('#staffEmail') as HTMLInputElement);
-    const isAdminInput = (formContainer.querySelector('#isAdmin') as HTMLInputElement);
-    const descInput = (formContainer.querySelector('#staffDesc') as HTMLTextAreaElement);
-
     const name = nameInput.value.trim();
     const email = emailInput.value.trim();
     const desc = descInput.value.trim();

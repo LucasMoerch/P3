@@ -14,13 +14,21 @@ export type ClientDTO = {
 
 export function renderClientsPage(): HTMLElement {
   const container = document.createElement('div');
-  container.classList.add('container');
+  container.classList.add('container', 'clients-page');
 
   const header = document.createElement('h1');
   header.textContent = 'Clients Overview';
   container.appendChild(header);
 
-  container.appendChild(renderSearchComponent());
+  const searchEl = renderSearchComponent((query) => {
+    const rows = realDataSection.querySelectorAll('tr');
+        rows.forEach((row, index) => {
+            if (index === 0) return; // skip header
+            const nameCell = row.querySelector('td:first-child'); // Searches first column
+            row.style.display = nameCell?.textContent?.toLowerCase().includes(query) ? '' : 'none';
+        });
+    });
+  container.appendChild(searchEl);
 
   const realDataSection = document.createElement('div');
   realDataSection.innerHTML = '<p>Loading...</p>';
@@ -32,7 +40,6 @@ export function renderClientsPage(): HTMLElement {
       const clients = (await http.get('/clients')) as ClientDTO[];
 
       const clientData = (clients ?? []).map((c) => ({
-        id: c.id,
         name: c.name,
         address: c.address || '-',
         contactPhone: c.contactPhone || 'N/A',
@@ -99,7 +106,6 @@ export function renderClientsPage(): HTMLElement {
             <span class="label text-muted fw-medium">Email</span>
             <span class="value fw-semibold" data-field="contactEmail">${client.contactEmail || 'N/A'}</span>
           </div>
-
         </div>
       </div>
     `;
@@ -110,7 +116,6 @@ export function renderClientsPage(): HTMLElement {
   }
 
   loadClients();
-  setInterval(loadClients, 10000);
-
+  (container as any).reload = loadClients;
   return container;
 }

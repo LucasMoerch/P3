@@ -15,6 +15,7 @@ export type CaseDto = {
   updatedAt: string;
 };
 
+// InspectCase - matches the style/behavior of inspectUser
 export function inspectCase(c: CaseDto): HTMLElement {
     const overlay: HTMLElement = renderCard({ edit: true, endpoint: 'cases', data: c });
     const card: HTMLElement = overlay.querySelector('.card') as HTMLElement;
@@ -80,9 +81,18 @@ export function renderCasesPage(): HTMLElement {
   div.innerHTML = `<h1>Cases Overview</h1>`;
 
   const container = document.createElement('div');
-  container.classList.add('container');
+  container.classList.add('container', 'cases-page');
   container.appendChild(div);
-  container.appendChild(renderSearchComponent());
+
+    const searchEl = renderSearchComponent((query) => {
+        const rows = realDataSection.querySelectorAll('tr');
+        rows.forEach((row, index) => {
+            if (index === 0) return; // skip header
+            const titleCell = row.querySelector('td:first-child'); // assuming title is first column
+            row.style.display = titleCell?.textContent?.toLowerCase().includes(query) ? '' : 'none';
+        });
+    });
+    container.appendChild(searchEl);
 
   const realDataSection = document.createElement('div');
   realDataSection.innerHTML = `<p>Loading...</p>`;
@@ -125,11 +135,10 @@ export function renderCasesPage(): HTMLElement {
     }
   }
 
-  // InspectCase - matches the style/behavior of inspectUser
 
-  // initial load + auto refresh
+  // initial load
   loadCases();
-  setInterval(loadCases, 10000);
+  (container as any).reload = loadCases;
 
   return container;
 }

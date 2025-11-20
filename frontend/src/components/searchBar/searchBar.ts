@@ -2,7 +2,7 @@ import { renderNewButton } from '../newButton/newButton';
 import './searchBar.scss';
 import { isAdmin } from '../../auth/auth';
 
-export function renderSearchComponent(): HTMLElement {
+export function renderSearchComponent(onSearch: (value: string) => void): HTMLElement {
   const searchDiv = document.createElement('div');
   searchDiv.className = 'Search';
 
@@ -13,7 +13,7 @@ export function renderSearchComponent(): HTMLElement {
   //Input field
   const input = document.createElement('input');
   input.type = 'text';
-  input.className = 'form-control bg-white text-dark shadow-none';
+  input.className = 'form-control bg-white text-dark shadow-none pe-5';
   input.id = 'floatingSearch';
   input.placeholder = ''; // Bootstrap floating labels still need a placeholder
 
@@ -28,16 +28,19 @@ export function renderSearchComponent(): HTMLElement {
 
   // Create search button
   const searchButton = document.createElement('button');
-  searchButton.className = 'search-button';
+  searchButton.className = 'search-button d-none';
+
+  formFloating.appendChild(searchButton);
 
   // Import icon from Font Awesome
   const searchIcon = document.createElement('i');
   searchIcon.className = 'fa-solid fa-magnifying-glass text-dark';
   searchButton.appendChild(searchIcon);
 
-  // Example: log input value when clicked
-  searchButton.addEventListener('click', () => {
-    console.log('Searching for:', input.value);
+  // Show icon when typing
+  input.addEventListener('input', () => {
+      searchButton.classList.toggle('d-none', input.value.trim().length === 0);
+      onSearch(input.value.trim().toLowerCase());
   });
 
   // Group the input field and search button into a nested container
@@ -46,7 +49,6 @@ export function renderSearchComponent(): HTMLElement {
 
   // Append input and button to the container
   searchContainer.appendChild(formFloating);
-  searchContainer.appendChild(searchButton);
   searchDiv.appendChild(searchContainer);
 
   if (isAdmin()) {

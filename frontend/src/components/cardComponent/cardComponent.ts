@@ -1,10 +1,12 @@
 import './cardComponent.scss';
 import http from '../../api/http';
+import {showCancelConfirmation} from "../cancelPopUp/cancelPopUp";
 
 type RenderCardOptions = {
   edit?: boolean;
   endpoint?: string;
   data?: Record<string, any>;
+  hasChanges?: () => boolean;
 };
 
 export function renderCard(options: RenderCardOptions = {}): HTMLElement {
@@ -13,8 +15,12 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
   overlay.setAttribute('role', 'dialog');
   overlay.setAttribute('aria-modal', 'true');
 
+  let isEdited = false;
+
   const card = document.createElement('div');
   card.className = 'card bg-card-bg';
+
+  card.addEventListener('click', (ev) => ev.stopPropagation());
 
   const closeBtn = document.createElement('button');
   closeBtn.className =
@@ -41,23 +47,30 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
 
         //Here it creates an input box, so the user can edit the value.
         if (!valueSpan.querySelector('input')) {
-          const currentValue = valueSpan.textContent?.trim() || '';
-          const input = document.createElement('input');
-          input.type = 'text';
-          input.value = currentValue; //Makes sure to insert the current value, after you click edit.
-          input.className = 'form-control text-end fw-semibold';
-          input.dataset.field = field;
-          if (valueSpan.dataset.transform) {
-            input.dataset.transform = valueSpan.dataset.transform;
-          }
-          valueSpan.textContent = '';
-          valueSpan.appendChild(input);
+            const currentValue = valueSpan.textContent?.trim() || '';
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = currentValue; //Makes sure to insert the current value, after you click edit.
+            input.className = 'form-control text-end fw-semibold';
+            input.dataset.field = field;
+            if (valueSpan.dataset.transform) {
+                input.dataset.transform = valueSpan.dataset.transform;
+            }
+            valueSpan.textContent = '';
+            valueSpan.appendChild(input);
+
+            // Mark as edited when user types
+            input.addEventListener('input', () => {
+                isEdited = true;
+            });
         }
       });
 
+      editBtn.remove();
+
       //Save button implementation
       const saveBtn = document.createElement('button');
-      saveBtn.className = 'btn btn-primary btn-lg';
+      saveBtn.className = 'btn btn-primary position-absolute top-0 end-0 m-3 fs-3 py-1 px-2';
       saveBtn.innerText = 'Save';
 
       const btnContainer = document.createElement('div');
@@ -156,16 +169,35 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
   const body = document.createElement('div');
   body.className = 'body';
 
-  closeBtn.addEventListener('click', () => {
-    overlay.remove();
+  closeBtn.addEventListener("pointerdown", (ev) => {
+      ev.stopPropagation();
+      ev.preventDefault();
+  });
+
+  closeBtn.addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      ev.preventDefault();
+
+      const changed = options.hasChanges?.() ?? isEdited;
+
+      if (changed) {
+          showCancelConfirmation(overlay);
+      } else {
+          overlay.remove();
+      }
   });
   card.appendChild(closeBtn);
   overlay.appendChild(card);
   card.appendChild(header);
   card.appendChild(body);
 
+  //Removes overlay if you click outside
   overlay.addEventListener('click', (event) => {
-    if (event.target === overlay) overlay.remove();
+      if (!card.contains(event.target as Node)) {
+          const changed = options.hasChanges?.() ?? isEdited;
+          if (changed) showCancelConfirmation(overlay);
+          else overlay.remove();
+      }
   });
 
   // Return overlay, but let caller add content to the card
