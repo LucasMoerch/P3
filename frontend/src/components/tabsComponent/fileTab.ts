@@ -13,9 +13,7 @@ export async function loadFiles(config: FileTabConfig) {
   const { entityType, entityId, container } = config;
 
   try {
-    const response = (await http.get(
-      `/${entityType}/${entityId}/documents`,
-    )) as any[];
+    const response = (await http.get(`/${entityType}/${entityId}/documents`)) as any[];
 
     const filesContent = container.querySelector('#files-content') as HTMLElement | null;
     if (!filesContent) return;
@@ -50,15 +48,15 @@ function renderFilesList(documents: any[]) {
   return `
     <ul class="list-group">
       ${documents
-      .map(
-        (doc, index) => `
+        .map(
+          (doc, index) => `
         <li class="list-group-item d-flex justify-content-between align-items-center">
           <div>
             <i class="fa-solid fa-file"></i>
             <span class="ms-2">${doc.filename || doc.fileName}</span>
             <small class="text-muted ms-2">(${formatDate(
-          doc.uploadedAt,
-        )}) by ${doc.createdBy}</small>
+              doc.uploadedAt,
+            )}) by ${doc.createdBy}</small>
           </div>
           <div>
             <button class="btn btn-sm btn-primary me-2" data-action="download" data-index="${index}">
@@ -70,8 +68,8 @@ function renderFilesList(documents: any[]) {
           </div>
         </li>
       `,
-      )
-      .join('')}
+        )
+        .join('')}
     </ul>
   `;
 }
@@ -122,11 +120,9 @@ function attachUploadListener(config: FileTabConfig) {
       formData.append('createdBy', getMe()?.displayName || 'unknown');
 
       try {
-        await http.post(
-          `/${entityType}/${entityId}/uploadDocument`,
-          formData,
-          { headers: { 'Content-Type': 'multipart/form-data' } },
-        );
+        await http.post(`/${entityType}/${entityId}/uploadDocument`, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
         uploadStatus.textContent = 'Upload successful!';
         fileInput.value = '';
         await loadFiles(config);
@@ -148,10 +144,9 @@ async function downloadFile(index: number, config: FileTabConfig) {
   const { entityType, entityId } = config;
 
   try {
-    const response = (await http.get(
-      `/${entityType}/${entityId}/documents/${index}/download`,
-      { responseType: 'blob' },
-    )) as any;
+    const response = (await http.get(`/${entityType}/${entityId}/documents/${index}/download`, {
+      responseType: 'blob',
+    })) as any;
 
     const blob = new Blob([response]);
     const url = window.URL.createObjectURL(blob);

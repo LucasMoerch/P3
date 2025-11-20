@@ -24,8 +24,7 @@ export async function loadTimeEntries(config: TimeTabConfig) {
   const { entityType, entityId, container } = config;
 
   try {
-    const entries = (await http.get(`/times/${entityType}/${entityId}`,
-    )) as TimeEntry[];
+    const entries = (await http.get(`/times/${entityType}/${entityId}`)) as TimeEntry[];
 
     const timeContent = container.querySelector('#times-content') as HTMLElement | null;
     if (!timeContent) return;
@@ -44,8 +43,8 @@ function renderTimeList(entries: TimeEntry[]) {
   return `
     <ul class="list-group">
       ${entries
-      .map(
-        (t) => `
+        .map(
+          (t) => `
         <li class="list-group-item d-flex justify-content-between">
           <div>
             <strong>${t.date}</strong> ${t.startTime} - ${t.stopTime} (${t.totalTime}) - <small>${t.caseId}</small><br/>
@@ -54,8 +53,8 @@ function renderTimeList(entries: TimeEntry[]) {
           </div>
         </li>
       `,
-      )
-      .join('')}
+        )
+        .join('')}
     </ul>
   `;
 }
