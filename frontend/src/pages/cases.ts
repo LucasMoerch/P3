@@ -9,7 +9,7 @@ export type CaseDto = {
   clientId: string;
   title: string;
   description?: string;
-  status: 'OPEN' | 'CLOSED';
+  status: 'OPEN' | 'ON_HOLD' | 'CLOSED';
   assignedUserIds: string[];
   createdAt: string;
   updatedAt: string;
@@ -17,16 +17,16 @@ export type CaseDto = {
 
 // InspectCase - matches the style/behavior of inspectUser
 export function inspectCase(c: CaseDto): HTMLElement {
-    const overlay: HTMLElement = renderCard({ edit: true, endpoint: 'cases', data: c });
-    const card: HTMLElement = overlay.querySelector('.card') as HTMLElement;
-    const header: HTMLElement = card.querySelector('.header') as HTMLElement;
-    const body: HTMLElement = card.querySelector('.body') as HTMLElement;
+  const overlay: HTMLElement = renderCard({ edit: true, endpoint: 'cases', data: c });
+  const card: HTMLElement = overlay.querySelector('.card') as HTMLElement;
+  const header: HTMLElement = card.querySelector('.header') as HTMLElement;
+  const body: HTMLElement = card.querySelector('.body') as HTMLElement;
 
-    header.innerText = c.title;
+  header.innerText = c.title;
 
-    // Body markup
-    if (body) {
-        body.innerHTML = `
+  // Body markup
+  if (body) {
+    body.innerHTML = `
         <div class="card profile-card w-100 shadow-sm border-0">
           <div class="card-body fs-5">
             <div class="info-row d-flex justify-content-between border-bottom py-3">
@@ -40,8 +40,13 @@ export function inspectCase(c: CaseDto): HTMLElement {
 
             <div class="info-row d-flex justify-content-between border-bottom py-3">
               <span class="label text-muted fw-medium">Client ID</span>
-              <span class="value fw-semibold" data-field="clientId">${c.clientId}</span>
-            </div>
+              <span
+                class="value dropdown fw-semibold"
+                data-field="clientId"
+                data-client-id="${c.clientId ?? ''}"
+              >
+                ${c.clientId ? c.clientId : 'None'}
+              </span>            </div>
 
             <div class="info-row d-flex justify-content-between border-bottom py-3">
               <span class="label text-muted fw-medium">Description</span>
@@ -50,12 +55,18 @@ export function inspectCase(c: CaseDto): HTMLElement {
 
             <div class="info-row d-flex justify-content-between border-bottom py-3">
               <span class="label text-muted fw-medium">Status</span>
-              <span class="value fw-semibold" data-field="status">${c.status}</span>
+              <span class="value dropdown fw-semibold" data-field="status" data-options="OPEN,ON_HOLD,CLOSED">${c.status}</span>
             </div>
 
             <div class="info-row d-flex justify-content-between border-bottom py-3">
               <span class="label text-muted fw-medium">Assigned Users</span>
-              <span class="value fw-semibold" data-field="assignedUsers">${c.assignedUserIds.length ? c.assignedUserIds.join(', ') : 'None'}</span>
+              <span
+                class="value dropdown fw-semibold"
+                data-field="assignedUsers"
+                data-assigned-ids='${JSON.stringify(c.assignedUserIds ?? [])}'
+              >
+                ${c.assignedUserIds && c.assignedUserIds.length ? c.assignedUserIds.join(', ') : 'None'}
+              </span>
             </div>
 
             <div class="info-row d-flex justify-content-between border-bottom py-3">
@@ -65,15 +76,15 @@ export function inspectCase(c: CaseDto): HTMLElement {
 
             <div class="info-row d-flex justify-content-between py-3">
               <span class="label text-muted fw-medium">Last Updated</span>
-              <span class="value fw-semibold" data-field="updatedAt">${new Date(c.updatedAt).toLocaleString('da-DK')}</span>
+              <span class="value fw-semibold" data-field="updatedAt" data-editable="false">${new Date(c.updatedAt).toLocaleString('da-DK')}</span>
             </div>
           </div>
         </div>
       `;
-    }
-    card.appendChild(renderTabs({ entityType: 'cases', entityId: c.id }));
+  }
+  card.appendChild(renderTabs({ entityType: 'cases', entityId: c.id }));
 
-    return overlay;
+  return overlay;
 }
 
 export function renderCasesPage(): HTMLElement {
@@ -103,10 +114,9 @@ export function renderCasesPage(): HTMLElement {
       const cases = (await http.get('/cases')) as CaseDto[];
 
       const caseData = (cases ?? []).map((c) => ({
-        title: c.title || 'Untitled',
-        description: c.description || '-',
+        adress: c.title || 'Untitled',
         status: c.status || 'UNKNOWN',
-        createdAt: new Date(c.createdAt).toLocaleDateString('da-DK'),
+        Date_Created: new Date(c.createdAt).toLocaleDateString('da-DK'),
       }));
 
       // clear loading...
@@ -115,12 +125,37 @@ export function renderCasesPage(): HTMLElement {
       // render table and append
       const tableElement = renderTable(caseData);
       realDataSection.appendChild(tableElement);
+      
+
 
       // make rows clickable like InspectUser
       const rows = tableElement.querySelectorAll('tr');
       rows.forEach((row, index) => {
         // Skip header row
         if (index === 0) return;
+
+
+
+        //Add color coding to status column
+        // Status column is the second cell
+        const statusCell = row.querySelectorAll('td')[1] as HTMLTableCellElement | undefined;
+  
+
+        switch (statusCell?.textContent) {
+          case 'CLOSED':
+            statusCell.classList.add('text-danger');
+            break;
+          case 'OPEN':
+            statusCell.classList.add('text-success');
+            break;
+          case 'ON_HOLD':
+            statusCell.classList.add('text-warning');
+            statusCell.innerText = 'ON HOLD';
+            break;
+          
+          default:
+            break;
+        }
 
         row.addEventListener('click', (): void => {
           const selectedCase = cases[index - 1]; // match index with case
@@ -133,7 +168,11 @@ export function renderCasesPage(): HTMLElement {
       console.error('Failed to load cases:', err);
       realDataSection.innerHTML = '<p>Failed to load case data.</p>';
     }
+
   }
+  
+  
+    
 
 
   // initial load

@@ -2,6 +2,7 @@ import { navigate } from '../main';
 import { renderLogoNavbar } from './logoComponent/logo';
 import { clearAuth } from '../auth/auth';
 import http from '../api/http';
+import { renderLogoutButton } from './logoutButtonComponent/logoutButton';
 
 export function getPageTitle(path: string): string {
   switch (path) {
@@ -96,32 +97,12 @@ export function renderHeaderAndNavbar(): HTMLElement {
   });
 
   sidebarBody.appendChild(ul);
-
-  // 🔻 Logout button container at bottom
   const logoutContainer = document.createElement('div');
   logoutContainer.className = 'mt-auto p-3 border-top border-secondary';
 
-  const logoutButton = document.createElement('button');
-  logoutButton.className = 'btn btn-outline-danger w-100';
-  logoutButton.innerHTML = '<i class="fa-solid fa-right-from-bracket"></i> Logout';
+  // Use your new LogoutButton component
+  logoutContainer.appendChild(renderLogoutButton());
 
-  logoutButton.addEventListener('click', async () => {
-    try {
-      //  Call backend logout endpoint using axios wrapper
-      await http.post('/logout');
-    } catch (err) {
-      console.warn('Logout request failed, continuing anyway:', err);
-    } finally {
-      //  Clear frontend auth state
-      clearAuth();
-      localStorage.removeItem('token');
-      sessionStorage.clear();
-
-      // Redirect and refresh the page to show clean login state
-      window.location.href = '/login';
-    }
-  });
-  logoutContainer.appendChild(logoutButton);
   sidebarBody.appendChild(logoutContainer);
   sidebar.appendChild(sidebarBody);
 

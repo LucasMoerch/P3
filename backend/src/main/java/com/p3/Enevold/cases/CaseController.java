@@ -1,6 +1,5 @@
 package com.p3.Enevold.cases;
 
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +33,6 @@ public class CaseController {
       }
 
       Case c = new Case();
-      c.setClientId(new ObjectId("652bc56efba9ab8ef7ab9a91"));
       c.setTitle(title);
       c.setDescription(description);
       c.setStatus(normalizedStatus);
