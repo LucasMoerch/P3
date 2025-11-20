@@ -14,7 +14,6 @@ export function renderLoginPage(): HTMLElement {
   document.body.style.backgroundRepeat = 'no-repeat';
   document.body.style.backgroundAttachment = 'fixed';
   document.body.style.overflow = 'hidden';
-
   const container = document.createElement('div');
   container.className = 'container d-flex justify-content-center align-items-center vh-100';
 
@@ -79,7 +78,6 @@ export function renderLoginPage(): HTMLElement {
       }
     }
   };
-
   ensureGisLoaded();
 
   // assemble

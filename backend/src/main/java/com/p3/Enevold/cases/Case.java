@@ -16,11 +16,11 @@ public class Case {
 
   @Id
   private String id;
-  private ObjectId clientId;
+  private String clientId;
   private String title;
   private String description;
   private String status;
-  private List<ObjectId> assignedUserIds;
+  private List<String> assignedUserIds;
 
   @CreatedDate
   private Date createdAt;
@@ -36,11 +36,11 @@ public class Case {
     return id;
   }
 
-  public ObjectId getClientId() {
+  public String getClientId() {
     return clientId;
   }
 
-  public void setClientId(ObjectId clientId) {
+  public void setClientId(String clientId) {
     this.clientId = clientId;
   }
 
@@ -68,11 +68,11 @@ public class Case {
     this.status = status;
   }
 
-  public List<ObjectId> getAssignedUserIds() {
+  public List<String> getAssignedUserIds() {
     return assignedUserIds;
   }
 
-  public void setAssignedUserIds(List<ObjectId> assignedUserIds) {
+  public void setAssignedUserIds(List<String> assignedUserIds) {
     this.assignedUserIds = assignedUserIds;
   }
 

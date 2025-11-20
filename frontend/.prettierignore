@@ -8,3 +8,4 @@ coverage
 *.min.css
 package-lock.json
 .env*
+/src/components/cardComponent/utils.ts

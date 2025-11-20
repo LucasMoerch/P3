@@ -1,5 +1,8 @@
 import { navigate } from '../main';
 import { renderLogoNavbar } from './logoComponent/logo';
+import { clearAuth } from '../auth/auth';
+import http from '../api/http';
+import { renderLogoutButton } from './logoutButtonComponent/logoutButton';
 
 export function getPageTitle(path: string): string {
   switch (path) {
@@ -45,7 +48,7 @@ export function renderHeaderAndNavbar(): HTMLElement {
 
   // Sidebar
   const sidebar = document.createElement('div');
-  sidebar.className = 'offcanvas offcanvas-start bg-dark text-white shadow-lg';
+  sidebar.className = 'offcanvas offcanvas-start bg-dark text-white shadow-lg d-flex flex-column';
   sidebar.id = 'sidebar';
   sidebar.tabIndex = -1;
   sidebar.style.setProperty('--bs-offcanvas-width', 'fit-content');
@@ -67,10 +70,10 @@ export function renderHeaderAndNavbar(): HTMLElement {
 
   // Sidebar body
   const sidebarBody = document.createElement('div');
-  sidebarBody.className = 'offcanvas-body';
+  sidebarBody.className = 'offcanvas-body d-flex flex-column';
 
   const ul = document.createElement('ul');
-  ul.className = 'list-unstyled';
+  ul.className = 'list-unstyled flex-grow-1';
 
   // Menu items
   const menuItems: { label: string; page: string; icon: string }[] = [
@@ -78,7 +81,7 @@ export function renderHeaderAndNavbar(): HTMLElement {
     { label: 'Staff', page: 'staff', icon: '<i class="fa-solid fa-clipboard-user"></i>' },
     { label: 'Clients', page: 'clients', icon: '<i class="fa-solid fa-users"></i>' },
     { label: 'Cases', page: 'cases', icon: '<i class="fa-solid fa-suitcase"></i>' },
-    { label: 'My Profile', page: 'profile', icon: '<i class="fa-solid fa-user"></i>' },
+    { label: 'My Profile', page: 'myProfile', icon: '<i class="fa-solid fa-user"></i>' },
   ];
 
   menuItems.forEach((item) => {
@@ -94,6 +97,13 @@ export function renderHeaderAndNavbar(): HTMLElement {
   });
 
   sidebarBody.appendChild(ul);
+  const logoutContainer = document.createElement('div');
+  logoutContainer.className = 'mt-auto p-3 border-top border-secondary';
+
+  // Use your new LogoutButton component
+  logoutContainer.appendChild(renderLogoutButton());
+
+  sidebarBody.appendChild(logoutContainer);
   sidebar.appendChild(sidebarBody);
 
   // Attach click handlers

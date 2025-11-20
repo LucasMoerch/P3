@@ -1,7 +1,9 @@
 import { renderCard } from '../cardComponent/cardComponent';
+import { createFloatingInput, createFloatingTextarea } from '../floatingLabel/floatingLabel';
+import http from '../../api/http';
 
 export function renderAddNewCaseCard(): HTMLElement {
-  const overlay = renderCard(true);
+  const overlay = renderCard({ edit: false, endpoint: 'cases/create' });
   const card = overlay.querySelector('.card') as HTMLElement;
   const header = card.querySelector('.header') as HTMLElement;
   const body = card.querySelector('.body') as HTMLElement;
@@ -10,17 +12,17 @@ export function renderAddNewCaseCard(): HTMLElement {
 
   const formContainer = document.createElement('div');
   formContainer.className = 'container p-4 rounded';
-  formContainer.innerHTML = `
+
+  const titleField = createFloatingInput('caseTitle', 'Case Title', 'text');
+  const descriptionField = createFloatingTextarea('caseDescription', 'Description', 4);
+
+  formContainer.appendChild(titleField);
+  formContainer.appendChild(descriptionField);
+
+  const dropDown = document.createElement('div');
+  dropDown.className = 'mb-3';
+  dropDown.innerHTML = `
     <div class="mb-3">
-      <label for="caseTitle" class="form-label">Case Title</label>
-      <input type="text" id="caseTitle" class="form-control" placeholder="Enter case title...">
-    </div>
-    <div class="mb-3">
-      <label for="caseDescription" class="form-label">Description</label>
-      <textarea id="caseDescription" class="form-control" rows="4" placeholder="Add a short description..."></textarea>
-    </div>
-    <div class="mb-3">
-      <label for="caseStatus" class="form-label">Status</label>
       <select id="caseStatus" class="form-select">
         <option selected disabled>Choose status...</option>
         <option value="OPEN">Open</option>
@@ -29,6 +31,8 @@ export function renderAddNewCaseCard(): HTMLElement {
       </select>
     </div>
   `;
+
+  formContainer.appendChild(dropDown);
 
   const buttonRow = document.createElement('div');
   buttonRow.className = 'd-flex justify-content-end gap-2 p-3';
@@ -60,23 +64,21 @@ export function renderAddNewCaseCard(): HTMLElement {
       return;
     }
 
-    const params = new URLSearchParams({ title, description, status });
-
+    saveBtn.disabled = true;
     try {
-      const response = await fetch(`/api/cases/create?${params.toString()}`, { method: 'POST' });
+      const data = await http.post('/cases/create', null, {
+        params: { title, description, status },
+      });
 
-      if (!response.ok) {
-        const text = await response.text();
-        throw new Error(`Server responded with ${response.status}: ${text}`);
-      }
-
-      const data = await response.json();
       console.log('Case created successfully:', data);
-      alert(`Case "${data.title}" created successfully.`);
+      alert(`Case created successfully.`);
       overlay.remove();
-    } catch (err) {
+    } catch (err: any) {
+      const msg = err?.response?.data?.message || err?.message || 'Failed to create case.';
       console.error('Error creating case:', err);
-      alert('Failed to create case. Check console for details.');
+      alert(msg);
+    } finally {
+      saveBtn.disabled = false;
     }
   });
 

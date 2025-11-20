@@ -63,7 +63,9 @@ export function renderTabs(config: TabsConfig) {
     console.log(documents);
     return `
       <ul class="list-group">
-        ${documents.map((doc, index) => `
+        ${documents
+          .map(
+            (doc, index) => `
           <li class="list-group-item d-flex justify-content-between align-items-center">
             <div>
               <i class="fa-solid fa-file"></i>
@@ -79,7 +81,9 @@ export function renderTabs(config: TabsConfig) {
               </button>
             </div>
           </li>
-        `).join('')}
+        `,
+          )
+          .join('')}
       </ul>
     `;
   }
@@ -87,7 +91,7 @@ export function renderTabs(config: TabsConfig) {
   function attachFileEventListeners() {
     const filesContent = tabContainer.querySelector('#files-content');
     if (!filesContent) return;
-    filesContent.querySelectorAll('[data-action]').forEach(button => {
+    filesContent.querySelectorAll('[data-action]').forEach((button) => {
       button.addEventListener('click', async (e) => {
         const target = e.currentTarget as HTMLElement;
         const action = target.getAttribute('data-action');
@@ -112,27 +116,26 @@ export function renderTabs(config: TabsConfig) {
     if (uploadBtn && fileInput) {
       uploadBtn.addEventListener('click', async () => {
         if (!fileInput.files || fileInput.files.length === 0) {
-          uploadStatus!.textContent = "Please select a file first.";
+          uploadStatus!.textContent = 'Please select a file first.';
           return;
         }
         const file = fileInput.files[0];
         uploadBtn.disabled = true;
-        uploadStatus!.textContent = "Uploading...";
+        uploadStatus!.textContent = 'Uploading...';
 
         const formData = new FormData();
         formData.append('file', file);
         formData.append('createdBy', getMe()?.displayName || 'unknown');
 
-
         try {
           await http.post(`/${entityType}/${entityId}/uploadDocument`, formData, {
-            headers: { 'Content-Type': 'multipart/form-data' }
+            headers: { 'Content-Type': 'multipart/form-data' },
           });
-          uploadStatus!.textContent = "Upload successful!";
+          uploadStatus!.textContent = 'Upload successful!';
           fileInput.value = '';
           await loadFiles();
         } catch (err) {
-          uploadStatus!.textContent = "Upload failed.";
+          uploadStatus!.textContent = 'Upload failed.';
           console.error('Upload failed:', err);
         } finally {
           uploadBtn.disabled = false;
@@ -147,10 +150,9 @@ export function renderTabs(config: TabsConfig) {
 
   async function downloadFile(index: number) {
     try {
-      const response = await http.get(
-        `/${entityType}/${entityId}/documents/${index}/download`,
-        { responseType: 'blob' }
-      ) as any;
+      const response = (await http.get(`/${entityType}/${entityId}/documents/${index}/download`, {
+        responseType: 'blob',
+      })) as any;
       const blob = new Blob([response]);
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');

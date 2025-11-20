@@ -17,7 +17,9 @@ services:
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
       ADMIN_EMAILS: ${ADMIN_EMAILS}
-      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS}
+      APP_ALLOWED_ORIGINS: ${ALLOWED_ORIGINS}
+      SERVER_PORT: ${PORT}
+      SPRING_SECTURITY_DEBUG: "true"
     ports: ["8080:8080"]
     depends_on: [mongo]
 
@@ -34,7 +36,6 @@ services:
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
     depends_on:
       - api
-
 
 volumes:
   mongo_data:

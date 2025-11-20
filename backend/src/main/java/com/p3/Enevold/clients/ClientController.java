@@ -17,12 +17,18 @@ import org.springframework.http.MediaType;
 @RestController
 @RequestMapping("/clients")
 public class ClientController {
+
   @Autowired
   ClientRepository clientRepository;
 
-  @PostMapping("/addClient")
-  public void addClient(@RequestBody Client client) {
-    clientRepository.save(client);
+  @PostMapping({"/create"})
+  public ResponseEntity<Client> addClient(@RequestBody Client client) {
+    // Ensure server manages id/createdAt
+    client.setId(null);
+
+    Client saved = clientRepository.save(client);
+
+    return ResponseEntity.ok(saved);
   }
 
   @GetMapping("/getClients/{id}")
@@ -30,19 +36,19 @@ public class ClientController {
     return clientRepository.findById(id).orElse(null);
   }
 
-  @PutMapping("/updateClient/{id}")
-  public Client updateClient(@PathVariable String id, @RequestBody Client client) {
-    return clientRepository.findById(id).map(data -> {
-      if (client.getName() != null)
-        data.setName(client.getName());
-      if (client.getContactEmail() != null)
-        data.setContactEmail(client.getContactEmail());
-      if (client.getContactPhone() != null)
-        data.setContactPhone(client.getContactPhone());
-      if (client.getNotes() != null)
-        data.setNotes(client.getNotes());
-      return clientRepository.save(data);
-    }).orElse(null);
+  @PutMapping("/{id}")
+  public ResponseEntity<Client> putClient(@PathVariable String id, @RequestBody Client body) {
+  var existing = clientRepository.findById(id).orElse(null);
+  if (existing == null) return ResponseEntity.notFound().build();
+
+  // Ensure path id is the source of truth
+  body.setId(id);
+
+  // Preserve server-managed field (createdAt)
+  body.setCreatedAt(existing.getCreatedAt());
+
+  var saved = clientRepository.save(body);
+  return ResponseEntity.ok(saved);
   }
 
   @DeleteMapping("/deleteClient/{id}")

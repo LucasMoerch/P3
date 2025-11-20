@@ -6,11 +6,25 @@ export function renderSearchComponent(): HTMLElement {
   const searchDiv = document.createElement('div');
   searchDiv.className = 'Search';
 
-  // Create input
+  //Bootstrap floating form wrapper
+  const formFloating = document.createElement('div');
+  formFloating.className = 'form-floating flex-grow-1';
+
+  //Input field
   const input = document.createElement('input');
   input.type = 'text';
   input.placeholder = 'Search...';
   input.className = 'Search-input light-bg text-dark shadow-sm ';
+  input.id = 'floatingSearch';
+
+  //Label (for floating effect)
+  const label = document.createElement('label');
+  label.htmlFor = 'floatingSearch';
+  label.textContent = 'Search';
+
+  // Append input + label to form-floating
+  formFloating.appendChild(input);
+  formFloating.appendChild(label);
 
   // Create search button
   const searchButton = document.createElement('button');
@@ -31,7 +45,7 @@ export function renderSearchComponent(): HTMLElement {
   searchContainer.className = 'search-container d-flex justify-content-between';
 
   // Append input and button to the container
-  searchContainer.appendChild(input);
+  searchContainer.appendChild(formFloating);
   searchContainer.appendChild(searchButton);
   searchDiv.appendChild(searchContainer);
 

@@ -1,6 +1,5 @@
 package com.p3.Enevold.cases;
 
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +33,6 @@ public class CaseController {
       }
 
       Case c = new Case();
-      c.setClientId(new ObjectId("652bc56efba9ab8ef7ab9a91"));
       c.setTitle(title);
       c.setDescription(description);
       c.setStatus(normalizedStatus);
@@ -53,6 +51,17 @@ public class CaseController {
           "error", e.getClass().getSimpleName(),
           "message", e.getMessage()));
     }
+  }
+
+  // Edit case details
+  @PutMapping("/{id}")
+    public ResponseEntity<Case> putCase(@PathVariable String id, @RequestBody Case body) {
+    var existing = repo.findById(id).orElse(null);
+    if (existing == null) return ResponseEntity.notFound().build();
+
+
+    var saved = repo.save(body);
+    return ResponseEntity.ok(saved);
   }
 
   // Upload a file/document to a specific case

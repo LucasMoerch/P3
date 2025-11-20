@@ -14,7 +14,7 @@ export type TimeEntryDto = {
 async function checkForUnresolvedTime(buttonRow: HTMLDivElement, startTimeBtn: HTMLButtonElement, stopTimeBtn: HTMLButtonElement) {
   try {
     const currentUserId = getUserId();
-    console.log ('Current User ID:', currentUserId);
+    console.log('Current User ID:', currentUserId);
     if (!currentUserId) {
       console.error('User ID is not available.');
       return;
@@ -37,12 +37,12 @@ async function checkForUnresolvedTime(buttonRow: HTMLDivElement, startTimeBtn: H
       buttonRow.appendChild(stopTimeBtn);
       displayTime('startTime', entry.startTime);
       return entry.startTime;
-    }else {
+    } else {
       console.log('Last time entry is already completed.');
       return;
     }
 
-//api functions
+    //api functions
   } catch (err) {
     console.error('Failed to load cases:', err);
   }
@@ -119,7 +119,7 @@ async function updateTimeData(
   }
 }
 
-// Regular functions
+// ----------------------------------------Regular functions------------------------------------------------
 function getTimeNow(): string {
   const startTime: Date = new Date(); // stores the current time the moment the start button is clicked
   const timeNow: string =
@@ -226,7 +226,7 @@ export function renderTimeTracker(): HTMLElement {
 
   function renderTimeTrackingCard(): HTMLElement {
     // Create overlay
-    const overlay: HTMLElement = renderCard();
+    const overlay = renderCard({ edit: false, endpoint: 'times' });
     const card: HTMLElement = overlay.querySelector('.card') as HTMLElement;
     const header: HTMLElement = card.querySelector('.header') as HTMLElement;
     const body: HTMLElement = card.querySelector('.body') as HTMLElement;
@@ -266,13 +266,13 @@ export function renderTimeTracker(): HTMLElement {
     //global variable to hold data until confirmed
     let pendingCompletionData:
       | {
-          startTime: string;
-          stopTime: string;
-          totalTime: string;
-          description: string;
-          date: string;
-          caseId: string;
-        }
+        startTime: string;
+        stopTime: string;
+        totalTime: string;
+        description: string;
+        date: string;
+        caseId: string;
+      }
       | null = null;
 
     const dropDownRow: HTMLDivElement = document.createElement('div');
@@ -287,8 +287,8 @@ export function renderTimeTracker(): HTMLElement {
     const description: HTMLDivElement = document.createElement('div');
     description.className = 'container col-12 p-4';
     description.innerHTML = `
-    
-    <textarea class="form-control shadow border-0 lighter-bg shadow-sm rounded-3" id="description" 
+
+    <textarea class="form-control shadow border-0 lighter-bg shadow-sm rounded-3" id="description"
     rows="6" placeholder="Add a short description..."
     ></textarea>
     `;
@@ -296,14 +296,17 @@ export function renderTimeTracker(): HTMLElement {
     const buttonRow: HTMLDivElement = document.createElement('div');
     buttonRow.className =
       'container d-flex justify-content-between align-items-center gap-3 px-4 pb-4 pt-3 position-sticky bottom-0';
+    buttonRow.id = 'buttonRow';
 
     const startTimeBtn = document.createElement('button');
     startTimeBtn.className = 'btn btn-success shadow col-4 rounded-pill ms-4';
     startTimeBtn.innerText = 'Start Time';
+    startTimeBtn.id = 'startTimeBtn';
 
     const stopTimeBtn = document.createElement('button');
     stopTimeBtn.className = 'btn btn-danger shadow col-4 rounded-pill ms-4';
     stopTimeBtn.innerText = 'Stop Time';
+    stopTimeBtn.id = 'stopTimeBtn';
 
     const completeBtn: HTMLButtonElement = document.createElement('button');
     completeBtn.className = 'btn btn-primary shadow col-4 rounded-pill ms-4';
@@ -315,22 +318,22 @@ export function renderTimeTracker(): HTMLElement {
     <div class="container col-5 rounded text-center shadow-sm light-bg py-2">
       <label for="startTime" class="form-label">Start Time</label> <br>
       <div class="container col-12 rounded text-center bg-transparent py-1">
-      <input 
-        type="time" 
-        step="1" 
-        class="form-control mx-auto px-2 shadow-sm lighter-bg clockText text-center" 
-        id="startTime" 
+      <input
+        type="time"
+        step="1"
+        class="form-control mx-auto px-2 shadow-sm lighter-bg clockText text-center"
+        id="startTime"
         value="00:00:00">
       </div>
     </div>
     <div class="container col-5 rounded text-center shadow-sm light-bg py-2">
       <label for="stopTime" class="form-label">Stop Time</label> <br>
       <div class="container col-12 rounded text-center bg-transparent py-1">
-      <input 
-        type="time" 
-        step="1" 
-        class="form-control mx-auto px-2 shadow-sm lighter-bg clockText text-center " 
-        id="stopTime" 
+      <input
+        type="time"
+        step="1"
+        class="form-control mx-auto px-2 shadow-sm lighter-bg clockText text-center "
+        id="stopTime"
         value="00:00:00">
       </div>
     </div>`;
@@ -338,16 +341,16 @@ export function renderTimeTracker(): HTMLElement {
 
 
     const totalTimeDisplay: HTMLDivElement = document.createElement('div');
-    totalTimeDisplay.className = 'container p-2 rounded d-flex justify-content-center'; 
+    totalTimeDisplay.className = 'container p-2 rounded d-flex justify-content-center';
     totalTimeDisplay.innerHTML = `
     <div class="container col-11 rounded text-center shadow-sm light-bg py-2">
      <label for="totalTime" class="form-label">Total Time</label> <br>
      <div class="container col-12 rounded text-center bg-transparent py-1">
-      <input 
-        type="time" 
-        step="1" 
-        class="form-control totalTime-field mx-auto px-2 shadow-sm lighter-bg clockText text-center" 
-        id="totalTime" 
+      <input
+        type="time"
+        step="1"
+        class="form-control totalTime-field mx-auto px-2 shadow-sm lighter-bg clockText text-center"
+        id="totalTime"
         value="00:00:00">
      </div>
     </div>`;
@@ -376,12 +379,13 @@ export function renderTimeTracker(): HTMLElement {
     const startTimeInputEl = startStopTimeRow.querySelector('#startTime') as HTMLInputElement | null;
     const stopTimeInputEl = startStopTimeRow.querySelector('#stopTime') as HTMLInputElement | null;
     const totalTimeInputEl = totalTimeDisplay.querySelector('#totalTime') as HTMLInputElement | null;
-    
-   
 
-    
-    
+
+
+
+
     loadCases();
+
     let originalStartTime: string;
     // Event listeners
 
@@ -397,12 +401,12 @@ export function renderTimeTracker(): HTMLElement {
 
     // Async check for unresolved time entry. after function is completed the originalStartTime is set
     checkForUnresolvedTime(buttonRow, startTimeBtn, stopTimeBtn)
-       .then((t) => {
+      .then((t) => {
         if (t) {
           originalStartTime = t;
-       }
-       })
-       .catch((err) => console.error(err));
+        }
+      })
+      .catch((err) => console.error(err));
 
 
 

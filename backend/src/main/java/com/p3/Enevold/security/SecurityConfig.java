@@ -28,7 +28,7 @@ public class SecurityConfig {
         .cors(cors -> cors.configurationSource(corsConfigurationSource()))
         .authorizeHttpRequests(auth -> auth
             // Context-path '/api' open endpoints
-            .requestMatchers("/ping", "/users/activate", "/me/logout").permitAll()
+            .requestMatchers("/ping", "/users/activate", "/me", "/me/logout").permitAll()
             // Everything else under the context-path 'api' requires auth
             .anyRequest().authenticated())
         // Insert session auth before Spring filter
