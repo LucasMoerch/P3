@@ -1,5 +1,6 @@
-import { renderHealthCheck } from '../components/healthCheck';
 import { getMe } from '../auth/auth';
+import http from '../api/http';
+import { loadTimeEntries } from '../components/tabsComponent/timeTab';
 
 export function renderMyProfilePage(): HTMLElement {
   const div = document.createElement('div');
@@ -32,7 +33,7 @@ export function renderMyProfilePage(): HTMLElement {
           </div>
            <div class="info-row d-flex justify-content-between border-bottom py-3">
             <span class="label text-muted fw-medium">Picture</span>
-            <img src = "${me?.pictureUrl}" /> 
+            <img src = "${me?.pictureUrl}" />
           </div>
            <div class="info-row d-flex justify-content-between border-bottom py-3">
             <span class="label text-muted fw-medium">Status</span>
@@ -67,10 +68,24 @@ export function renderMyProfilePage(): HTMLElement {
     });
   });
 
+  const timeRegistrations = document.createElement('div');
+  timeRegistrations.id = 'time-registrations';
+  timeRegistrations.innerHTML = `<h2 class="mt-5">My Time Registrations</h2><div id="times-content" class="mt-3"></div>`;
+
   const container = document.createElement('container');
   container.appendChild(div);
   container.appendChild(body);
   container.appendChild(editButton);
+  container.appendChild(timeRegistrations);
+
+  // Load time entries for me
+  if (me?.id) {
+    loadTimeEntries({
+      entityType: 'users',
+      entityId: me.id,
+      container: timeRegistrations,
+    });
+  }
 
   return container;
 }
