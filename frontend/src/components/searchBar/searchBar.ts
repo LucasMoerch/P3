@@ -39,8 +39,8 @@ export function renderSearchComponent(onSearch: (value: string) => void): HTMLEl
 
   // Show icon when typing
   input.addEventListener('input', () => {
-      searchButton.classList.toggle('d-none', input.value.trim().length === 0);
-      onSearch(input.value.trim().toLowerCase());
+    searchButton.classList.toggle('d-none', input.value.trim().length === 0);
+    onSearch(input.value.trim().toLowerCase());
   });
 
   // Group the input field and search button into a nested container

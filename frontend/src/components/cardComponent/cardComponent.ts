@@ -4,7 +4,7 @@ import { UserDTO } from '../../pages/staff';
 import { loadUsersAndClients } from './dataLoader';
 import { createCheckboxDropdown } from './checkboxDropdown';
 import { normalizeIdArray, friendlyForValue } from './utils';
-import { showCancelConfirmation } from "../cancelPopUp/cancelPopUp";
+import { showCancelConfirmation } from '../cancelPopUp/cancelPopUp';
 
 type RenderCardOptions = {
   edit?: boolean;
@@ -376,7 +376,7 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
   const body = document.createElement('div');
   body.className = 'body';
 
-  closeBtn.addEventListener("pointerdown", (ev) => {
+  closeBtn.addEventListener('pointerdown', (ev) => {
     ev.stopPropagation();
     ev.preventDefault();
   });

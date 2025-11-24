@@ -1,10 +1,14 @@
 import { renderCard } from '../cardComponent/cardComponent';
 import { createFloatingInput } from '../floatingLabel/floatingLabel';
 import http from '../../api/http';
-import {showCancelConfirmation} from "../cancelPopUp/cancelPopUp";
+import { showCancelConfirmation } from '../cancelPopUp/cancelPopUp';
 
 export function renderAddNewClientCard(): HTMLElement {
-  const overlay = renderCard({ edit: false, endpoint: 'clients/create', hasChanges: () => isTyped });
+  const overlay = renderCard({
+    edit: false,
+    endpoint: 'clients/create',
+    hasChanges: () => isTyped,
+  });
   const card = overlay.querySelector('.card') as HTMLElement;
   const header = card.querySelector('.header') as HTMLElement;
   const body = card.querySelector('.body') as HTMLElement;
@@ -43,23 +47,23 @@ export function renderAddNewClientCard(): HTMLElement {
   let isTyped = false;
 
   const markTypedInput = (el: HTMLInputElement | HTMLTextAreaElement) => {
-      if (el.value.trim() !== "") isTyped = true;
+    if (el.value.trim() !== '') isTyped = true;
   };
 
-  const nameInput = (formContainer.querySelector('#clientName') as HTMLInputElement);
-  const emailInput = (formContainer.querySelector('#clientEmail') as HTMLInputElement);
-  const phoneInput = (formContainer.querySelector('#clientPhone') as HTMLInputElement);
+  const nameInput = formContainer.querySelector('#clientName') as HTMLInputElement;
+  const emailInput = formContainer.querySelector('#clientEmail') as HTMLInputElement;
+  const phoneInput = formContainer.querySelector('#clientPhone') as HTMLInputElement;
 
   nameInput.addEventListener('input', () => markTypedInput(nameInput));
   emailInput.addEventListener('input', () => markTypedInput(emailInput));
   phoneInput.addEventListener('input', () => markTypedInput(phoneInput));
 
   cancelBtn.addEventListener('click', () => {
-      if (isTyped) {
-          showCancelConfirmation(overlay);
-      } else {
-          overlay.remove();
-      }
+    if (isTyped) {
+      showCancelConfirmation(overlay);
+    } else {
+      overlay.remove();
+    }
   });
 
   saveBtn.addEventListener('click', async () => {
@@ -68,30 +72,30 @@ export function renderAddNewClientCard(): HTMLElement {
     const phone = phoneInput.value.trim();
 
     // RESET previous errors
-    nameInput.classList.remove("is-invalid");
-    emailInput.classList.remove("is-invalid");
-    phoneInput.classList.remove("is-invalid");
+    nameInput.classList.remove('is-invalid');
+    emailInput.classList.remove('is-invalid');
+    phoneInput.classList.remove('is-invalid');
 
     let hasError = false;
 
     if (!name) {
-        nameInput.classList.add("is-invalid");
-        hasError = true;
+      nameInput.classList.add('is-invalid');
+      hasError = true;
     }
 
     if (!email) {
-        emailInput.classList.add("is-invalid");
-        hasError = true;
+      emailInput.classList.add('is-invalid');
+      hasError = true;
     }
 
     if (!phone) {
-        phoneInput.classList.add("is-invalid");
-        hasError = true;
+      phoneInput.classList.add('is-invalid');
+      hasError = true;
     }
 
     if (hasError) {
-        alert("Please fill out the required fields.");
-        return;
+      alert('Please fill out the required fields.');
+      return;
     }
 
     saveBtn.disabled = true;
@@ -107,9 +111,8 @@ export function renderAddNewClientCard(): HTMLElement {
       const clientsPage = document.querySelector('.clients-page') as any;
 
       if (clientsPage?.reload) {
-            clientsPage.reload();   // reload the client page
+        clientsPage.reload(); // reload the client page
       }
-
     } catch (err: any) {
       const msg = err?.response?.data?.message || err?.message || 'Failed to save client';
       console.error(err);

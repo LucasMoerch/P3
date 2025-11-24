@@ -1,9 +1,9 @@
 import './cancelCard.scss';
 
 export function showCancelConfirmation(overlay: HTMLElement) {
-    const wrapper = document.createElement("div");
+  const wrapper = document.createElement('div');
 
-    wrapper.innerHTML = `
+  wrapper.innerHTML = `
     <div class="cancel-confirm-overlay">
       <div class="card cancel-confirm-card">
         <p>Are you sure you want to cancel, non-saved changes will be lost</p>
@@ -15,18 +15,17 @@ export function showCancelConfirmation(overlay: HTMLElement) {
     </div>
     `;
 
-    document.body.appendChild(wrapper);
+  document.body.appendChild(wrapper);
 
-    const yesBtn = wrapper.querySelector("#confirmYes") as HTMLButtonElement;
-    const noBtn = wrapper.querySelector("#confirmNo") as HTMLButtonElement;
+  const yesBtn = wrapper.querySelector('#confirmYes') as HTMLButtonElement;
+  const noBtn = wrapper.querySelector('#confirmNo') as HTMLButtonElement;
 
-    const cleanup = () => wrapper.remove();
+  const cleanup = () => wrapper.remove();
 
-    yesBtn.onclick = () => {
-        cleanup();
-        overlay.remove();
-    };
+  yesBtn.onclick = () => {
+    cleanup();
+    overlay.remove();
+  };
 
-    noBtn.onclick = cleanup;
-
+  noBtn.onclick = cleanup;
 }

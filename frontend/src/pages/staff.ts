@@ -188,16 +188,16 @@ export function renderStaffPage(): HTMLElement {
   searchAndButtonContainer.style.marginBottom = '20px';
 
   const searchEl = renderSearchComponent((query) => {
-      const rows = realDataSection.querySelectorAll('tr');
-      rows.forEach((row, index) => {
-          if (index === 0) return; // skip header
-          const nameCell = row.querySelector('td:first-child'); // Searches first column
-          row.style.display = nameCell?.textContent?.toLowerCase().includes(query) ? '' : 'none';
-      });
+    const rows = realDataSection.querySelectorAll('tr');
+    rows.forEach((row, index) => {
+      if (index === 0) return; // skip header
+      const nameCell = row.querySelector('td:first-child'); // Searches first column
+      row.style.display = nameCell?.textContent?.toLowerCase().includes(query) ? '' : 'none';
+    });
   });
   searchAndButtonContainer.appendChild(searchEl);
 
-    // New section for real data from backend
+  // New section for real data from backend
   const realDataSection = document.createElement('div');
   realDataSection.innerHTML = `<p>Loading...</p>`;
   container.appendChild(realDataSection);

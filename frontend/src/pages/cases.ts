@@ -95,15 +95,15 @@ export function renderCasesPage(): HTMLElement {
   container.classList.add('container', 'cases-page');
   container.appendChild(div);
 
-    const searchEl = renderSearchComponent((query) => {
-        const rows = realDataSection.querySelectorAll('tr');
-        rows.forEach((row, index) => {
-            if (index === 0) return; // skip header
-            const titleCell = row.querySelector('td:first-child'); // assuming title is first column
-            row.style.display = titleCell?.textContent?.toLowerCase().includes(query) ? '' : 'none';
-        });
+  const searchEl = renderSearchComponent((query) => {
+    const rows = realDataSection.querySelectorAll('tr');
+    rows.forEach((row, index) => {
+      if (index === 0) return; // skip header
+      const titleCell = row.querySelector('td:first-child'); // assuming title is first column
+      row.style.display = titleCell?.textContent?.toLowerCase().includes(query) ? '' : 'none';
     });
-    container.appendChild(searchEl);
+  });
+  container.appendChild(searchEl);
 
   const realDataSection = document.createElement('div');
   realDataSection.innerHTML = `<p>Loading...</p>`;
@@ -164,7 +164,6 @@ export function renderCasesPage(): HTMLElement {
       realDataSection.innerHTML = '<p>Failed to load case data.</p>';
     }
   }
-
 
   // initial load
   loadCases();

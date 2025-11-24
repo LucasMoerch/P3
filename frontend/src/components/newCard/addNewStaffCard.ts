@@ -1,13 +1,13 @@
 import { renderCard } from '../cardComponent/cardComponent';
 import { createFloatingInput, createFloatingTextarea } from '../floatingLabel/floatingLabel';
 import type { UserRole } from '../../pages/staff';
-import {showCancelConfirmation} from "../cancelPopUp/cancelPopUp";
+import { showCancelConfirmation } from '../cancelPopUp/cancelPopUp';
 
 export function renderAddNewStaffCard(
   onInvite?: (email: string, role: UserRole[]) => Promise<boolean>,
 ): HTMLElement {
   // Create overlay
-  const overlay = renderCard({ edit: false, endpoint: 'users/create', hasChanges: () => isTyped});
+  const overlay = renderCard({ edit: false, endpoint: 'users/create', hasChanges: () => isTyped });
   const card: HTMLElement = overlay.querySelector('.card') as HTMLElement;
   const header: HTMLElement = card.querySelector('.header') as HTMLElement;
   const body: HTMLElement = card.querySelector('.body') as HTMLElement;
@@ -62,13 +62,13 @@ export function renderAddNewStaffCard(
   let isTyped = false;
 
   const markTypedInput = (el: HTMLInputElement | HTMLTextAreaElement) => {
-      if (el.value.trim() !== "") isTyped = true;
+    if (el.value.trim() !== '') isTyped = true;
   };
 
-  const nameInput = (formContainer.querySelector('#staffName') as HTMLInputElement);
-  const emailInput = (formContainer.querySelector('#staffEmail') as HTMLInputElement);
-  const isAdminInput = (formContainer.querySelector('#isAdmin') as HTMLInputElement);
-  const descInput = (formContainer.querySelector('#staffDesc') as HTMLTextAreaElement);
+  const nameInput = formContainer.querySelector('#staffName') as HTMLInputElement;
+  const emailInput = formContainer.querySelector('#staffEmail') as HTMLInputElement;
+  const isAdminInput = formContainer.querySelector('#isAdmin') as HTMLInputElement;
+  const descInput = formContainer.querySelector('#staffDesc') as HTMLTextAreaElement;
 
   nameInput.addEventListener('input', () => markTypedInput(nameInput));
   emailInput.addEventListener('input', () => markTypedInput(emailInput));
@@ -76,11 +76,11 @@ export function renderAddNewStaffCard(
   descInput.addEventListener('input', () => markTypedInput(descInput));
 
   cancelBtn.addEventListener('click', () => {
-      if (isTyped) {
-          showCancelConfirmation(overlay);
-      } else {
-          overlay.remove();
-      }
+    if (isTyped) {
+      showCancelConfirmation(overlay);
+    } else {
+      overlay.remove();
+    }
   });
 
   saveBtn.addEventListener('click', async () => {
@@ -92,26 +92,25 @@ export function renderAddNewStaffCard(
     const role: UserRole = isAdmin ? 'admin' : 'staff';
 
     // Reset all invalid states
-    nameInput.classList.remove("is-invalid");
-    emailInput.classList.remove("is-invalid");
+    nameInput.classList.remove('is-invalid');
+    emailInput.classList.remove('is-invalid');
 
     let hasError = false;
 
     if (!name) {
-        nameInput.classList.add("is-invalid");
-        hasError = true;
+      nameInput.classList.add('is-invalid');
+      hasError = true;
     }
 
     if (!email) {
-        emailInput.classList.add("is-invalid");
-        hasError = true;
+      emailInput.classList.add('is-invalid');
+      hasError = true;
     }
 
     if (hasError) {
-        alert("Please fill out the required fields.");
-        return;
+      alert('Please fill out the required fields.');
+      return;
     }
-
 
     console.log('Submitting:', { name, email, desc, role });
 
@@ -123,13 +122,12 @@ export function renderAddNewStaffCard(
 
     const success = await onInvite(email, [role]);
     if (success) {
-
       overlay.remove();
 
       const staffPage = document.querySelector('.staff-page') as any;
 
       if (staffPage?.reload) {
-            staffPage.reload();   // reload the staff page
+        staffPage.reload(); // reload the staff page
       }
     }
   });

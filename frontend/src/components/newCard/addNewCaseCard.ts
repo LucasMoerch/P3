@@ -1,7 +1,7 @@
 import { renderCard } from '../cardComponent/cardComponent';
 import { createFloatingInput, createFloatingTextarea } from '../floatingLabel/floatingLabel';
 import http from '../../api/http';
-import {showCancelConfirmation} from "../cancelPopUp/cancelPopUp";
+import { showCancelConfirmation } from '../cancelPopUp/cancelPopUp';
 
 export function renderAddNewCaseCard(): HTMLElement {
   const overlay = renderCard({ edit: false, endpoint: 'cases/create', hasChanges: () => isTyped });
@@ -55,29 +55,27 @@ export function renderAddNewCaseCard(): HTMLElement {
   let isTyped = false;
 
   const markTypedInput = (el: HTMLInputElement | HTMLTextAreaElement) => {
-      if (el.value.trim() !== "") isTyped = true;
+    if (el.value.trim() !== '') isTyped = true;
   };
 
   const markTypedSelect = (el: HTMLSelectElement) => {
-      if (el.value !== "") isTyped = true;
+    if (el.value !== '') isTyped = true;
   };
 
-  const titleInput = (formContainer.querySelector('#caseTitle') as HTMLInputElement);
-  const descriptionInput = (
-      formContainer.querySelector('#caseDescription') as HTMLTextAreaElement
-  );
-  const statusInput = (formContainer.querySelector('#caseStatus') as HTMLSelectElement);
+  const titleInput = formContainer.querySelector('#caseTitle') as HTMLInputElement;
+  const descriptionInput = formContainer.querySelector('#caseDescription') as HTMLTextAreaElement;
+  const statusInput = formContainer.querySelector('#caseStatus') as HTMLSelectElement;
 
   titleInput.addEventListener('input', () => markTypedInput(titleInput));
   descriptionInput.addEventListener('input', () => markTypedInput(descriptionInput));
   statusInput.addEventListener('change', () => markTypedSelect(statusInput));
 
   cancelBtn.addEventListener('click', () => {
-      if (isTyped) {
-          showCancelConfirmation(overlay);
-      } else {
-          overlay.remove();
-      }
+    if (isTyped) {
+      showCancelConfirmation(overlay);
+    } else {
+      overlay.remove();
+    }
   });
 
   saveBtn.addEventListener('click', async () => {
@@ -86,24 +84,24 @@ export function renderAddNewCaseCard(): HTMLElement {
     const status = statusInput.value;
 
     // RESET previous errors
-    titleInput.classList.remove("is-invalid");
-    statusInput.classList.remove("is-invalid");
+    titleInput.classList.remove('is-invalid');
+    statusInput.classList.remove('is-invalid');
 
     let hasError = false;
 
     if (!title) {
-        titleInput.classList.add("is-invalid");
-        hasError = true;
+      titleInput.classList.add('is-invalid');
+      hasError = true;
     }
 
     if (!status) {
-        statusInput.classList.add("is-invalid");
-        hasError = true;
+      statusInput.classList.add('is-invalid');
+      hasError = true;
     }
 
     if (hasError) {
-        alert("Please fill out the required fields.");
-        return;
+      alert('Please fill out the required fields.');
+      return;
     }
 
     saveBtn.disabled = true;
@@ -120,7 +118,7 @@ export function renderAddNewCaseCard(): HTMLElement {
       const casesPage = document.querySelector('.cases-page') as any;
 
       if (casesPage?.reload) {
-            casesPage.reload();   // reload the cases page
+        casesPage.reload(); // reload the cases page
       }
     } catch (err: any) {
       const msg = err?.response?.data?.message || err?.message || 'Failed to create case.';

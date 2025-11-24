@@ -22,12 +22,12 @@ export function renderClientsPage(): HTMLElement {
 
   const searchEl = renderSearchComponent((query) => {
     const rows = realDataSection.querySelectorAll('tr');
-        rows.forEach((row, index) => {
-            if (index === 0) return; // skip header
-            const nameCell = row.querySelector('td:first-child'); // Searches first column
-            row.style.display = nameCell?.textContent?.toLowerCase().includes(query) ? '' : 'none';
-        });
+    rows.forEach((row, index) => {
+      if (index === 0) return; // skip header
+      const nameCell = row.querySelector('td:first-child'); // Searches first column
+      row.style.display = nameCell?.textContent?.toLowerCase().includes(query) ? '' : 'none';
     });
+  });
   container.appendChild(searchEl);
 
   const realDataSection = document.createElement('div');
