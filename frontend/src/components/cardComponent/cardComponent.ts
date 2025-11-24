@@ -4,7 +4,7 @@ import { UserDTO } from '../../pages/staff';
 import { loadUsersAndClients } from './dataLoader';
 import { createCheckboxDropdown } from './checkboxDropdown';
 import { normalizeIdArray, friendlyForValue } from './utils';
-import {showCancelConfirmation} from "../cancelPopUp/cancelPopUp";
+import { showCancelConfirmation } from "../cancelPopUp/cancelPopUp";
 
 type RenderCardOptions = {
   edit?: boolean;
@@ -190,22 +190,22 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
         }
 
         if (!valueSpan.querySelector('input')) {
-            const currentValue = valueSpan.textContent?.trim() || '';
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.value = currentValue; //Makes sure to insert the current value, after you click edit.
-            input.className = 'form-control text-end fw-semibold';
-            input.dataset.field = field;
-            if (valueSpan.dataset.transform) {
-                input.dataset.transform = valueSpan.dataset.transform;
-            }
-            valueSpan.textContent = '';
-            valueSpan.appendChild(input);
+          const currentValue = valueSpan.textContent?.trim() || '';
+          const input = document.createElement('input');
+          input.type = 'text';
+          input.value = currentValue; //Makes sure to insert the current value, after you click edit.
+          input.className = 'form-control text-end fw-semibold';
+          input.dataset.field = field;
+          if (valueSpan.dataset.transform) {
+            input.dataset.transform = valueSpan.dataset.transform;
+          }
+          valueSpan.textContent = '';
+          valueSpan.appendChild(input);
 
-            // Mark as edited when user types
-            input.addEventListener('input', () => {
-                isEdited = true;
-            });
+          // Mark as edited when user types
+          input.addEventListener('input', () => {
+            isEdited = true;
+          });
         }
       });
 
@@ -213,12 +213,9 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
 
       const saveBtn = document.createElement('button');
       saveBtn.className = 'btn btn-primary position-absolute top-0 end-0 m-3 fs-3 py-1 px-2';
-      saveBtn.innerText = 'Save';
+      saveBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save';
 
-      const btnContainer = document.createElement('div');
-      btnContainer.className = 'd-flex justify-content-center mt-3';
-      btnContainer.appendChild(saveBtn);
-      card.appendChild(btnContainer);
+      card.appendChild(saveBtn);
 
       const setNestedValue = (target: Record<string, unknown>, path: string, value: unknown) => {
         const segments = path.split('.');
@@ -380,21 +377,21 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
   body.className = 'body';
 
   closeBtn.addEventListener("pointerdown", (ev) => {
-      ev.stopPropagation();
-      ev.preventDefault();
+    ev.stopPropagation();
+    ev.preventDefault();
   });
 
   closeBtn.addEventListener('click', (ev) => {
-      ev.stopPropagation();
-      ev.preventDefault();
+    ev.stopPropagation();
+    ev.preventDefault();
 
-      const changed = options.hasChanges?.() ?? isEdited;
+    const changed = options.hasChanges?.() ?? isEdited;
 
-      if (changed) {
-          showCancelConfirmation(overlay);
-      } else {
-          overlay.remove();
-      }
+    if (changed) {
+      showCancelConfirmation(overlay);
+    } else {
+      overlay.remove();
+    }
   });
   card.appendChild(closeBtn);
   overlay.appendChild(card);
@@ -403,11 +400,11 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
 
   //Removes overlay if you click outside
   overlay.addEventListener('click', (event) => {
-      if (!card.contains(event.target as Node)) {
-          const changed = options.hasChanges?.() ?? isEdited;
-          if (changed) showCancelConfirmation(overlay);
-          else overlay.remove();
-      }
+    if (!card.contains(event.target as Node)) {
+      const changed = options.hasChanges?.() ?? isEdited;
+      if (changed) showCancelConfirmation(overlay);
+      else overlay.remove();
+    }
   });
 
   return overlay;
