@@ -115,8 +115,6 @@ export function renderCasesPage(): HTMLElement {
       // render table and append
       const tableElement = renderTable(caseData);
       realDataSection.appendChild(tableElement);
-      
-
 
       // make rows clickable like InspectUser
       const rows = tableElement.querySelectorAll('tr');
@@ -124,12 +122,9 @@ export function renderCasesPage(): HTMLElement {
         // Skip header row
         if (index === 0) return;
 
-
-
         //Add color coding to status column
         // Status column is the second cell
         const statusCell = row.querySelectorAll('td')[1] as HTMLTableCellElement | undefined;
-  
 
         switch (statusCell?.textContent) {
           case 'CLOSED':
@@ -142,7 +137,7 @@ export function renderCasesPage(): HTMLElement {
             statusCell.classList.add('text-warning');
             statusCell.innerText = 'ON HOLD';
             break;
-          
+
           default:
             break;
         }
@@ -158,11 +153,7 @@ export function renderCasesPage(): HTMLElement {
       console.error('Failed to load cases:', err);
       realDataSection.innerHTML = '<p>Failed to load case data.</p>';
     }
-
   }
-  
-  
-    
 
   // InspectCase - matches the style/behavior of inspectUser
 

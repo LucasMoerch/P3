@@ -11,7 +11,11 @@ export type TimeEntryDto = {
 };
 
 //api functions
-async function checkForUnresolvedTime(buttonRow: HTMLDivElement, startTimeBtn: HTMLButtonElement, stopTimeBtn: HTMLButtonElement) {
+async function checkForUnresolvedTime(
+  buttonRow: HTMLDivElement,
+  startTimeBtn: HTMLButtonElement,
+  stopTimeBtn: HTMLButtonElement,
+) {
   try {
     const currentUserId = getUserId();
     console.log('Current User ID:', currentUserId);
@@ -20,7 +24,7 @@ async function checkForUnresolvedTime(buttonRow: HTMLDivElement, startTimeBtn: H
       return;
     }
 
-    const last = (await http.get(`/times/users/${currentUserId}/last-time`)) as TimeEntryDto
+    const last = (await http.get(`/times/users/${currentUserId}/last-time`)) as TimeEntryDto;
     console.log('Last time entry fetched:', last.startTime, last.stopTime);
     if (!last) {
       console.log('No last time entry found for user.');
@@ -79,12 +83,15 @@ async function sendStartTimeData(
   startTime: string,
   userId: string,
   currentUserName: string,
+  caseId?: string,
 ): Promise<void> {
   try {
-    const response = await http.post(
-      '/times/start',
-      new URLSearchParams({ startTime, userId, currentUserName }),
-    );
+    const params = new URLSearchParams({ startTime, userId, currentUserName });
+    if (caseId) {
+      params.append('caseId', caseId);
+    }
+
+    const response = await http.post('/times/start', params);
     console.log('Response:', response);
   } catch (error: any) {
     console.error('Error:', error.response?.data || error.message);
@@ -264,16 +271,14 @@ export function renderTimeTracker(): HTMLElement {
     };
 
     //global variable to hold data until confirmed
-    let pendingCompletionData:
-      | {
-        startTime: string;
-        stopTime: string;
-        totalTime: string;
-        description: string;
-        date: string;
-        caseId: string;
-      }
-      | null = null;
+    let pendingCompletionData: {
+      startTime: string;
+      stopTime: string;
+      totalTime: string;
+      description: string;
+      date: string;
+      caseId: string;
+    } | null = null;
 
     const dropDownRow: HTMLDivElement = document.createElement('div');
     dropDownRow.innerHTML = `
@@ -338,8 +343,6 @@ export function renderTimeTracker(): HTMLElement {
       </div>
     </div>`;
 
-
-
     const totalTimeDisplay: HTMLDivElement = document.createElement('div');
     totalTimeDisplay.className = 'container p-2 rounded d-flex justify-content-center';
     totalTimeDisplay.innerHTML = `
@@ -354,8 +357,7 @@ export function renderTimeTracker(): HTMLElement {
         value="00:00:00">
      </div>
     </div>`;
-    const calender: HTMLElement = renderCalendar(
-    );
+    const calender: HTMLElement = renderCalendar();
 
     // Build card
 
@@ -376,13 +378,13 @@ export function renderTimeTracker(): HTMLElement {
     body.appendChild(bottomSection);
     buttonRow.appendChild(startTimeBtn);
 
-    const startTimeInputEl = startStopTimeRow.querySelector('#startTime') as HTMLInputElement | null;
+    const startTimeInputEl = startStopTimeRow.querySelector(
+      '#startTime',
+    ) as HTMLInputElement | null;
     const stopTimeInputEl = startStopTimeRow.querySelector('#stopTime') as HTMLInputElement | null;
-    const totalTimeInputEl = totalTimeDisplay.querySelector('#totalTime') as HTMLInputElement | null;
-
-
-
-
+    const totalTimeInputEl = totalTimeDisplay.querySelector(
+      '#totalTime',
+    ) as HTMLInputElement | null;
 
     loadCases();
 
@@ -398,7 +400,6 @@ export function renderTimeTracker(): HTMLElement {
       });
     });
 
-
     // Async check for unresolved time entry. after function is completed the originalStartTime is set
     checkForUnresolvedTime(buttonRow, startTimeBtn, stopTimeBtn)
       .then((t) => {
@@ -407,8 +408,6 @@ export function renderTimeTracker(): HTMLElement {
         }
       })
       .catch((err) => console.error(err));
-
-
 
     startTimeBtn.addEventListener('click', (): void => {
       //get Start time
@@ -425,6 +424,8 @@ export function renderTimeTracker(): HTMLElement {
         return;
       }
 
+      const caseId = getCaseIdFromSelect();
+
       console.log('Current User ID:', currentUserId);
       //This time needs to be stored the same place as the Id so that each account has a latest time that can be queried
       originalStartTime = startTimeNow;
@@ -433,9 +434,8 @@ export function renderTimeTracker(): HTMLElement {
       buttonRow.appendChild(stopTimeBtn);
       displayTime('startTime', startTimeNow);
       //const result = await getTimeData();
-      sendStartTimeData(startTimeNow, currentUserId, currentUserName);
+      sendStartTimeData(startTimeNow, currentUserId, currentUserName, caseId);
     });
-
 
     stopTimeBtn.addEventListener('click', (): void => {
       //Gets the time of stopping
@@ -447,12 +447,14 @@ export function renderTimeTracker(): HTMLElement {
       stopTimeBtn.remove();
     });
 
-
     completeBtn.addEventListener('click', (): void => {
-      const startTimeInput: string = (document.getElementById('startTime') as HTMLInputElement).value;
+      const startTimeInput: string = (document.getElementById('startTime') as HTMLInputElement)
+        .value;
       const stopTimeInput: string = (document.getElementById('stopTime') as HTMLInputElement).value;
-      const descriptionInput: string = (document.getElementById('description') as HTMLInputElement).value;
-      const calenderField: string = (document.getElementById('dateInput') as HTMLInputElement).value;
+      const descriptionInput: string = (document.getElementById('description') as HTMLInputElement)
+        .value;
+      const calenderField: string = (document.getElementById('dateInput') as HTMLInputElement)
+        .value;
       const caseId: string = getCaseIdFromSelect();
       const formattedDate = getDateNow(calenderField);
       const totalTime = calculateTotalTime(startTimeInput, stopTimeInput);

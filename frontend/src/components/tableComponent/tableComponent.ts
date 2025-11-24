@@ -23,9 +23,7 @@ export function renderTable(data: Array<Record<string, unknown>>): HTMLElement {
   const columnNames: string[] = [];
   for (const key of Object.keys(data[0])) {
     columnNames.push(key);
-
   }
- 
 
   // Build header
   const headTr = document.createElement('tr');
