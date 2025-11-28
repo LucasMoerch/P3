@@ -9,20 +9,101 @@ export type CaseDto = {
   clientId: string;
   title: string;
   description?: string;
-  status: 'OPEN' | 'CLOSED';
+  status: 'OPEN' | 'ON_HOLD' | 'CLOSED';
   assignedUserIds: string[];
   createdAt: string;
   updatedAt: string;
 };
+
+// InspectCase - matches the style/behavior of inspectUser
+export function inspectCase(c: CaseDto): HTMLElement {
+  const overlay: HTMLElement = renderCard({ edit: true, endpoint: 'cases', data: c });
+  const card: HTMLElement = overlay.querySelector('.card') as HTMLElement;
+  const header: HTMLElement = card.querySelector('.header') as HTMLElement;
+  const body: HTMLElement = card.querySelector('.body') as HTMLElement;
+
+  header.innerText = c.title;
+
+  // Body markup
+  if (body) {
+    body.innerHTML = `
+        <div class="card profile-card w-100 shadow-sm border-0">
+          <div class="card-body fs-5">
+            <div class="info-row d-flex justify-content-between border-bottom py-3">
+              <span class="label text-muted fw-medium">Case ID</span>
+              <span class="value fw-semibold" data-field="id" data-editable="false">${c.id}</span>
+            </div>
+            <div class="info-row d-flex justify-content-between border-bottom py-3">
+              <span class="label text-muted fw-medium">Title</span>
+              <span class="value fw-semibold" data-field="title">${c.title}</span>
+            </div>
+
+            <div class="info-row d-flex justify-content-between border-bottom py-3">
+              <span class="label text-muted fw-medium">Client ID</span>
+              <span
+                class="value dropdown fw-semibold"
+                data-field="clientId"
+                data-client-id="${c.clientId ?? ''}"
+              >
+                ${c.clientId ? c.clientId : 'None'}
+              </span>            </div>
+
+            <div class="info-row d-flex justify-content-between border-bottom py-3">
+              <span class="label text-muted fw-medium">Description</span>
+              <span class="value fw-semibold text-end" data-field="description">${c.description || '-'}</span>
+            </div>
+
+            <div class="info-row d-flex justify-content-between border-bottom py-3">
+              <span class="label text-muted fw-medium">Status</span>
+              <span class="value dropdown fw-semibold" data-field="status" data-options="OPEN,ON_HOLD,CLOSED">${c.status}</span>
+            </div>
+
+            <div class="info-row d-flex justify-content-between border-bottom py-3">
+              <span class="label text-muted fw-medium">Assigned Users</span>
+              <span
+                class="value dropdown fw-semibold"
+                data-field="assignedUsers"
+                data-assigned-ids='${JSON.stringify(c.assignedUserIds ?? [])}'
+              >
+                ${c.assignedUserIds && c.assignedUserIds.length ? c.assignedUserIds.join(', ') : 'None'}
+              </span>
+            </div>
+
+            <div class="info-row d-flex justify-content-between border-bottom py-3">
+              <span class="label text-muted fw-medium">Created</span>
+              <span class="value fw-semibold" data-field="createdAt" data-editable="false">${new Date(c.createdAt).toLocaleString('da-DK')}</span>
+            </div>
+
+            <div class="info-row d-flex justify-content-between py-3">
+              <span class="label text-muted fw-medium">Last Updated</span>
+              <span class="value fw-semibold" data-field="updatedAt" data-editable="false">${new Date(c.updatedAt).toLocaleString('da-DK')}</span>
+            </div>
+          </div>
+        </div>
+      `;
+  }
+  card.appendChild(renderTabs({ entityType: 'cases', entityId: c.id }));
+
+  return overlay;
+}
 
 export function renderCasesPage(): HTMLElement {
   const div = document.createElement('div');
   div.innerHTML = `<h1>Cases Overview</h1>`;
 
   const container = document.createElement('div');
-  container.classList.add('container');
+  container.classList.add('container', 'cases-page');
   container.appendChild(div);
-  container.appendChild(renderSearchComponent());
+
+  const searchEl = renderSearchComponent((query) => {
+    const rows = realDataSection.querySelectorAll('tr');
+    rows.forEach((row, index) => {
+      if (index === 0) return; // skip header
+      const titleCell = row.querySelector('td:first-child'); // assuming title is first column
+      row.style.display = titleCell?.textContent?.toLowerCase().includes(query) ? '' : 'none';
+    });
+  });
+  container.appendChild(searchEl);
 
   const realDataSection = document.createElement('div');
   realDataSection.innerHTML = `<p>Loading...</p>`;
@@ -33,10 +114,9 @@ export function renderCasesPage(): HTMLElement {
       const cases = (await http.get('/cases')) as CaseDto[];
 
       const caseData = (cases ?? []).map((c) => ({
-        title: c.title || 'Untitled',
-        description: c.description || '-',
+        adress: c.title || 'Untitled',
         status: c.status || 'UNKNOWN',
-        createdAt: new Date(c.createdAt).toLocaleDateString('da-DK'),
+        Date_Created: new Date(c.createdAt).toLocaleDateString('da-DK'),
       }));
 
       // clear loading...
@@ -52,6 +132,26 @@ export function renderCasesPage(): HTMLElement {
         // Skip header row
         if (index === 0) return;
 
+        //Add color coding to status column
+        // Status column is the second cell
+        const statusCell = row.querySelectorAll('td')[1] as HTMLTableCellElement | undefined;
+
+        switch (statusCell?.textContent) {
+          case 'CLOSED':
+            statusCell.classList.add('text-danger');
+            break;
+          case 'OPEN':
+            statusCell.classList.add('text-success');
+            break;
+          case 'ON_HOLD':
+            statusCell.classList.add('text-warning');
+            statusCell.innerText = 'ON HOLD';
+            break;
+
+          default:
+            break;
+        }
+
         row.addEventListener('click', (): void => {
           const selectedCase = cases[index - 1]; // match index with case
           const popup = inspectCase(selectedCase);
@@ -65,67 +165,9 @@ export function renderCasesPage(): HTMLElement {
     }
   }
 
-  // InspectCase - matches the style/behavior of inspectUser
-  function inspectCase(c: CaseDto): HTMLElement {
-    const overlay: HTMLElement = renderCard(true);
-    const card: HTMLElement = overlay.querySelector('.card') as HTMLElement;
-    const header: HTMLElement = card.querySelector('.header') as HTMLElement;
-    const body: HTMLElement = card.querySelector('.body') as HTMLElement;
-
-    header.innerText = c.title;
-
-    // Body markup
-    if (body) {
-      body.innerHTML = `
-        <div class="card profile-card w-100 shadow-sm border-0">
-          <div class="card-body fs-5">
-            <div class="info-row d-flex justify-content-between border-bottom py-3">
-              <span class="label text-muted fw-medium">Case ID</span>
-              <span class="value fw-semibold">${c.id}</span>
-            </div>
-
-            <div class="info-row d-flex justify-content-between border-bottom py-3">
-              <span class="label text-muted fw-medium">Client ID</span>
-              <span class="value fw-semibold">${c.clientId}</span>
-            </div>
-
-            <div class="info-row d-flex justify-content-between border-bottom py-3">
-              <span class="label text-muted fw-medium">Description</span>
-              <span class="value fw-semibold text-end">${c.description || '-'}</span>
-            </div>
-
-            <div class="info-row d-flex justify-content-between border-bottom py-3">
-              <span class="label text-muted fw-medium">Status</span>
-              <span class="value fw-semibold">${c.status}</span>
-            </div>
-
-            <div class="info-row d-flex justify-content-between border-bottom py-3">
-              <span class="label text-muted fw-medium">Assigned Users</span>
-              <span class="value fw-semibold">${c.assignedUserIds.length ? c.assignedUserIds.join(', ') : 'None'}</span>
-            </div>
-
-            <div class="info-row d-flex justify-content-between border-bottom py-3">
-              <span class="label text-muted fw-medium">Created</span>
-              <span class="value fw-semibold">${new Date(c.createdAt).toLocaleString('da-DK')}</span>
-            </div>
-
-            <div class="info-row d-flex justify-content-between py-3">
-              <span class="label text-muted fw-medium">Last Updated</span>
-              <span class="value fw-semibold">${new Date(c.updatedAt).toLocaleString('da-DK')}</span>
-            </div>
-          </div>
-        </div>
-      `;
-    }
-    card.appendChild(renderTabs({ entityType: 'cases', entityId: c.id }));
-
-
-    return overlay;
-  }
-
-  // initial load + auto refresh
+  // initial load
   loadCases();
-  setInterval(loadCases, 10000);
+  (container as any).reload = loadCases;
 
   return container;
 }

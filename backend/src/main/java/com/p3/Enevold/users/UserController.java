@@ -19,6 +19,8 @@ import java.util.Date;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.beans.factory.annotation.Autowired;
+
 
 @RestController
 @RequestMapping("/users") // final path = /api/users
@@ -34,49 +36,6 @@ public class UserController {
         this.googleJwtDecoder = googleJwtDecoder;
     }
 
-    @PostMapping("/invite")
-    public ResponseEntity<?> invite(@RequestParam String email,
-                                    @RequestParam String firstName,
-                                    @RequestParam String lastName) {
-        try {
-            var lower = email.toLowerCase();
-
-            var u = new User();
-
-            var auth = new User.Auth();
-            auth.setProvider("google");
-            auth.setEmail(lower);
-            auth.setEmailVerified(false);
-            auth.setPictureUrl(null);
-
-            var profile = new User.Profile();
-            profile.setFirstName(firstName);
-            profile.setLastName(lastName);
-            profile.setDisplayName(firstName + " " + lastName);
-            profile.setLocale("da-DK");
-            profile.setPhone(null);
-
-            var audit = new User.Audit();
-            var now = java.time.Instant.now();
-            audit.setCreatedAt(now);
-            audit.setUpdatedAt(now);
-            audit.setCreatedBy(null);
-            audit.setUpdatedBy(null);
-
-            u.setRoles(java.util.List.of("staff"));
-            u.setStatus("invited");
-            u.setAuth(auth);
-            u.setProfile(profile);
-            u.setStaff(null);
-            u.setAudit(audit);
-            u.setDocuments(new ArrayList<>());
-
-            return ResponseEntity.ok(repo.save(u));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest()
-                    .body(java.util.Map.of("error", e.getClass().getSimpleName(), "message", String.valueOf(e.getMessage())));
-        }
-    }
     @PostMapping("/activate")
     public ResponseEntity<?> activate(@RequestParam("id_token") String idToken, jakarta.servlet.http.HttpSession session) {
        try {
@@ -134,6 +93,17 @@ public class UserController {
            return ResponseEntity.badRequest().body(java.util.Map.of("error", e.getClass().getSimpleName(), "message", e.getMessage()));
        }
 
+    }
+
+    // Edit user details
+    @PutMapping("/{id}")
+      public ResponseEntity<User> putUser(@PathVariable String id, @RequestBody User body) {
+      var existing = repo.findById(id).orElse(null);
+      if (existing == null) return ResponseEntity.notFound().build();
+
+
+      var saved = repo.save(body);
+      return ResponseEntity.ok(saved);
     }
 
     // Upload a file/document to a specific user

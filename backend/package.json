@@ -1,0 +1,8 @@
+{
+  "name": "backend",
+  "private": true,
+  "scripts": {
+    "format": "./mvnw -q spotless:apply",
+    "lint": "./mvnw -q spotless:check"
+  }
+}

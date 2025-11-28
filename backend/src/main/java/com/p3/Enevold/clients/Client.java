@@ -15,6 +15,7 @@ public class Client {
   @Id
   private String id;
   private String name;
+  private String address;
   private String contactEmail;
   private String contactPhone;
   private String notes;
@@ -74,6 +75,10 @@ public class Client {
 
   public void setDocuments(List<FileDocument> documents) {
     this.documents = documents;
+  }
+
+  public void setCreatedAt(Date createdAt) {
+    this.createdAt = createdAt;
   }
 
 }

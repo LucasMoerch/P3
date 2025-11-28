@@ -1,12 +1,46 @@
-.search-container input {
-  min-width: 85%;
-  padding: 10px 40px 10px 12px;
-  border: 1px solid #ccc;
-  border-radius: 25px;
-  outline: none;
+.form-floating {
+  position: relative;
+}
+
+.form-control {
+  padding-right: 40px !important;
+}
+.search-container {
+  position: relative; // enables absolute positioning inside box
+}
+
+.search-button {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.Search,
+.search-container {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  margin-right: 8px;
 }
 .search-container .search-button {
   cursor: pointer;
   border: none;
   background: none;
+  margin-left: 8px;
+}
+
+.form-floating > label {
+  background: none;
+  backdrop-filter: none;
+  box-shadow: none;
+  color: #777;
+}
+
+:root {
+  --bs-body-bg: #fff;
 }

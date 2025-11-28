@@ -1,34 +1,24 @@
 import './newButton.scss';
-import { renderAddNewStaffCard } from '../newCard/addNewStaffCard';
 import { renderAddNewClientCard } from '../newCard/addNewClientCard';
 import { renderAddNewCaseCard } from '../newCard/addNewCaseCard';
 
-export function renderNewButton(): HTMLElement {
+export function renderNewButton(onClick?: () => void): HTMLElement {
   const addButton = document.createElement('button');
   addButton.className = 'button';
 
-  // Import icon from Font Awesome
   const newClientIcon = document.createElement('i');
   newClientIcon.className = 'fa-solid fa-user-plus text-dark';
   addButton.appendChild(newClientIcon);
 
   addButton.addEventListener('click', () => {
     const path = window.location.pathname.toLowerCase();
-
-    let cardEl: HTMLElement | null = null;
-
-    if (path.includes('staff')) {
-      cardEl = renderAddNewStaffCard();
+    if (onClick) {
+      onClick();
     } else if (path.includes('client')) {
-      cardEl = renderAddNewClientCard();
+      document.body.appendChild(renderAddNewClientCard());
     } else if (path.includes('case')) {
-      cardEl = renderAddNewCaseCard();
-    } else {
-      console.warn('No matching overlay found for path:', path);
-      return;
+      document.body.appendChild(renderAddNewCaseCard());
     }
-
-    document.body.appendChild(cardEl);
   });
 
   return addButton;

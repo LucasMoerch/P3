@@ -11,9 +11,9 @@
   top: 50%;
   background: linear-gradient(
     356deg,
-    rgba(42, 123, 155, 1) 0%,
-    rgba(87, 115, 199, 1) 53%,
-    rgba(33, 60, 235, 1) 100%
+    rgba(42, 123, 155, 0.7) 0%,
+    rgba(87, 115, 199, 0.7) 53%,
+    rgba(33, 60, 235, 0.7) 100%
   );
   color: white;
   border: none;
@@ -38,12 +38,31 @@
   letter-spacing: 2px;
   user-select: none;
 }
-.light-bg {
-  background-color: #f3f1ec;
-}
-.lighter-bg {
-  background-color: #fbfaf8;
-}
+
 .clockText {
   font-size: 14px;
+}
+.totalTime-field {
+  pointer-events: none;
+}
+.completion-popup {
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 1rem;
+  z-index: 1100;
+}
+.completion-popup.show {
+  display: flex;
+}
+.completion-popup .popup-inner {
+  max-width: 420px;
+  width: 100%;
+}
+
+.hide-long-text {
+  overflow: hidden;
 }

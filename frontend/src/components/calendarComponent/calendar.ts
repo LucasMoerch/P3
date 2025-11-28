@@ -18,7 +18,7 @@ export function renderCalendar(): HTMLElement {
   input.type = 'text';
   input.placeholder = 'Choose date';
 
-  input.className = 'form-control rounded w-100';
+  input.className = 'form-control rounded w-100 lighter-bg';
   inputGroup.appendChild(input);
   inputGroup.appendChild(calenderBtn);
   wrapper.appendChild(inputGroup);
