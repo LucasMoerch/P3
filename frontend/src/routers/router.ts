@@ -4,8 +4,17 @@ import { renderCasesPage } from '../pages/cases';
 import { renderClientsPage } from '../pages/clients';
 import { renderMyProfilePage } from '../pages/myProfile';
 import { renderStaffPage } from '../pages/staff';
+import { isAuthenticated } from '../auth/auth';
 
 export function resolveRoute(path: string): HTMLElement {
+ if (!isAuthenticated() && path !== '/login') { // forces non-user to only visit login page
+     return renderLoginPage();
+ }
+
+ if (isAuthenticated() && path === '/login') {
+     return renderHomePage();
+ }
+
   switch (path) {
     case '/login':
       return renderLoginPage();

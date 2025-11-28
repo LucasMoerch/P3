@@ -47,8 +47,8 @@ export function renderLoginPage(): HTMLElement {
       const data = await http.post('/users/activate', new URLSearchParams({ id_token }));
 
       // success
-      navigate('home');
-      await initAuth();
+      navigate('/home');
+      await initAuth(true);
       document.body.style.backgroundImage = '';
     } catch (err: any) {
       // Axios errors, err.response?.data has server message
