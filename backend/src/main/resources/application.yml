@@ -24,6 +24,8 @@ app:
   allowed-origins: ${ALLOWED_ORIGINS:https://enevold-frontend-cytaa.ondigitalocean.app}
   google:
     client-id: ${GOOGLE_CLIENT_ID}
+    client-secret: ${GOOGLE_CLIENT_SECRET}
+
 
 management:
   endpoints:
@@ -34,4 +36,5 @@ logging:
   level:
     org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping: DEBUG
     org.mongodb.driver: INFO
+
 
