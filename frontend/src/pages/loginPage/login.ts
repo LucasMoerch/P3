@@ -22,6 +22,9 @@ export function renderLoginPage(): HTMLElement {
   const card = document.createElement('div');
   card.className = 'card p-5 login-card d-flex flex-column justify-content-center ';
 
+  
+  console.log('RENDER LOGIN - CLIENT ID =', GOOGLE_CLIENT_ID);
+
   const gContainer = document.createElement('div');
   gContainer.innerHTML = `
     <div id="g_id_onload"
