@@ -21,7 +21,7 @@ app:
   # admin emails
   admin-emails: ${ADMIN_EMAILS:}
   # Allowed frontend origins for CORS
-  allowed-origins: ${ALLOWED_ORIGINS:http://localhost:8080}
+  allowed-origins: ${ALLOWED_ORIGINS:https://enevold-frontend-cytaa.ondigitalocean.app}
   google:
     client-id: ${GOOGLE_CLIENT_ID}
 
@@ -34,3 +34,4 @@ logging:
   level:
     org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping: DEBUG
     org.mongodb.driver: INFO
+
