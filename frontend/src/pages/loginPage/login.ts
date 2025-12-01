@@ -4,8 +4,10 @@ import { navigate } from '../../main';
 import { initAuth } from '../../auth/auth';
 import './loginStyles.scss';
 
-// Uses google_client_id from .env
-const GOOGLE_CLIENT_ID = (process.env.GOOGLE_CLIENT_ID as string) || '';
+// This will be replaced by webpack at build time
+declare const __GOOGLE_CLIENT_ID__: string;
+const GOOGLE_CLIENT_ID = __GOOGLE_CLIENT_ID__;
+
 
 export function renderLoginPage(): HTMLElement {
   document.body.style.backgroundImage = `url("../images/toemrer.jpeg")`;
@@ -19,6 +21,9 @@ export function renderLoginPage(): HTMLElement {
 
   const card = document.createElement('div');
   card.className = 'card p-5 login-card d-flex flex-column justify-content-center ';
+
+  
+  console.log('RENDER LOGIN - CLIENT ID =', GOOGLE_CLIENT_ID);
 
   const gContainer = document.createElement('div');
   gContainer.innerHTML = `

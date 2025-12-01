@@ -5,6 +5,8 @@ import webpack from 'webpack';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+console.log('BUILD GOOGLE_CLIENT_ID =', process.env.GOOGLE_CLIENT_ID);
+
 export default {
   entry: './src/main.ts',
   output: {
@@ -60,7 +62,7 @@ export default {
   },
   plugins: [
     new webpack.DefinePlugin({
-      'process.env.GOOGLE_CLIENT_ID': JSON.stringify(process.env.GOOGLE_CLIENT_ID || ''),
+      __GOOGLE_CLIENT_ID__: JSON.stringify(process.env.GOOGLE_CLIENT_ID || 'MISSING_GOOGLE_CLIENT_ID'),
     }),
   ],
 };
