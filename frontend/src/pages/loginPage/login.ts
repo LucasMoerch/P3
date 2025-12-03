@@ -8,7 +8,6 @@ import './loginStyles.scss';
 declare const __GOOGLE_CLIENT_ID__: string;
 const GOOGLE_CLIENT_ID = __GOOGLE_CLIENT_ID__;
 
-
 export function renderLoginPage(): HTMLElement {
   document.body.style.backgroundImage = `url("../images/toemrer.jpeg")`;
   document.body.style.backgroundSize = 'cover';
@@ -22,7 +21,6 @@ export function renderLoginPage(): HTMLElement {
   const card = document.createElement('div');
   card.className = 'card p-5 login-card d-flex flex-column justify-content-center ';
 
-  
   console.log('RENDER LOGIN - CLIENT ID =', GOOGLE_CLIENT_ID);
 
   const gContainer = document.createElement('div');

@@ -362,12 +362,12 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
           overlay.remove();
           //Refreshes page for ANY page upon save or more specifically updating that specific row.
           const container =
-              document.querySelector('.clients-page') ||
-              document.querySelector('.staff-page') ||
-              document.querySelector('.cases-page');
+            document.querySelector('.clients-page') ||
+            document.querySelector('.staff-page') ||
+            document.querySelector('.cases-page');
 
           if (container && (container as any).reload) {
-              (container as any).reload();
+            (container as any).reload();
           }
 
           saveBtn.innerText = prev;

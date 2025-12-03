@@ -12,8 +12,7 @@ export function renderMyProfilePage(): HTMLElement {
   const body = document.createElement('div');
 
   const me = getMe();
-  console.log(me)
-
+  console.log(me);
 
   body.innerHTML = `
       <div class="card profile-card w-100 shadow-sm border-0">
@@ -91,7 +90,7 @@ export function renderMyProfilePage(): HTMLElement {
   const documents = document.createElement('div');
   documents.id = 'files';
   documents.innerHTML = `<h2 class="mt-5">My documents</h2><div id="files-content" class="mt-3"></div>`;
-  loadFiles({ entityType: 'users', entityId: me!.id.toString(), container: documents })
+  loadFiles({ entityType: 'users', entityId: me!.id.toString(), container: documents });
 
   const timeRegistrations = document.createElement('div');
   timeRegistrations.id = 'time-registrations';
