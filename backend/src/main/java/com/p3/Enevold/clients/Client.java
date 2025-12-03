@@ -1,14 +1,12 @@
 package com.p3.Enevold.clients;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 import com.p3.Enevold.utils.FileDocument;
-
 import java.util.List;
 import java.util.Date;
 import java.util.ArrayList;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 @Document("clients")
 public class Client {
@@ -21,6 +19,8 @@ public class Client {
   private String notes;
   @CreatedDate
   private Date createdAt;
+  @LastModifiedDate
+  private Date updatedAt;
   private List<FileDocument> documents = new ArrayList<>();
 
   // Getters
@@ -46,6 +46,10 @@ public class Client {
 
   public Date getCreatedAt() {
     return createdAt;
+  }
+
+  public Date getUpdatedAt() {
+    return updatedAt;
   }
 
   public List<FileDocument> getDocuments() {
@@ -76,9 +80,4 @@ public class Client {
   public void setDocuments(List<FileDocument> documents) {
     this.documents = documents;
   }
-
-  public void setCreatedAt(Date createdAt) {
-    this.createdAt = createdAt;
-  }
-
 }

@@ -1,3 +1,4 @@
+
 import './pageStyles/staff.scss';
 import { renderTable } from '../components/tableComponent/tableComponent';
 import { renderSearchComponent } from '../components/searchBar/searchBar';
@@ -152,9 +153,8 @@ function inspectUser(user: any): HTMLElement {
         </div>
         <div class="info-row d-flex justify-content-between py-3">
           <span class="label text-muted fw-medium">Roles</span>
-          <span class="value fw-semibold" data-field="roles" data-transform="commaList">${
-            Array.isArray(user.roles) ? user.roles.join(', ') : user.roles || 'N/A'
-          }</span>
+          <span class="value fw-semibold" data-field="roles" data-transform="commaList">${Array.isArray(user.roles) ? user.roles.join(', ') : user.roles || 'N/A'
+    }</span>
         </div>
       </div>
     </div>

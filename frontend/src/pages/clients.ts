@@ -87,10 +87,6 @@ export function renderClientsPage(): HTMLElement {
       <div class="card profile-card w-100 shadow-sm border-0">
         <div class="card-body fs-5">
           <div class="info-row d-flex justify-content-between border-bottom py-3">
-            <span class="label text-muted fw-medium">Client ID</span>
-            <span class="value fw-semibold" data-field="id">${client.id}</span>
-          </div>
-          <div class="info-row d-flex justify-content-between border-bottom py-3">
             <span class="label text-muted fw-medium">Name</span>
             <span class="value fw-semibold" data-field="name">${client.name}</span>
           </div>

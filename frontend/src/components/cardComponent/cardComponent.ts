@@ -342,6 +342,9 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
           (updated as any).id = (options.data as any).id;
         }
 
+        // Do NOT send documents back on update, they are managed by upload/delete endpoints
+        delete (updated as any).documents;
+
         try {
           saveBtn.disabled = true;
           const prev = saveBtn.innerText;
