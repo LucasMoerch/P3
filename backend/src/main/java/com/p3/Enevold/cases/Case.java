@@ -1,6 +1,7 @@
 package com.p3.Enevold.cases;
 
 import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -21,9 +22,9 @@ public class Case {
   private String description;
   private String status;
   private List<String> assignedUserIds;
-
   @CreatedDate
   private Date createdAt;
+  @LastModifiedDate
   private Date updatedAt;
 
   @CreatedBy

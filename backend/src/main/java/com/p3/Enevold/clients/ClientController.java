@@ -41,11 +41,6 @@ public class ClientController {
   var existing = clientRepository.findById(id).orElse(null);
   if (existing == null) return ResponseEntity.notFound().build();
 
-  // Ensure path id is the source of truth
-  body.setId(id);
-
-  // Preserve server-managed field (createdAt)
-  body.setCreatedAt(existing.getCreatedAt());
 
   var saved = clientRepository.save(body);
   return ResponseEntity.ok(saved);
