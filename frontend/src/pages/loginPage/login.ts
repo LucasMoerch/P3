@@ -53,7 +53,7 @@ export function renderLoginPage(): HTMLElement {
 
       // success
       navigate('home');
-      await initAuth();
+      await initAuth(true);
       document.body.style.backgroundImage = '';
     } catch (err: any) {
       // Axios errors, err.response?.data has server message
