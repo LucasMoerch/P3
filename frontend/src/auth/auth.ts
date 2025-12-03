@@ -3,12 +3,21 @@ import http from '../api/http';
 export type Role = 'admin' | 'staff' | string;
 export interface Me {
   authenticated: boolean;
-  id?: string;
+  id: string;
+  firstName?: string;
+  lastName?: string;
   displayName?: string;
   email?: string;
   pictureUrl?: string;
   roles?: Role[];
   status?: string;
+  cpr?: string;
+  birthDate?: string;
+  phoneNumber?: string;
+  address?: string;
+  documents?: any[];
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 const STORAGE_KEY = 'me';

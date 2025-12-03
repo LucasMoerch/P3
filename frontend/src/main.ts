@@ -1,4 +1,3 @@
-
 import './styles/custom.scss';
 import { renderTimeTracker } from './components/timeTracker/timeTracker';
 import '@fortawesome/fontawesome-free/css/all.min.css';

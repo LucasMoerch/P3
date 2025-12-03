@@ -81,22 +81,21 @@ export function renderAddNewStaffCard(
 
   // CPR formatting (xxxxxx-xxxx)
   cprInput.addEventListener('input', () => {
-      isTyped = true;
+    isTyped = true;
 
-      // remove non-digits
-      let digits = cprInput.value.replace(/\D/g, '');
+    // remove non-digits
+    let digits = cprInput.value.replace(/\D/g, '');
 
-      // max 10 digits
-      if (digits.length > 10) digits = digits.slice(0, 10);
+    // max 10 digits
+    if (digits.length > 10) digits = digits.slice(0, 10);
 
-      // insert hyphen after first 6 i.e. "-"
-      if (digits.length > 6) {
-          cprInput.value = digits.slice(0, 6) + '-' + digits.slice(6);
-      } else {
-          cprInput.value = digits;
-      }
+    // insert hyphen after first 6 i.e. "-"
+    if (digits.length > 6) {
+      cprInput.value = digits.slice(0, 6) + '-' + digits.slice(6);
+    } else {
+      cprInput.value = digits;
+    }
   });
-
 
   nameInput.addEventListener('input', () => markTypedInput(nameInput));
   phoneInput.addEventListener('input', () => markTypedInput(phoneInput));
@@ -144,8 +143,8 @@ export function renderAddNewStaffCard(
     // Validate CPR format
     const cprRegex = /^\d{6}-\d{4}$/;
     if (!cprRegex.test(cpr)) {
-        cprInput.classList.add('is-invalid');
-        hasError = true;
+      cprInput.classList.add('is-invalid');
+      hasError = true;
     }
 
     if (hasError) {

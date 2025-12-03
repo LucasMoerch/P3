@@ -62,7 +62,9 @@ export default {
   },
   plugins: [
     new webpack.DefinePlugin({
-      __GOOGLE_CLIENT_ID__: JSON.stringify(process.env.GOOGLE_CLIENT_ID || 'MISSING_GOOGLE_CLIENT_ID'),
+      __GOOGLE_CLIENT_ID__: JSON.stringify(
+        process.env.GOOGLE_CLIENT_ID || 'MISSING_GOOGLE_CLIENT_ID',
+      ),
     }),
   ],
 };

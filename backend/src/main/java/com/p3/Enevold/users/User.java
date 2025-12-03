@@ -3,8 +3,9 @@ package com.p3.Enevold.users;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.time.Instant;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.annotation.CreatedBy;
 import java.util.List;
 import java.util.Date;
 import java.util.ArrayList;
@@ -18,8 +19,9 @@ public class User {
     private String status; // "invited" | "active" | "disabled"
     private Auth auth;
     private Profile profile;
-    private Staff staff;
-    private Audit audit;
+    @CreatedDate private Date createdAt;
+    @LastModifiedDate private Date updatedAt;
+    @CreatedBy private String createdBy;
 
     public static class Auth {
         private String provider = "google";
@@ -69,30 +71,12 @@ public class User {
         public String getCPR() {return cpr; }
         public void setCPR(String cpr) { this.cpr = cpr; }
     }
-    public static class Staff {
-        private String employeeNo;
-        private Double hourlyRate;
-        // getters/setters
-        public String getEmployeeNo() { return employeeNo; }
-        public void setEmployeeNo(String employeeNo) { this.employeeNo = employeeNo; }
-        public Double getHourlyRate() { return hourlyRate; }
-        public void setHourlyRate(Double hourlyRate) { this.hourlyRate = hourlyRate; }
-    }
-    public static class Audit {
-        private Instant createdAt;
-        private Instant updatedAt;
-        private String createdBy;
-        private String updatedBy;
-        // getters/setters
-        public Instant getCreatedAt() { return createdAt; }
-        public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }
-        public Instant getUpdatedAt() { return updatedAt; }
-        public void setUpdatedAt(Instant updatedAt) { this.updatedAt = updatedAt; }
-        public String getCreatedBy() { return createdBy; }
-        public void setCreatedBy(String createdBy) { this.createdBy = createdBy; }
-        public String getUpdatedBy() { return updatedBy; }
-        public void setUpdatedBy(String updatedBy) { this.updatedBy = updatedBy; }
-    }
+
+    // getters/setters
+    public Date getCreatedAt() { return createdAt; }
+    public Date getUpdatedAt() { return updatedAt; }
+    public String getCreatedBy() { return createdBy; }
+
 
     private List<FileDocument> documents = new ArrayList<>();
 
@@ -106,10 +90,6 @@ public class User {
     public void setAuth(Auth auth) { this.auth = auth; }
     public Profile getProfile() { return profile; }
     public void setProfile(Profile profile) { this.profile = profile; }
-    public Staff getStaff() { return staff; }
-    public void setStaff(Staff staff) { this.staff = staff; }
-    public Audit getAudit() { return audit; }
-    public void setAudit(Audit audit) { this.audit = audit; }
     public List<FileDocument> getDocuments() { return documents; }
     public void setDocuments(List<FileDocument> documents) { this.documents = documents; }
 }

@@ -1,4 +1,3 @@
-
 import { renderHomePage } from '../pages/home';
 import { renderLoginPage } from '../pages/loginPage/login';
 import { renderCasesPage } from '../pages/cases';
