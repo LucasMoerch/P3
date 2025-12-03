@@ -1,3 +1,4 @@
+
 import { renderHomePage } from '../pages/home';
 import { renderLoginPage } from '../pages/loginPage/login';
 import { renderCasesPage } from '../pages/cases';
@@ -7,13 +8,10 @@ import { renderStaffPage } from '../pages/staff';
 import { isAuthenticated } from '../auth/auth';
 
 export function resolveRoute(path: string): HTMLElement {
- if (!isAuthenticated() && path !== '/login') { // forces non-user to only visit login page
-     return renderLoginPage();
- }
-
- if (isAuthenticated() && path === '/login') {
-     return renderHomePage();
- }
+  // If not authenticated, always go to login
+  if (!isAuthenticated() && path !== '/login' && path !== '/home') {
+    document.location.href = '/login';
+  }
 
   switch (path) {
     case '/login':
