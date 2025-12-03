@@ -11,11 +11,13 @@ export function renderMyProfilePage(): HTMLElement {
   const body = document.createElement('div');
 
   const me = getMe();
+  console.log(me)
+
 
   body.innerHTML = `
       <div class="card profile-card w-100 shadow-sm border-0">
         <div class="card-body fs-5">
-        <div class="info-row d-flex justify-content-between border-bottom py-3">
+          <div class="info-row d-flex justify-content-between border-bottom py-3">
             <span class="label text-muted fw-medium">Display Name</span>
             <span class="value fw-semibold">${me?.displayName}</span>
           </div>
@@ -25,7 +27,7 @@ export function renderMyProfilePage(): HTMLElement {
           </div>
           <div class="info-row d-flex justify-content-between border-bottom py-3">
             <span class="label text-muted fw-medium">Authenticated</span>
-            <span class="value fw-semibold text-end">${me?.authenticated || 'N/A'}</span>
+            <span class="value fw-semibold text-end">${me?.firstName || 'N/A'}</span>
           </div>
           <div class="info-row d-flex justify-content-between border-bottom py-3">
             <span class="label text-muted fw-medium">Email</span>

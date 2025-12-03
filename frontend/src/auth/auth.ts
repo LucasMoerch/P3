@@ -4,6 +4,8 @@ export type Role = 'admin' | 'staff' | string;
 export interface Me {
   authenticated: boolean;
   id?: string;
+  firstName?: string;
+  lastName?: string;
   displayName?: string;
   email?: string;
   pictureUrl?: string;
@@ -20,7 +22,7 @@ let initPromise: Promise<Me | null> | null = null;
   try {
     const raw = sessionStorage.getItem(STORAGE_KEY);
     if (raw) me = JSON.parse(raw);
-  } catch {}
+  } catch { }
 })();
 
 function persist(): void {
@@ -76,6 +78,6 @@ window.addEventListener('storage', (e) => {
   if (e.key === STORAGE_KEY) {
     try {
       me = e.newValue ? JSON.parse(e.newValue) : null;
-    } catch {}
+    } catch { }
   }
 });
