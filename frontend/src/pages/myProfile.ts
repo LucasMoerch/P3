@@ -1,6 +1,7 @@
 import { getMe } from '../auth/auth';
 import http from '../api/http';
 import { loadTimeEntries } from '../components/tabsComponent/timeTab';
+import { loadFiles } from '../components/tabsComponent/fileTab';
 
 export function renderMyProfilePage(): HTMLElement {
   const div = document.createElement('div');
@@ -17,21 +18,38 @@ export function renderMyProfilePage(): HTMLElement {
   body.innerHTML = `
       <div class="card profile-card w-100 shadow-sm border-0">
         <div class="card-body fs-5">
+
+        <div class="info-row d-flex justify-content-between border-bottom py-3">
+          <span class="label text-muted fw-medium">First Name</span>
+          <span class="value fw-semibold">${me?.firstName}</span>
+        </div>
+        <div class="info-row d-flex justify-content-between border-bottom py-3">
+          <span class="label text-muted fw-medium">Last Name</span>
+          <span class="value fw-semibold">${me?.lastName}</span>
+        </div>
           <div class="info-row d-flex justify-content-between border-bottom py-3">
             <span class="label text-muted fw-medium">Display Name</span>
             <span class="value fw-semibold">${me?.displayName}</span>
           </div>
           <div class="info-row d-flex justify-content-between border-bottom py-3">
-            <span class="label text-muted fw-medium">Client ID</span>
-            <span class="value fw-semibold">${me?.id}</span>
+            <span class="label text-muted fw-medium">CPR</span>
+            <span class="value fw-semibold text-end">${me?.cpr || 'N/A'}</span>
           </div>
           <div class="info-row d-flex justify-content-between border-bottom py-3">
-            <span class="label text-muted fw-medium">Authenticated</span>
-            <span class="value fw-semibold text-end">${me?.firstName || 'N/A'}</span>
+            <span class="label text-muted fw-medium">Birthdate</span>
+            <span class="value fw-semibold text-end">${me?.birthDate || 'N/A'}</span>
           </div>
           <div class="info-row d-flex justify-content-between border-bottom py-3">
             <span class="label text-muted fw-medium">Email</span>
             <span class="value fw-semibold">${me?.email || 'N/A'}</span>
+          </div>
+          <div class="info-row d-flex justify-content-between border-bottom py-3">
+            <span class="label text-muted fw-medium">Phone number</span>
+            <span class="value fw-semibold text-end">${me?.phoneNumber || 'N/A'}</span>
+          </div>
+          <div class="info-row d-flex justify-content-between border-bottom py-3">
+            <span class="label text-muted fw-medium">Address</span>
+            <span class="value fw-semibold text-end">${me?.address || 'N/A'}</span>
           </div>
            <div class="info-row d-flex justify-content-between border-bottom py-3">
             <span class="label text-muted fw-medium">Picture</span>
@@ -70,6 +88,11 @@ export function renderMyProfilePage(): HTMLElement {
     });
   });
 
+  const documents = document.createElement('div');
+  documents.id = 'files';
+  documents.innerHTML = `<h2 class="mt-5">My documents</h2><div id="files-content" class="mt-3"></div>`;
+  loadFiles({ entityType: 'users', entityId: me!.id.toString(), container: documents })
+
   const timeRegistrations = document.createElement('div');
   timeRegistrations.id = 'time-registrations';
   timeRegistrations.innerHTML = `<h2 class="mt-5">My Time Registrations</h2><div id="times-content" class="mt-3"></div>`;
@@ -79,6 +102,7 @@ export function renderMyProfilePage(): HTMLElement {
   container.appendChild(body);
   container.appendChild(editButton);
   container.appendChild(timeRegistrations);
+  container.appendChild(documents);
 
   // Load time entries for me
   if (me?.id) {

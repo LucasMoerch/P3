@@ -31,6 +31,7 @@ public class MeController {
       // Return only safe fields
       var auth = user.getAuth();
       var profile = user.getProfile();
+      var documents = user.getDocuments();
 
       Map<String, Object> response = new HashMap<>();
       response.put("firstName", profile != null ? profile.getFirstName() : "");
@@ -44,6 +45,11 @@ public class MeController {
       response.put("roles", user.getRoles() != null ? user.getRoles() : List.of());
       response.put("status", user.getStatus() != null ? user.getStatus() : "unknown");
       response.put("pictureUrl", auth != null ? auth.getPictureUrl() : "");
+      response.put("createdAt", user.getCreatedAt());
+      response.put("updatedAt", user.getUpdatedAt());
+      response.put("birthdate", profile != null ? profile.getBirthDate() : "");
+      response.put("cpr", profile != null ? profile.getCPR() : "");
+      response.put("documents", documents != null ? documents : List.of());
 
       return ResponseEntity.ok(response);
   }

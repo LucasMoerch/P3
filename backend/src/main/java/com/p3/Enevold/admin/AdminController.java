@@ -65,9 +65,7 @@ public class AdminController {
                 if (user.getProfile() == null) {
                     user.setProfile(new User.Profile());
                 }
-                if (user.getStaff() == null) {
-                    user.setStaff(new User.Staff());
-                }
+
 
                 if (!filteredRoles.isEmpty()) {
                     user.setRoles(filteredRoles);

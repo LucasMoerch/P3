@@ -19,7 +19,6 @@ public class User {
     private String status; // "invited" | "active" | "disabled"
     private Auth auth;
     private Profile profile;
-    private Staff staff;
     @CreatedDate private Date createdAt;
     @LastModifiedDate private Date updatedAt;
     @CreatedBy private String createdBy;
@@ -72,15 +71,6 @@ public class User {
         public String getCPR() {return cpr; }
         public void setCPR(String cpr) { this.cpr = cpr; }
     }
-    public static class Staff {
-        private String employeeNo;
-        private Double hourlyRate;
-        // getters/setters
-        public String getEmployeeNo() { return employeeNo; }
-        public void setEmployeeNo(String employeeNo) { this.employeeNo = employeeNo; }
-        public Double getHourlyRate() { return hourlyRate; }
-        public void setHourlyRate(Double hourlyRate) { this.hourlyRate = hourlyRate; }
-    }
 
     // getters/setters
     public Date getCreatedAt() { return createdAt; }
@@ -100,8 +90,6 @@ public class User {
     public void setAuth(Auth auth) { this.auth = auth; }
     public Profile getProfile() { return profile; }
     public void setProfile(Profile profile) { this.profile = profile; }
-    public Staff getStaff() { return staff; }
-    public void setStaff(Staff staff) { this.staff = staff; }
     public List<FileDocument> getDocuments() { return documents; }
     public void setDocuments(List<FileDocument> documents) { this.documents = documents; }
 }
