@@ -82,7 +82,7 @@ export function inspectCase(c: CaseDto): HTMLElement {
         </div>
       `;
   }
-  card.appendChild(renderTabs({ entityType: 'cases', entityId: c.id }));
+  card.appendChild(renderTabs({ entityType: 'cases', entityId: c.id, description: c.description || '' }));
 
   return overlay;
 }

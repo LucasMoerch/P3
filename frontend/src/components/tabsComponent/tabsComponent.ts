@@ -1,10 +1,12 @@
 import './tabsStyling.scss';
 import { loadFiles, FileTabConfig, EntityType } from './fileTab';
 import { loadTimeEntries } from './timeTab';
+import { renderDescriptionTab } from './descTab';
 
 interface TabsConfig {
   entityType: EntityType;
   entityId: string;
+  description?: string;
 }
 
 export function renderTabs(config: TabsConfig) {
@@ -31,7 +33,7 @@ export function renderTabs(config: TabsConfig) {
     </ul>
     <div class="tab-content">
       <div class="tab-pane active" id="files-content"></div>
-      <div class="tab-pane" id="description-content"></div>
+      <div class="tab-pane info-row" id="description-content"></div>
       <div class="tab-pane" id="times-content"></div>
     </div>
   `;
@@ -60,6 +62,9 @@ export function renderTabs(config: TabsConfig) {
       await loadFiles({ entityType, entityId, container: tabContainer });
     } else if (tabName === 'description') {
       // Load description content
+      const descriptionContent = tabContainer.querySelector('#description-content');
+      descriptionContent!.innerHTML = renderDescriptionTab(config.description || '');
+
     } else if (tabName === 'times') {
       await loadTimeEntries({ entityType, entityId, container: tabContainer });
     }
