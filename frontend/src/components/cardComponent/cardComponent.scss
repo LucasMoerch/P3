@@ -22,8 +22,7 @@
 .header {
   padding: 0 4rem;
   text-align: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  text-overflow: hidden;
   white-space: nowrap;
   display: block;
 }
@@ -41,6 +40,11 @@
 
 .edit-button:hover {
   transform: scale(1.2);
+}
+
+.body {
+  max-height: 50%;
+  max-width: 98%;
 }
 
 @media (min-width: 768px) {

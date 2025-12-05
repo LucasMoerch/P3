@@ -212,7 +212,8 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
       editBtn.remove();
 
       const saveBtn = document.createElement('button');
-      saveBtn.className = 'btn btn-primary position-absolute top-0 end-0 m-3 fs-3 py-1 px-2';
+      saveBtn.className =
+        'btn btn-sm btn-primary position-absolute top-0 end-0 my-4 mx-1 py-1 px-2';
       saveBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save';
 
       card.appendChild(saveBtn);
@@ -342,6 +343,9 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
           (updated as any).id = (options.data as any).id;
         }
 
+        // Do NOT send documents back on update, they are managed by upload/delete endpoints
+        delete (updated as any).documents;
+
         try {
           saveBtn.disabled = true;
           const prev = saveBtn.innerText;
@@ -357,6 +361,16 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
           });
 
           overlay.remove();
+          //Refreshes page for ANY page upon save or more specifically updating that specific row.
+          const container =
+            document.querySelector('.clients-page') ||
+            document.querySelector('.staff-page') ||
+            document.querySelector('.cases-page');
+
+          if (container && (container as any).reload) {
+            (container as any).reload();
+          }
+
           saveBtn.innerText = prev;
         } catch (e) {
           console.error(e);

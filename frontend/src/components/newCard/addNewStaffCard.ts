@@ -21,7 +21,10 @@ export function renderAddNewStaffCard(
 
   //Use the new reusable floating label helpers
   const nameField = createFloatingInput('staffName', 'Full Name *', 'text');
+  const phoneField = createFloatingInput('staffPhone', 'Mobile Number', 'tel');
   const emailField = createFloatingInput('staffEmail', 'Email *', 'email');
+  const addressField = createFloatingInput('staffAddress', 'Address', 'text');
+  const cprField = createFloatingInput('staffCpr', 'CPR *', 'tel');
   const descField = createFloatingTextarea('staffDesc', 'Description', 4);
 
   const adminCheckWrapper = document.createElement('div');
@@ -32,7 +35,10 @@ export function renderAddNewStaffCard(
     `;
 
   formContainer.appendChild(nameField);
+  formContainer.appendChild(phoneField);
   formContainer.appendChild(emailField);
+  formContainer.appendChild(addressField);
+  formContainer.appendChild(cprField);
   formContainer.appendChild(descField);
   formContainer.appendChild(adminCheckWrapper);
 
@@ -66,12 +72,35 @@ export function renderAddNewStaffCard(
   };
 
   const nameInput = formContainer.querySelector('#staffName') as HTMLInputElement;
+  const phoneInput = formContainer.querySelector('#staffPhone') as HTMLInputElement;
   const emailInput = formContainer.querySelector('#staffEmail') as HTMLInputElement;
+  const addressInput = formContainer.querySelector('#staffAddress') as HTMLInputElement;
+  const cprInput = formContainer.querySelector('#staffCpr') as HTMLInputElement;
   const isAdminInput = formContainer.querySelector('#isAdmin') as HTMLInputElement;
   const descInput = formContainer.querySelector('#staffDesc') as HTMLTextAreaElement;
 
+  // CPR formatting (xxxxxx-xxxx)
+  cprInput.addEventListener('input', () => {
+    isTyped = true;
+
+    // remove non-digits
+    let digits = cprInput.value.replace(/\D/g, '');
+
+    // max 10 digits
+    if (digits.length > 10) digits = digits.slice(0, 10);
+
+    // insert hyphen after first 6 i.e. "-"
+    if (digits.length > 6) {
+      cprInput.value = digits.slice(0, 6) + '-' + digits.slice(6);
+    } else {
+      cprInput.value = digits;
+    }
+  });
+
   nameInput.addEventListener('input', () => markTypedInput(nameInput));
+  phoneInput.addEventListener('input', () => markTypedInput(phoneInput));
   emailInput.addEventListener('input', () => markTypedInput(emailInput));
+  addressInput.addEventListener('input', () => markTypedInput(addressInput));
   isAdminInput.addEventListener('input', () => markTypedInput(isAdminInput));
   descInput.addEventListener('input', () => markTypedInput(descInput));
 
@@ -85,7 +114,10 @@ export function renderAddNewStaffCard(
 
   saveBtn.addEventListener('click', async () => {
     const name = nameInput.value.trim();
+    const phone = phoneInput.value.trim();
     const email = emailInput.value.trim();
+    const address = addressInput.value.trim();
+    const cpr = cprInput.value.trim();
     const desc = descInput.value.trim();
     const isAdmin = isAdminInput.checked;
 
@@ -94,6 +126,7 @@ export function renderAddNewStaffCard(
     // Reset all invalid states
     nameInput.classList.remove('is-invalid');
     emailInput.classList.remove('is-invalid');
+    cprInput.classList.remove('is-invalid');
 
     let hasError = false;
 
@@ -107,12 +140,19 @@ export function renderAddNewStaffCard(
       hasError = true;
     }
 
+    // Validate CPR format
+    const cprRegex = /^\d{6}-\d{4}$/;
+    if (!cprRegex.test(cpr)) {
+      cprInput.classList.add('is-invalid');
+      hasError = true;
+    }
+
     if (hasError) {
       alert('Please fill out the required fields.');
       return;
     }
 
-    console.log('Submitting:', { name, email, desc, role });
+    console.log('Submitting:', { name, phone, email, address, cpr, desc, role });
 
     if (!onInvite) {
       console.warn('No invite callback provided.');

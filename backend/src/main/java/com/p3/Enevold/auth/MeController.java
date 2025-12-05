@@ -28,14 +28,16 @@ public class MeController {
       if (user == null)
           return ResponseEntity.ok(Map.of("authenticated", false));
 
-      System.out.println("ME CONTROLLER: session uid=" + uid);
-      System.out.println("ME CONTROLLER: user=" + user);
-
       // Return only safe fields
       var auth = user.getAuth();
       var profile = user.getProfile();
+      var documents = user.getDocuments();
 
       Map<String, Object> response = new HashMap<>();
+      response.put("firstName", profile != null ? profile.getFirstName() : "");
+      response.put("lastName", profile != null ? profile.getLastName() : "");
+      response.put("phone", profile != null ? profile.getPhone() : "");
+      response.put("address", profile != null ? profile.getAddress() : "");
       response.put("authenticated", true);
       response.put("id", user.getId());
       response.put("email", auth != null ? auth.getEmail() : "");
@@ -43,6 +45,11 @@ public class MeController {
       response.put("roles", user.getRoles() != null ? user.getRoles() : List.of());
       response.put("status", user.getStatus() != null ? user.getStatus() : "unknown");
       response.put("pictureUrl", auth != null ? auth.getPictureUrl() : "");
+      response.put("createdAt", user.getCreatedAt());
+      response.put("updatedAt", user.getUpdatedAt());
+      response.put("birthdate", profile != null ? profile.getBirthDate() : "");
+      response.put("cpr", profile != null ? profile.getCPR() : "");
+      response.put("documents", documents != null ? documents : List.of());
 
       return ResponseEntity.ok(response);
   }

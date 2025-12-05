@@ -1,3 +1,4 @@
+
 package com.p3.Enevold.users;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -79,8 +80,6 @@ public class UserController {
 
            // Flip status to active
            user.setStatus("active");
-           if (user.getAudit() == null) user.setAudit(new User.Audit());
-           user.getAudit().setUpdatedAt(java.time.Instant.now());
 
            if (adminEmails.contains(lowerEmail)) {
                user.setRoles(java.util.List.of("admin","staff"));
@@ -129,7 +128,6 @@ public class UserController {
           u.setDocuments(new ArrayList<>());
         }
         u.getDocuments().add(document);
-        u.getAudit().setUpdatedAt(java.time.Instant.now());
 
         repo.save(u);
         return ResponseEntity.ok("File uploaded successfully: " + file.getOriginalFilename());
@@ -178,7 +176,6 @@ public class UserController {
       }
 
       u.getDocuments().remove(documentIndex);
-      u.getAudit().setUpdatedAt(java.time.Instant.now());
       repo.save(u);
 
       return ResponseEntity.ok("Document deleted successfully");

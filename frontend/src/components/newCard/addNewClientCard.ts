@@ -54,9 +54,74 @@ export function renderAddNewClientCard(): HTMLElement {
   const emailInput = formContainer.querySelector('#clientEmail') as HTMLInputElement;
   const phoneInput = formContainer.querySelector('#clientPhone') as HTMLInputElement;
 
+  // CPR / CVR selection
+  const typeContainer = document.createElement('div');
+  typeContainer.className = 'my-3';
+  typeContainer.innerHTML = `
+  <label class="form-label fw-semibold">Registration Type *</label>
+  <select id="idType" class="form-select">
+    <option value="cpr">CPR</option>
+    <option value="cvr">CVR</option>
+  </select>
+  `;
+
+  const idField = createFloatingInput('clientIdentifier', 'CPR Number *', 'text');
+
+  formContainer.appendChild(typeContainer);
+  formContainer.appendChild(idField);
+
   nameInput.addEventListener('input', () => markTypedInput(nameInput));
   emailInput.addEventListener('input', () => markTypedInput(emailInput));
   phoneInput.addEventListener('input', () => markTypedInput(phoneInput));
+
+  const idTypeSelect = formContainer.querySelector('#idType') as HTMLSelectElement;
+  const idInput = formContainer.querySelector('#clientIdentifier') as HTMLInputElement;
+
+  //CPR/CVR formatting & restrictions
+  idInput.addEventListener('input', () => {
+    isTyped = true;
+
+    if (idTypeSelect.value === 'cpr') {
+      // Remove all non-digits
+      let digits = idInput.value.replace(/\D/g, '');
+
+      // Max 10 digits
+      if (digits.length > 10) digits = digits.slice(0, 10);
+
+      // Insert hyphen after first 6 digits
+      if (digits.length > 6) {
+        idInput.value = digits.slice(0, 6) + '-' + digits.slice(6);
+      } else {
+        idInput.value = digits;
+      }
+    }
+
+    if (idTypeSelect.value === 'cvr') {
+      // CVR: only digits, max 8 characters
+      idInput.value = idInput.value.replace(/\D/g, '').slice(0, 8);
+    }
+  });
+
+  //Changes depend on if you choose cpr or cvr.
+  idTypeSelect.addEventListener('change', () => {
+    isTyped = true;
+
+    const idLabel = formContainer.querySelector(
+      'label[for="clientIdentifier"]',
+    ) as HTMLLabelElement;
+
+    if (idTypeSelect.value === 'cpr') {
+      idInput.placeholder = 'CPR';
+      if (idLabel) idLabel.textContent = 'CPR Number *';
+    } else {
+      idInput.placeholder = 'CVR';
+      if (idLabel) idLabel.textContent = 'CVR Number *';
+    }
+
+    idInput.value = '';
+  });
+
+  idInput.addEventListener('input', () => markTypedInput(idInput));
 
   cancelBtn.addEventListener('click', () => {
     if (isTyped) {
@@ -70,11 +135,14 @@ export function renderAddNewClientCard(): HTMLElement {
     const name = nameInput.value.trim();
     const email = emailInput.value.trim();
     const phone = phoneInput.value.trim();
+    const idValue = idInput.value.trim();
+    const idType = idTypeSelect.value;
 
     // RESET previous errors
     nameInput.classList.remove('is-invalid');
     emailInput.classList.remove('is-invalid');
     phoneInput.classList.remove('is-invalid');
+    idInput.classList.remove('is-invalid');
 
     let hasError = false;
 
@@ -93,6 +161,24 @@ export function renderAddNewClientCard(): HTMLElement {
       hasError = true;
     }
 
+    // Validate CPR
+    if (idType === 'cpr') {
+      const cprRegex = /^\d{6}-\d{4}$/;
+      if (!cprRegex.test(idValue)) {
+        hasError = true;
+        idInput.classList.add('is-invalid');
+      }
+    }
+
+    // Validate CVR
+    if (idType === 'cvr') {
+      const cvrRegex = /^\d{8}$/;
+      if (!cvrRegex.test(idValue)) {
+        hasError = true;
+        idInput.classList.add('is-invalid');
+      }
+    }
+
     if (hasError) {
       alert('Please fill out the required fields.');
       return;
@@ -104,6 +190,8 @@ export function renderAddNewClientCard(): HTMLElement {
         name,
         contactEmail: email,
         contactPhone: phone,
+        identifierType: idType, // "cpr" / "cvr"
+        identifierValue: idValue, // the actual number
       });
       console.log('Client created:', created);
       overlay.remove();

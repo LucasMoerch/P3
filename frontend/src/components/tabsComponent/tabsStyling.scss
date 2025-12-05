@@ -2,3 +2,20 @@ li:hover {
   cursor: pointer;
   background-color: #f0f0f0;
 }
+
+.nav-tabs .nav-link.active {
+  background-color: #f1f2f3;
+}
+
+// Time registrations list
+.time-list {
+  .time-list-item {
+    border-color: rgba(255, 255, 255, 0.08); // adjust for your theme
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+
+    .time-main {
+      max-width: 70%;
+    }
+  }
+}
