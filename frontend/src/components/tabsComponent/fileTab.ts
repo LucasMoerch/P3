@@ -19,14 +19,23 @@ export async function loadFiles(config: FileTabConfig) {
     if (!filesContent) return;
 
     filesContent.innerHTML = `
-      <div class="mb-3">
-        <input type="file" id="upload-input" style="display:inline-block" />
-        <button class="btn btn-sm btn-success ms-2" id="upload-btn">
-          <i class="fa-solid fa-upload"></i> Upload
-        </button>
-        <span id="upload-status" class="ms-2"></span>
+      <div class="card bg-card-bg border-0 shadow-sm mt-3">
+        <div class="card-body d-flex flex-wrap align-items-center gap-2">
+          <div class="d-flex align-items-center gap-2 flex-grow-1">
+            <label for="upload-input" class="btn-primary btn-sm btn-outline-secondary mb-0">
+              <i class="fa-solid fa-file-arrow-up me-1"></i> Choose file
+            </label>
+            <input type="file" id="upload-input" class="d-none" />
+            <button class="btn btn-sm btn-success" id="upload-btn">
+              <i class="fa-solid fa-upload me-1"></i> Upload
+            </button>
+          </div>
+          <span id="upload-status" class="small text-muted ms-auto"></span>
+        </div>
+        <div class="card-body pt-0">
+          ${renderFilesList(response)}
+        </div>
       </div>
-      ${renderFilesList(response)}
     `;
 
     attachFileEventListeners(config);
@@ -57,13 +66,13 @@ function renderFilesList(documents: any[]) {
             <small class="text-muted ms-2">(${formatDate(
               doc.uploadedAt,
             )}) by ${doc.createdBy}</small>
+            <button class="btn btn-sm me-2" data-action="download" data-index="${index}">
+              <i class="fa-solid fa-download"></i>
+            </button>
           </div>
           <div>
-            <button class="btn btn-sm btn-primary me-2" data-action="download" data-index="${index}">
-              <i class="fa-solid fa-download"></i> Download
-            </button>
-            <button class="btn btn-sm btn-danger" data-action="delete" data-index="${index}">
-              <i class="fa-solid fa-trash"></i> Delete
+            <button class="btn btn-sm" data-action="delete" data-index="${index}">
+              <i class="fa-solid fa-trash"></i>
             </button>
           </div>
         </li>
@@ -108,12 +117,16 @@ function attachUploadListener(config: FileTabConfig) {
     uploadBtn.addEventListener('click', async () => {
       if (!fileInput.files || fileInput.files.length === 0) {
         uploadStatus.textContent = 'Please select a file first.';
+        uploadStatus.classList.remove('text-success', 'text-danger');
+        uploadStatus.classList.add('text-warning');
         return;
       }
 
       const file = fileInput.files[0];
       uploadBtn.disabled = true;
       uploadStatus.textContent = 'Uploading...';
+      uploadStatus.classList.remove('text-success', 'text-danger', 'text-warning');
+      uploadStatus.classList.add('text-muted');
 
       const formData = new FormData();
       formData.append('file', file);
@@ -124,10 +137,14 @@ function attachUploadListener(config: FileTabConfig) {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
         uploadStatus.textContent = 'Upload successful!';
+        uploadStatus.classList.remove('text-muted', 'text-danger', 'text-warning');
+        uploadStatus.classList.add('text-success');
         fileInput.value = '';
         await loadFiles(config);
       } catch (err) {
         uploadStatus.textContent = 'Upload failed.';
+        uploadStatus.classList.remove('text-muted', 'text-success', 'text-warning');
+        uploadStatus.classList.add('text-danger');
         console.error('Upload failed:', err);
       } finally {
         uploadBtn.disabled = false;

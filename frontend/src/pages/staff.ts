@@ -152,8 +152,9 @@ function inspectUser(user: any): HTMLElement {
         </div>
         <div class="info-row d-flex justify-content-between py-3">
           <span class="label text-muted fw-medium">Roles</span>
-          <span class="value fw-semibold" data-field="roles" data-transform="commaList">${Array.isArray(user.roles) ? user.roles.join(', ') : user.roles || 'N/A'
-    }</span>
+          <span class="value fw-semibold" data-field="roles" data-transform="commaList">${
+            Array.isArray(user.roles) ? user.roles.join(', ') : user.roles || 'N/A'
+          }</span>
         </div>
       </div>
     </div>
@@ -165,7 +166,7 @@ function inspectUser(user: any): HTMLElement {
   card.append(
     renderTabs({
       entityType: 'users',
-      entityId: user.id
+      entityId: user.id,
     }),
   );
 

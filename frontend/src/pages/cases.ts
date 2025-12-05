@@ -82,7 +82,9 @@ export function inspectCase(c: CaseDto): HTMLElement {
         </div>
       `;
   }
-  card.appendChild(renderTabs({ entityType: 'cases', entityId: c.id, description: c.description || '' }));
+  card.appendChild(
+    renderTabs({ entityType: 'cases', entityId: c.id, description: c.description || '' }),
+  );
 
   return overlay;
 }
@@ -114,7 +116,7 @@ export function renderCasesPage(): HTMLElement {
       const cases = (await http.get('/cases')) as CaseDto[];
 
       const caseData = (cases ?? []).map((c) => ({
-        adress: c.title || 'Untitled',
+        address: c.title || 'Untitled',
         status: c.status || 'UNKNOWN',
         Date_Created: new Date(c.createdAt).toLocaleDateString('da-DK'),
       }));

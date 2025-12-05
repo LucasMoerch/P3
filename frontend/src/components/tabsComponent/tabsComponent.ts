@@ -58,7 +58,6 @@ export function renderTabs(config: TabsConfig) {
     (timePane as HTMLElement | null)?.remove();
   }
 
-
   async function handleTabClick(event: Event) {
     const target = event.target as HTMLElement;
     if (!target.classList.contains('nav-link')) return;
@@ -83,7 +82,6 @@ export function renderTabs(config: TabsConfig) {
       // Load description content
       const descriptionContent = tabContainer.querySelector('#description-content');
       descriptionContent!.innerHTML = renderDescriptionTab(config.description || '');
-
     } else if (tabName === 'times') {
       await loadTimeEntries({ entityType, entityId, container: tabContainer });
     }

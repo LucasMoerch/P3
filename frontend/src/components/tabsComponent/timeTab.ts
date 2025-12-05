@@ -5,7 +5,7 @@ type EntityType = 'clients' | 'cases' | 'users';
 export interface TimeTabConfig {
   entityType: EntityType;
   entityId: string;
-  container: HTMLElement; // the tabs container created in renderTabs
+  container: HTMLElement;
 }
 
 interface TimeEntry {
@@ -37,24 +37,54 @@ export async function loadTimeEntries(config: TimeTabConfig) {
 
 function renderTimeList(entries: TimeEntry[]) {
   if (!entries || entries.length === 0) {
-    return '<p class="text-muted">No time registrations yet.</p>';
+    return `
+      <div class="card bg-card-bg border-0 shadow-sm mt-3">
+        <div class="card-body text-center text-muted py-4">
+          No time registrations yet.
+        </div>
+      </div>
+    `;
   }
 
   return `
-    <ul class="list-group">
-      ${entries
-        .map(
-          (t) => `
-        <li class="list-group-item d-flex justify-content-between">
-          <div>
-            <strong>${t.date}</strong> ${t.startTime} - ${t.stopTime} (${t.totalTime}) - <small>${t.caseId}</small><br/>
-            <small>${t.userName}</small><br/>
-            <span>${t.description ?? ''}</span>
-          </div>
-        </li>
-      `,
-        )
-        .join('')}
-    </ul>
+    <div class="card bg-card-bg border-0 shadow-sm mt-3">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span class="fw-semibold">Time registrations</span>
+        <span class="badge bg-secondary">${entries.length}</span>
+      </div>
+      <ul class="list-group list-group-flush time-list">
+        ${entries
+          .map(
+            (t) => `
+          <li class="list-group-item bg-transparent time-list-item">
+            <div class="d-flex justify-content-between flex-wrap gap-2">
+              <div class="time-main">
+                <div class="fw-semibold">
+                  <i class="fa-regular fa-clock me-1"></i>
+                  ${t.date} · ${t.startTime}–${t.stopTime}
+                </div>
+                <div class="small text-muted">
+                  ${t.userName}${t.caseId ? ` · Case: ${t.caseId}` : ''}
+                </div>
+              </div>
+              <div class="text-end">
+                <span class="badge bg-primary rounded-pill">
+                  ${t.totalTime}
+                </span>
+              </div>
+            </div>
+            ${
+              t.description
+                ? `<div class="mt-2 small text-body-secondary">
+                     ${t.description}
+                   </div>`
+                : ''
+            }
+          </li>
+        `,
+          )
+          .join('')}
+      </ul>
+    </div>
   `;
 }

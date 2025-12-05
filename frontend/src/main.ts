@@ -23,6 +23,8 @@ function render() {
   }
   // Renders the navbar on all pages
   if (!excludedPages.includes(location.pathname)) {
+    document.body.style.paddingTop = '56px'; // match navbar height
+
     let navbar = document.getElementById('navbar-container');
     if (!navbar) {
       navbar = document.createElement('div');

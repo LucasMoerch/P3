@@ -212,7 +212,8 @@ export function renderCard(options: RenderCardOptions = {}): HTMLElement {
       editBtn.remove();
 
       const saveBtn = document.createElement('button');
-      saveBtn.className = 'btn btn-primary position-absolute top-0 end-0 m-3 fs-3 py-1 px-2';
+      saveBtn.className =
+        'btn btn-sm btn-primary position-absolute top-0 end-0 my-4 mx-1 py-1 px-2';
       saveBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save';
 
       card.appendChild(saveBtn);
