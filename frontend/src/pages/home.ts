@@ -59,7 +59,6 @@ export function renderHomePage(): HTMLElement {
   create_new.addEventListener('click', (): void => {
     const newCaseCard = renderAddNewCaseCard();
     document.body.appendChild(newCaseCard);
-    console.log('creating new case clicked');
   });
 
   //Text for active cases
@@ -89,7 +88,6 @@ export function renderHomePage(): HTMLElement {
   async function loadCases() {
     try {
       const cases = (await http.get('/cases')) as CaseDto[];
-      console.log('Fetched cases:', cases);
 
       // Only show active/open cases
       const activeCases = cases.filter((c) => c.status === 'OPEN');
@@ -118,7 +116,6 @@ export function renderHomePage(): HTMLElement {
         caseBtn.addEventListener('click', () => {
           const popup = inspectCase(c);
           document.body.appendChild(popup);
-          console.log('Opened case:', c.id);
         });
 
         active_cases_container.appendChild(caseBtn);

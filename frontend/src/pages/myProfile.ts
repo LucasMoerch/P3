@@ -7,12 +7,9 @@ export function renderMyProfilePage(): HTMLElement {
   const div = document.createElement('div');
   div.innerHTML = `<h1>My Profile<h1>`;
 
-  console.log(getMe);
-
   const body = document.createElement('div');
 
   const me = getMe();
-  console.log(me);
 
   body.innerHTML = `
       <div class="card profile-card w-100 shadow-sm border-0">

@@ -152,8 +152,6 @@ export function renderAddNewStaffCard(
       return;
     }
 
-    console.log('Submitting:', { name, phone, email, address, cpr, desc, role });
-
     if (!onInvite) {
       console.warn('No invite callback provided.');
       overlay.remove();

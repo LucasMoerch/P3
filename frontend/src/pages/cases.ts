@@ -158,7 +158,6 @@ export function renderCasesPage(): HTMLElement {
           const selectedCase = cases[index - 1]; // match index with case
           const popup = inspectCase(selectedCase);
           document.body.appendChild(popup);
-          console.log('case clicked', selectedCase.id);
         });
       });
     } catch (err) {

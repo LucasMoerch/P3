@@ -58,7 +58,6 @@ export function renderClientsPage(): HTMLElement {
           const client = clients[index - 1];
           const popup = inspectClient(client);
           document.body.appendChild(popup);
-          console.log('client clicked');
         });
       });
     } catch (err) {
