@@ -16,17 +16,17 @@ export function renderTabs(config: TabsConfig) {
   const tabDiv = `
     <ul class="nav nav-tabs nav-fill">
       <li class="nav-item">
-        <a class="nav-link active" data-tab="files">
+        <a class="nav-link active files" data-tab="files">
           <i class="fa-solid fa-paperclip"></i>Files
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" data-tab="description">
+        <a class="nav-link description" data-tab="description">
           <i class="fa-solid fa-italic"></i>Description
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" data-tab="times">
+        <a class="nav-link times" data-tab="times">
           <i class="fa-solid fa-stopwatch"></i>Time Registrations
         </a>
       </li>
@@ -39,6 +39,25 @@ export function renderTabs(config: TabsConfig) {
   `;
 
   tabContainer.innerHTML = tabDiv;
+
+  if (entityType === 'users' || entityType === 'clients') {
+    // Remove description tab and its content pane
+    const descTabLi = tabContainer.querySelector('.nav-link.description')?.closest('li');
+    const descPane = tabContainer.querySelector('#description-content');
+
+    descTabLi?.remove();
+    (descPane as HTMLElement | null)?.remove();
+  }
+
+  if (entityType === 'clients') {
+    // Remove time registrations tab and its content pane
+    const timeTabLi = tabContainer.querySelector('.nav-link.times')?.closest('li');
+    const timePane = tabContainer.querySelector('#times-content');
+
+    timeTabLi?.remove();
+    (timePane as HTMLElement | null)?.remove();
+  }
+
 
   async function handleTabClick(event: Event) {
     const target = event.target as HTMLElement;

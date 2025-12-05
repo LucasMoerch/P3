@@ -1,7 +1,5 @@
 import { navigate } from '../main';
 import { renderLogoNavbar } from './logoComponent/logo';
-import { clearAuth } from '../auth/auth';
-import http from '../api/http';
 import { renderLogoutButton } from './logoutButtonComponent/logoutButton';
 
 export function getPageTitle(path: string): string {
@@ -26,7 +24,7 @@ export function getPageTitle(path: string): string {
 export function renderHeaderAndNavbar(): HTMLElement {
   // Header container
   const header = document.createElement('nav');
-  header.className = 'navbar navbar-dark bg-dark px-3 shadow-lg';
+  header.className = 'navbar navbar-dark fixed-top bg-dark px-3 shadow-lg';
   const logo = renderLogoNavbar();
   header.appendChild(logo);
 

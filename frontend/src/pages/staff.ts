@@ -165,8 +165,7 @@ function inspectUser(user: any): HTMLElement {
   card.append(
     renderTabs({
       entityType: 'users',
-      entityId: user.id,
-      description: user.profile.description
+      entityId: user.id
     }),
   );
 

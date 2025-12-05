@@ -1,4 +1,3 @@
-// Renders a table that takes data as an object and create matching column names
 export function renderTable(data: Array<Record<string, unknown>>): HTMLElement {
   const tableContainer = document.createElement('div');
   tableContainer.classList.add('col-12');
@@ -27,13 +26,17 @@ export function renderTable(data: Array<Record<string, unknown>>): HTMLElement {
 
   // Build header
   const headTr = document.createElement('tr');
-  const columnWidth = `${(100 / columnNames.length).toFixed(2)}%`;
-  for (const col of columnNames) {
+  for (const [index, col] of columnNames.entries()) {
     const th = document.createElement('th');
 
-    // Replace underscores and capitalize the first letter of the column label
     const formattedCol = col.replace(/_/g, ' ');
     th.textContent = formattedCol.charAt(0).toUpperCase() + formattedCol.slice(1);
+
+    // hide columns after the 2nd one on small screens, show from md+
+    if (index >= 2) {
+      th.classList.add('d-none', 'd-md-table-cell');
+    }
+
     headTr.appendChild(th);
   }
   thead.classList.add('table-dark');
@@ -42,14 +45,22 @@ export function renderTable(data: Array<Record<string, unknown>>): HTMLElement {
   // Build rows
   for (const row of data) {
     const tr = document.createElement('tr');
-    for (const col of columnNames) {
+
+    columnNames.forEach((col, index) => {
       const td = document.createElement('td');
-      td.textContent = (row as any)[col];
+      td.textContent = String((row as any)[col] ?? '');
       td.style.whiteSpace = 'normal';
       td.style.wordBreak = 'break-word';
       td.style.overflowWrap = 'anywhere';
+
+      // Mirror the same responsive visibility classes as header
+      if (index >= 2) {
+        td.classList.add('d-none', 'd-md-table-cell');
+      }
+
       tr.appendChild(td);
-    }
+    });
+
     tbody.appendChild(tr);
   }
 
